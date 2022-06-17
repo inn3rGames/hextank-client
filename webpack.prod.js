@@ -2,8 +2,7 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-    mode: "development",
-    devtool: "eval-cheap-source-map",
+    mode: "production",
     entry: "./src/game.ts",
     resolve: {
         extensions: [".tsx", ".ts", ".js"],
