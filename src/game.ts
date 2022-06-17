@@ -12,8 +12,8 @@ import "@babylonjs/loaders/glTF/2.0/glTFLoader";
 import { LoadFile } from "@babylonjs/core";
 
 
-import logo from "./assets/logo.png";
-import glb from "./assets/hextankFinal.glb";
+import logo from "./assets/images/logo.png";
+import glb from "./assets/models/hextankFinal.glb";
 
 
 const canvas: HTMLCanvasElement = document.getElementById(
