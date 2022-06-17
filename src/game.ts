@@ -57,3 +57,12 @@ engine.runRenderLoop(() => {
 window.addEventListener("resize", () => {
     engine.resize();
 });
+
+canvas.addEventListener("mousemove", (e) => {
+    e.preventDefault();
+});
+
+canvas.addEventListener("touchmove", (e) => {
+    e.preventDefault();
+    
+});
