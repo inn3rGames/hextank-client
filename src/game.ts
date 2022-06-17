@@ -11,7 +11,9 @@ import "@babylonjs/core/Materials/standardMaterial";
 import "@babylonjs/loaders/glTF/2.0/glTFLoader";
 import { LoadFile } from "@babylonjs/core";
 
-//import ok from "./hextankFinal.glb";
+
+import logo from "./assets/logo.png";
+import glb from "./assets/hextankFinal.glb";
 
 
 const canvas: HTMLCanvasElement = document.getElementById(
@@ -38,10 +40,11 @@ function createScene(): Scene {
         scene
     );
 
-        var hextank = SceneLoader.ImportMesh(null, "assets/", "hextankFinal.glb", scene)
+    var hextank = SceneLoader.ImportMesh(null, "", glb, scene)
     console.log(hextank);
+    console.log(logo, glb);
 
-   
+
     return scene;
 }
 

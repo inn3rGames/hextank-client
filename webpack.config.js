@@ -26,13 +26,8 @@ module.exports = {
                 exclude: /node_modules/,
             },
             {
-                test: /\.(png|jpg|gif|env|glb|stl)$/i,
-                use: [{
-                    loader: 'url-loader',
-                    options: {
-                        limit: 8192,
-                    },
-                },],
+                test: /\.(png|jpg|jpeg|gif|glb)$/i,
+                type: "asset/resource",
             }
         ],
     },
@@ -45,7 +40,7 @@ module.exports = {
         new HtmlWebpackPlugin({
             inject: true,
             template: "./public/index.html",
-            favicon: "./public/favicon.ico",
+            favicon: "./src/assets/favicon.ico",
         })
     ],
 };
