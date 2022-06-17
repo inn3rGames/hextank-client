@@ -3,22 +3,15 @@ import { Scene } from "@babylonjs/core/scene";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
 import { HemisphericLight } from "@babylonjs/core/Lights/hemisphericLight";
-import { Mesh } from "@babylonjs/core/Meshes/mesh";
-import { CreateSphere } from "@babylonjs/core/Meshes/Builders/sphereBuilder";
 import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
-
-import "@babylonjs/core/Materials/standardMaterial";
 import "@babylonjs/loaders/glTF/2.0/glTFLoader";
-import { LoadFile } from "@babylonjs/core";
 
-
-import logo from "./assets/images/logo.png";
-import glb from "./assets/models/hextankFinal.glb";
-
+import hextankModel from "./assets/models/hextankFinal.glb";
 
 const canvas: HTMLCanvasElement = document.getElementById(
     "hextankgame"
 ) as HTMLCanvasElement;
+
 const engine = new Engine(canvas, true);
 
 function createScene(): Scene {
@@ -40,10 +33,7 @@ function createScene(): Scene {
         scene
     );
 
-    var hextank = SceneLoader.ImportMesh(null, "", glb, scene)
-    console.log(hextank);
-    console.log(logo, glb);
-
+    var hextank = SceneLoader.ImportMesh(null, "", hextankModel, scene);
 
     return scene;
 }
@@ -64,5 +54,4 @@ canvas.addEventListener("mousemove", (e) => {
 
 canvas.addEventListener("touchmove", (e) => {
     e.preventDefault();
-    
 });
