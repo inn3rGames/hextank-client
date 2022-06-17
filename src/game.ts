@@ -4,9 +4,10 @@ import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
 import { HemisphericLight } from "@babylonjs/core/Lights/hemisphericLight";
 import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
-import "@babylonjs/loaders/glTF/2.0/glTFLoader";
+/* import "@babylonjs/loaders/glTF/2.0/glTFLoader"; */
+import '@babylonjs/loaders/glTF/2.0/Extensions/KHR_draco_mesh_compression';
 
-import hextankModel from "./assets/models/hextankFinal.glb";
+import hextankModel from "./assets/models/hextankFinalDraco.glb";
 
 const canvas: HTMLCanvasElement = document.getElementById(
     "hextankgame"
