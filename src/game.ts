@@ -58,9 +58,12 @@ function createScene(): Scene {
 
     var light1: HemisphericLight = new HemisphericLight(
         "light1",
-        new Vector3(1, 1, 0),
+        new Vector3(0, 1, 0),
         scene
     );
+    light1.diffuse = Color3.FromHexString("#FFFFFF");
+    light1.specular = Color3.FromHexString("#FFFFFF");
+    light1.groundColor = Color3.FromHexString("#FFFFFF");
 
     var skybox = MeshBuilder.CreateBox(
         "skyBox",
@@ -89,7 +92,7 @@ function createScene(): Scene {
         hextankModel,
         scene,
         (meshes) => {
-            meshes[0].scaling = new Vector3(0.5, 0.5, -0.5);
+            //meshes[0].scaling = new Vector3(0.5, 0.5, -0.5);
         }
     );
     //console.log(hextank);
