@@ -3,6 +3,7 @@ import { Scene } from "@babylonjs/core/scene";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
 import { HemisphericLight } from "@babylonjs/core/Lights/hemisphericLight";
+import { DirectionalLight } from "@babylonjs/core/Lights/directionalLight";
 import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 import { Color3 } from "@babylonjs/core/Maths/math.color";
@@ -64,6 +65,18 @@ function createScene(): Scene {
     light1.diffuse = Color3.FromHexString("#FFFFFF");
     light1.specular = Color3.FromHexString("#FFFFFF");
     light1.groundColor = Color3.FromHexString("#FFFFFF");
+    light1.intensity = 2.5;
+
+    /* var light2: DirectionalLight = new DirectionalLight(
+        "light2",
+        new Vector3(0, -1, 0),
+        scene
+    );
+    light2.diffuse = Color3.FromHexString("#FFFFFF");
+    light2.specular = Color3.FromHexString("#FFFFFF");
+    //light2.intensity = 10; */
+
+    console.log(light1);
 
     var skybox = MeshBuilder.CreateBox(
         "skyBox",
