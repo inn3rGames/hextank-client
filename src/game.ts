@@ -49,7 +49,7 @@ function createScene(): Scene {
         "Camera",
         -Math.PI / 2,
         Math.PI / 2.2,
-        6,
+        15,
         new Vector3(0, 0.5, 0),
         scene
     );
@@ -59,26 +59,25 @@ function createScene(): Scene {
     camera.upperRadiusLimit = 50;
     camera.attachControl(canvas, true);
 
-    var light1: HemisphericLight = new HemisphericLight(
-        "light1",
+    var worldLight: HemisphericLight = new HemisphericLight(
+        "worldLight",
         new Vector3(0, 1, 0),
         scene
     );
-    light1.diffuse = Color3.FromHexString("#FFFFFF");
-    light1.specular = Color3.FromHexString("#FFFFFF");
-    light1.groundColor = Color3.FromHexString("#FFFFFF");
-    light1.intensity = 2.5;
+    worldLight.diffuse = Color3.FromHexString("#FFFFFF");
+    worldLight.specular = Color3.FromHexString("#FFFFFF");
+    worldLight.groundColor = Color3.FromHexString("#FFFFFF");
+    worldLight.intensity = 2.5;
 
-    var light2: DirectionalLight = new DirectionalLight(
-        "light2",
-        new Vector3(0, -1, 0),
+    var directionalLight = new DirectionalLight(
+        "directionalLight",
+        new Vector3(-0.87, -1, 0),
         scene
     );
-    light2.diffuse = Color3.FromHexString("#FFFFFF");
-    light2.specular = Color3.FromHexString("#FFFFFF");
-    light2.intensity = 3;
-
-    var shadowGenerator = new ShadowGenerator(1024, light2);
+    directionalLight.position = new Vector3(0, 10, 0);
+    directionalLight.diffuse = Color3.FromHexString("#FFFFFF");
+    directionalLight.specular = Color3.FromHexString("#FFFFFF");
+    directionalLight.intensity = 2.5;
 
     var skybox = MeshBuilder.CreateBox(
         "skyBox",
@@ -112,7 +111,6 @@ function createScene(): Scene {
     groundMaterial.baseTexture = sandTexture;
     groundMaterial.metallic = 0;
     groundMaterial.roughness = 0;
-    console.log(groundMaterial);
 
     var ground = MeshBuilder.CreateGround("ground", {
         height: 200,
@@ -129,10 +127,23 @@ function createScene(): Scene {
         scene,
         (meshes) => {
             let hextankMesh = meshes[0];
-            hextankMesh.position.x += 0 * 2;
             shadowGenerator.addShadowCaster(hextankMesh, true);
         }
     );
+
+    var torus = MeshBuilder.CreateTorus("torus");
+    torus.position.y = 5;
+    torus.position.x = 2;
+
+    var shadowGenerator = new ShadowGenerator(1024, directionalLight);
+    shadowGenerator.addShadowCaster(torus);
+    shadowGenerator.useExponentialShadowMap = true;
+    shadowGenerator.usePoissonSampling = true;
+
+    scene.registerBeforeRender(function () {
+        torus.rotation.x += 0.01;
+        torus.rotation.z += 0.02;
+    });
 
     return scene;
 }
