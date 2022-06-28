@@ -113,7 +113,7 @@ function createScene(): Scene {
     var ground = MeshBuilder.CreateGround("ground", { height: 200, width: 200, subdivisions: 0 });
     ground.material = groundMaterial;
 
-    for (let i = 0; i < 25; i++) {
+    for (let i = 0; i < 1; i++) {
         var hextank = SceneLoader.ImportMesh(
             null,
             "",
