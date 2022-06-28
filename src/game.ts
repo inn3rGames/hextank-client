@@ -10,6 +10,7 @@ import { Color3 } from "@babylonjs/core/Maths/math.color";
 import { CubeTexture } from "@babylonjs/core/Materials/Textures/cubeTexture";
 import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
 import { Texture } from "@babylonjs/core/Materials/Textures/texture";
+import { KeyboardEventTypes } from "@babylonjs/core/Events/keyboardEvents";
 /* import "@babylonjs/loaders/glTF/2.0/glTFLoader"; */
 import "@babylonjs/loaders/glTF/2.0/Extensions/KHR_draco_mesh_compression";
 
@@ -37,6 +38,8 @@ const skyboxArray = [
     skyboxNy,
     skyboxNz,
 ];
+
+import sand from "./assets/textures/sand.png";
 
 const canvas: HTMLCanvasElement = document.getElementById(
     "hextankgame"
@@ -76,7 +79,7 @@ function createScene(): Scene {
     light2.specular = Color3.FromHexString("#FFFFFF");
     //light2.intensity = 10; */
 
-    console.log(light1);
+    //console.log(light1);
 
     var skybox = MeshBuilder.CreateBox(
         "skyBox",
@@ -99,17 +102,46 @@ function createScene(): Scene {
     skyboxMaterial.specularColor = Color3.FromHexString("#000000");
     skybox.material = skyboxMaterial;
 
-    var hextank = SceneLoader.ImportMesh(
-        null,
-        "",
-        hextankModel,
-        scene,
-        (meshes) => {
-            //meshes[0].scaling = new Vector3(0.5, 0.5, -0.5);
-        }
-    );
+    var groundMaterial = new StandardMaterial("groundMaterial", scene);
+    groundMaterial.diffuseColor = Color3.FromHexString("#D18212");
+    let sandTexture = new Texture(sand, scene);
+    sandTexture.uScale = 20;
+    sandTexture.vScale = 20;
+    groundMaterial.diffuseTexture = sandTexture;
+    
+
+    var ground = MeshBuilder.CreateGround("ground", { height: 200, width: 200, subdivisions: 0 });
+    ground.material = groundMaterial;
+
+    for (let i = 0; i < 100; i++) {
+        var hextank = SceneLoader.ImportMesh(
+            null,
+            "",
+            hextankModel,
+            scene,
+            (meshes) => {
+                //meshes[0].scaling = new Vector3(0.5, 0.5, -0.5);
+                let hextankMesh = meshes[0];
+                hextankMesh.position.x += i * 2;
+                /* scene.onKeyboardObservable.add((kbInfo) => {
+                    switch (kbInfo.type) {
+                        case KeyboardEventTypes.KEYDOWN:
+                            console.log("KEY DOWN: ", kbInfo.event.key);
+                            hextankMesh.position.x += 0.01;
+                            break;
+                        case KeyboardEventTypes.KEYUP:
+                            console.log("KEY UP: ", kbInfo.event.code);
+                            break;
+                    }
+                }); */
+                // console.log(hextankMesh);
+            }
+        );
     //console.log(hextank);
 
+    }
+
+   
     return scene;
 }
 
