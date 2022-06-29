@@ -14,6 +14,8 @@ import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
 import { PBRMetallicRoughnessMaterial } from "@babylonjs/core/Materials/PBR/pbrMetallicRoughnessMaterial";
 import { Texture } from "@babylonjs/core/Materials/Textures/texture";
 import { KeyboardEventTypes } from "@babylonjs/core/Events/keyboardEvents";
+import { AdvancedDynamicTexture } from "@babylonjs/gui/2D/advancedDynamicTexture";
+import { TextBlock } from "@babylonjs/gui/2D/controls/textBlock";
 import "@babylonjs/loaders/glTF/2.0/Extensions/KHR_draco_mesh_compression";
 
 import hextankModel from "./assets/models/hextankFinalDraco.glb";
@@ -137,12 +139,29 @@ function createScene(): Scene {
 
     var shadowGenerator = new ShadowGenerator(1024, directionalLight);
     shadowGenerator.addShadowCaster(torus);
-    shadowGenerator.useExponentialShadowMap = true;
-    shadowGenerator.usePoissonSampling = true;
+    shadowGenerator.useExponentialShadowMap = false;
+    shadowGenerator.usePoissonSampling = false;
+
+    var fpsTexture = AdvancedDynamicTexture.CreateFullscreenUI("FPS");
+
+    var fpsText = new TextBlock();
+    fpsText.text = "0";
+    fpsText.color = "#FFFFFF";
+    fpsText.fontSize = 32;
+    fpsText.textHorizontalAlignment = 0;
+    fpsText.textVerticalAlignment = 0;
+    fpsText.left = 10;
+    fpsText.top = 5;
+    fpsText.outlineColor = "#000000";
+    fpsText.outlineWidth = 5;
+    fpsTexture.addControl(fpsText);
+
+    console.log(fpsText);
 
     scene.registerBeforeRender(function () {
         torus.rotation.x += 0.01;
         torus.rotation.z += 0.02;
+        fpsText.text = engine.getFps().toFixed().toString();
     });
 
     return scene;
