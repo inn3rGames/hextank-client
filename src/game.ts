@@ -53,7 +53,7 @@ var positions: { [playerId: string]: any } = {};
 function createScene(): Scene {
     var scene: Scene = new Scene(engine);
 
-    const serverAddress = "ws://localhost:2567";
+    const serverAddress = "wss://gerxml.colyseus.de";
 
     const client = new Client(serverAddress);
     client.joinOrCreate("my_room").then((room: Room) => {
