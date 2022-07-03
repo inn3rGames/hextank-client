@@ -2,11 +2,14 @@ import { Engine } from "@babylonjs/core/Engines/engine";
 import { Scene } from "@babylonjs/core/scene";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
+import { FollowCamera } from "@babylonjs/core/Cameras/followCamera";
 import { HemisphericLight } from "@babylonjs/core/Lights/hemisphericLight";
 import "@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent";
+import "@babylonjs/core/Culling/ray";
 import { ShadowGenerator } from "@babylonjs/core/Lights/Shadows/shadowGenerator";
 import { DirectionalLight } from "@babylonjs/core/Lights/directionalLight";
 import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
+import { AbstractMesh } from "@babylonjs/core/Meshes/abstractMesh";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 import { Color3 } from "@babylonjs/core/Maths/math.color";
 import { CubeTexture } from "@babylonjs/core/Materials/Textures/cubeTexture";
@@ -17,6 +20,7 @@ import { KeyboardEventTypes } from "@babylonjs/core/Events/keyboardEvents";
 import { AdvancedDynamicTexture } from "@babylonjs/gui/2D/advancedDynamicTexture";
 import { TextBlock } from "@babylonjs/gui/2D/controls/textBlock";
 import "@babylonjs/loaders/glTF/2.0/Extensions/KHR_draco_mesh_compression";
+import { Client, Room } from "colyseus.js";
 
 import hextankModel from "./assets/models/hextankFinalDraco.glb";
 
@@ -43,9 +47,90 @@ const canvas: HTMLCanvasElement = document.getElementById(
 ) as HTMLCanvasElement;
 
 const engine = new Engine(canvas, true);
+var players: { [playerId: string]: AbstractMesh } = {};
+var positions: { [playerId: string]: any } = {};
 
 function createScene(): Scene {
     var scene: Scene = new Scene(engine);
+
+    const serverAddress = "ws://localhost:2567";
+
+    const client = new Client(serverAddress);
+    client.joinOrCreate("my_room").then((room: Room) => {
+        room.state.players.onAdd = async (player: any, sessionId: string) => {
+            const isCurrentPlayer = sessionId === room.sessionId;
+
+            var hextank = await SceneLoader.ImportMeshAsync(
+                null,
+                "",
+                hextankModel,
+                scene
+            );
+
+            let hextankMesh = hextank.meshes[0];
+            shadowGenerator.addShadowCaster(hextankMesh, true);
+
+            hextankMesh.position.x = player.x;
+            hextankMesh.position.z = player.z;
+
+            players[sessionId] = hextankMesh;
+            //camera.lockedTarget = hextankMesh;
+
+            positions[sessionId] = {
+                x: hextankMesh.position.x,
+                z: hextankMesh.position.z,
+            };
+
+            player.onChange = () => {
+                console.log("it works");
+                positions[sessionId] = {
+                    x: player.x,
+                    z: player.z,
+                };
+                console.log(positions);
+            };
+        };
+
+        room.state.players.onRemove = (player: any, playerId: string) => {
+            players[playerId].dispose();
+            delete players[playerId];
+            delete positions[playerId];
+        };
+
+        room.onLeave((code) => {
+            //console.log(code);
+        });
+
+        scene.onPointerDown = (event, pointer) => {
+            console.log(pointer.pickedPoint?.x, pointer.pickedPoint?.z);
+
+            positions[room.sessionId] = {
+                x: pointer.pickedPoint?.x,
+                z: pointer.pickedPoint?.z,
+            };
+
+            room.send("updatePosition", {
+                x: pointer.pickedPoint?.x,
+                z: pointer.pickedPoint?.z,
+            });
+        };
+
+        scene.registerBeforeRender(() => {
+            torus.rotation.x += 0.01;
+            torus.rotation.z += 0.02;
+            fpsText.text = engine.getFps().toFixed().toString();
+
+
+            
+                for (let sessionId in players) {
+                    const entity = players[sessionId];
+                    const targetPosition = positions[sessionId];
+                    entity.position.x = targetPosition.x;
+                    entity.position.z = targetPosition.z;
+                }
+            
+        });
+    });
 
     var camera: ArcRotateCamera = new ArcRotateCamera(
         "Camera",
@@ -61,6 +146,14 @@ function createScene(): Scene {
     camera.upperRadiusLimit = 50;
     camera.attachControl(canvas, true);
 
+    /* var  camera = new FollowCamera("FollowCamera", new Vector3(-6, 0, 0), scene);
+    camera.heightOffset = 8;
+    camera.radius = 1;
+    camera.rotationOffset = 0;
+    camera.cameraAcceleration = 0.005;
+    camera.maxCameraSpeed = 10;
+    camera.attachControl(true);
+ */
     var worldLight: HemisphericLight = new HemisphericLight(
         "worldLight",
         new Vector3(0, 1, 0),
@@ -122,17 +215,6 @@ function createScene(): Scene {
     ground.material = groundMaterial;
     ground.receiveShadows = true;
 
-    var hextank = SceneLoader.ImportMesh(
-        null,
-        "",
-        hextankModel,
-        scene,
-        (meshes) => {
-            let hextankMesh = meshes[0];
-            shadowGenerator.addShadowCaster(hextankMesh, true);
-        }
-    );
-
     var torus = MeshBuilder.CreateTorus("torus");
     torus.position.y = 5;
     torus.position.x = 2;
@@ -155,14 +237,6 @@ function createScene(): Scene {
     fpsText.outlineColor = "#000000";
     fpsText.outlineWidth = 5;
     fpsTexture.addControl(fpsText);
-
-    console.log(fpsText);
-
-    scene.registerBeforeRender(function () {
-        torus.rotation.x += 0.01;
-        torus.rotation.z += 0.02;
-        fpsText.text = engine.getFps().toFixed().toString();
-    });
 
     return scene;
 }

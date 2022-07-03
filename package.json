@@ -21,7 +21,8 @@
   "dependencies": {
     "@babylonjs/core": "^5.11.0",
     "@babylonjs/gui": "^5.12.1",
-    "@babylonjs/loaders": "^5.11.0"
+    "@babylonjs/loaders": "^5.11.0",
+    "colyseus.js": "^0.14.13"
   },
   "devDependencies": {
     "html-webpack-plugin": "^5.5.0",
