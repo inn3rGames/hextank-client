@@ -21,6 +21,7 @@ import { TextBlock } from "@babylonjs/gui/2D/controls/textBlock";
 import "@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent";
 import "@babylonjs/core/Culling/ray";
 import "@babylonjs/loaders/glTF/2.0/Extensions/KHR_draco_mesh_compression";
+import "@babylonjs/loaders/glTF/glTFFileLoader";
 
 import { Client, Room } from "colyseus.js";
 
