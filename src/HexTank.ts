@@ -2,7 +2,7 @@ import { Scene } from "@babylonjs/core/scene";
 import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
 import { AbstractMesh } from "@babylonjs/core/Meshes/abstractMesh";
 import { ShadowGenerator } from "@babylonjs/core/Lights/Shadows/shadowGenerator";
-import HexTankModel from "./assets/models/HexTankFinalDraco.glb";
+import HexTankModel from "./assets/models/hextankFinalDraco.glb";
 
 export default class HexTank {
     x: number;
