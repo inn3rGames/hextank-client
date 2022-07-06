@@ -5,18 +5,24 @@ import { ShadowGenerator } from "@babylonjs/core/Lights/Shadows/shadowGenerator"
 import HexTankModel from "./assets/models/HexTankFinalDraco.glb";
 
 export default class HexTank {
+    x: number;
+    z: number;
     private _currentScene: Scene;
     private _currentShadowGenerator: ShadowGenerator;
     mesh!: AbstractMesh;
 
-    constructor(scene: Scene, shadowGenerator: ShadowGenerator) {
+    constructor(x: number, z: number, scene: Scene, shadowGenerator: ShadowGenerator) {
+        this.x = x;
+        this.z = z;
         this._currentScene = scene;
         this._currentShadowGenerator = shadowGenerator;
     }
 
     async loadModel() {
-        let result  = await SceneLoader.ImportMeshAsync(null, "", HexTankModel, this._currentScene);
+        let result = await SceneLoader.ImportMeshAsync(null, "", HexTankModel, this._currentScene);
         this.mesh = result.meshes[0];
+        this.mesh.position.x = this.x;
+        this.mesh.position.z = this.z;
         this._currentShadowGenerator.addShadowCaster(this.mesh, true);
     }
 }

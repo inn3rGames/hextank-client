@@ -207,17 +207,14 @@ export default class World {
 
         client.joinOrCreate("my_room").then((room: Room) => {
             room.state._players.onAdd = async (player: any, sessionId: string) => {
-                var currentHexTank = new HexTank(this._scene, this._shadowGenerator);
+                var currentHexTank = new HexTank(player.x, player.z, this._scene, this._shadowGenerator);
                 await currentHexTank.loadModel();
-
-                currentHexTank.mesh.position.x = player.x;
-                currentHexTank.mesh.position.z = player.z;
 
                 this._players[sessionId] = currentHexTank.mesh;
 
                 this._positions[sessionId] = {
-                    x: currentHexTank.mesh.position.x,
-                    z: currentHexTank.mesh.position.z,
+                    x: currentHexTank.x,
+                    z: currentHexTank.z,
                 };
 
                 player.onChange = () => {
