@@ -68,11 +68,13 @@ export default class World {
 
     private _fpsText!: TextBlock;
 
-    private _players!: { [playerId: string]: AbstractMesh };
-    private _positions!: { [playerId: string]: any };
+    private _hexTanks!: { [tankId: string]: AbstractMesh };
+    private _positions!: { [tankId: string]: { x: number; z: number } };
 
     constructor() {
-        this._canvas = document.getElementById("hextankgame") as HTMLCanvasElement;
+        this._canvas = document.getElementById(
+            "hextankgame"
+        ) as HTMLCanvasElement;
 
         this._engine = new Engine(this._canvas, true);
 
@@ -167,7 +169,10 @@ export default class World {
         this._torus.position.y = 5;
         this._torus.position.x = 2;
 
-        this._shadowGenerator = new ShadowGenerator(1024, this._directionalLight);
+        this._shadowGenerator = new ShadowGenerator(
+            1024,
+            this._directionalLight
+        );
         this._shadowGenerator.useExponentialShadowMap = false;
         this._shadowGenerator.usePoissonSampling = false;
         this._shadowGenerator.addShadowCaster(this._torus);
@@ -185,7 +190,7 @@ export default class World {
         this._fpsText.outlineWidth = 5;
         this._fpsTexture.addControl(this._fpsText);
 
-        this._players = {};
+        this._hexTanks = {};
         this._positions = {};
 
         window.addEventListener("resize", () => {
@@ -202,34 +207,44 @@ export default class World {
     }
 
     connectWorldToServer(): void {
-        const serverAddress = "wss://gerxml.colyseus.de";
+        let serverAddress = "wss://gerxml.colyseus.de";
+        serverAddress = "ws://localhost:2567";
 
         const client = new Client(serverAddress);
 
-        client.joinOrCreate("my_room").then((room: Room) => {
-            room.state._players.onAdd = async (player: any, sessionId: string) => {
-                var currentHexTank = new HexTank(player.x, player.z, this._scene, this._shadowGenerator);
+        client.joinOrCreate("world_room").then((room: Room) => {
+            room.state.hexTanks.onAdd = async (
+                tank: any,
+                sessionId: string
+            ) => {
+                var currentHexTank = new HexTank(
+                    tank.x,
+                    tank.z,
+                    sessionId,
+                    this._scene,
+                    this._shadowGenerator
+                );
                 await currentHexTank.loadModel();
 
-                this._players[sessionId] = currentHexTank.mesh;
+                this._hexTanks[sessionId] = currentHexTank.mesh;
 
                 this._positions[sessionId] = {
                     x: currentHexTank.x,
                     z: currentHexTank.z,
                 };
 
-                player.onChange = () => {
+                tank.onChange = () => {
                     this._positions[sessionId] = {
-                        x: player.x,
-                        z: player.z,
+                        x: tank.x,
+                        z: tank.z,
                     };
                 };
             };
 
-            room.state._players.onRemove = (player: any, playerId: string) => {
-                this._players[playerId].dispose();
-                delete this._players[playerId];
-                delete this._positions[playerId];
+            room.state.hexTanks.onRemove = (tank: any, tankId: string) => {
+                this._hexTanks[tankId].dispose();
+                delete this._hexTanks[tankId];
+                delete this._positions[tankId];
             };
 
             room.onLeave((code) => {
@@ -238,13 +253,13 @@ export default class World {
 
             this._scene.onPointerDown = (event, pointer) => {
                 this._positions[room.sessionId] = {
-                    x: pointer.pickedPoint?.x,
-                    z: pointer.pickedPoint?.z,
+                    x: pointer.pickedPoint!.x,
+                    z: pointer.pickedPoint!.z,
                 };
 
-                room.send("updatePosition", {
-                    x: pointer.pickedPoint?.x,
-                    z: pointer.pickedPoint?.z,
+                room.send("moveHexTank", {
+                    x: pointer.pickedPoint!.x,
+                    z: pointer.pickedPoint!.z,
                 });
             };
         });
@@ -260,8 +275,8 @@ export default class World {
             this._torus.rotation.z += 0.02;
             this._fpsText.text = this._engine.getFps().toFixed().toString();
 
-            for (let sessionId in this._players) {
-                const entity = this._players[sessionId];
+            for (let sessionId in this._hexTanks) {
+                const entity = this._hexTanks[sessionId];
                 const targetPosition = this._positions[sessionId];
                 entity.position.x = targetPosition.x;
                 entity.position.z = targetPosition.z;
