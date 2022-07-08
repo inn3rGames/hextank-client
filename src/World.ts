@@ -212,7 +212,7 @@ export default class World {
 
         const client = new Client(serverAddress);
 
-        client.joinOrCreate("world_room").then((room: Room) => {
+        client.join("world_room").then((room: Room) => {
             room.state.hexTanks.onAdd = async (
                 tank: any,
                 sessionId: string
