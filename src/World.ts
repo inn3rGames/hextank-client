@@ -208,7 +208,14 @@ export default class World {
 
     connectWorldToServer(): void {
         let serverAddress = "wss://gerxml.colyseus.de";
-        //serverAddress = "ws://localhost:2567";
+
+        if (window.location.protocol === "http:") {
+            serverAddress = "ws://localhost:2567";
+            console.log("%c Development mode.", "background-color: #FFFF00")
+        }
+        else {
+            console.log("%c Production mode.", "background-color: #00FF00");
+        }
 
         const client = new Client(serverAddress);
 
