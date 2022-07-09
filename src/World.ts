@@ -45,19 +45,14 @@ export default class World {
     private _camera!: ArcRotateCamera;
 
     private _wordlLight!: HemisphericLight;
-
     private _directionalLight!: DirectionalLight;
 
     private _skyboxArray!: Array<string>;
-
     private _skybox!: Mesh;
-
     private _skyboxMaterial!: StandardMaterial;
 
     private _groundMaterial!: PBRMetallicRoughnessMaterial;
-
     private _sandTexture!: Texture;
-
     private _ground!: Mesh;
 
     private _torus!: Mesh;
@@ -65,11 +60,12 @@ export default class World {
     private _shadowGenerator!: ShadowGenerator;
 
     private _fpsTexture!: AdvancedDynamicTexture;
-
     private _fpsText!: TextBlock;
 
     private _hexTanks!: { [tankId: string]: AbstractMesh };
-    private _positions!: { [tankId: string]: { x: number; z: number } };
+
+    private _client!: Client;
+    private _room!: Room;
 
     constructor() {
         this._canvas = document.getElementById(
@@ -81,7 +77,7 @@ export default class World {
         this._scene = new Scene(this._engine);
     }
 
-    createWorld() {
+    initWorld() {
         this._camera = new ArcRotateCamera(
             "Camera",
             -Math.PI / 2,
@@ -191,7 +187,6 @@ export default class World {
         this._fpsTexture.addControl(this._fpsText);
 
         this._hexTanks = {};
-        this._positions = {};
 
         window.addEventListener("resize", () => {
             this._engine.resize();
@@ -206,70 +201,70 @@ export default class World {
         });
     }
 
-    connectWorldToServer(): void {
+    async connect() {
         let serverAddress = "wss://gerxml.colyseus.de";
-
         if (window.location.protocol === "http:") {
             serverAddress = "ws://localhost:2567";
-            console.log("%c Development mode.", "background-color: #FFFF00")
-        }
-        else {
+            console.log("%c Development mode.", "background-color: #FFFF00");
+        } else {
             console.log("%c Production mode.", "background-color: #00FF00");
         }
 
-        const client = new Client(serverAddress);
+        this._client = new Client(serverAddress);
+        try {
+            this._room = await this._client.join("world_room");
+        } catch (e) {
+            console.log(e);
+        }
+    }
 
-        client.join("world_room").then((room: Room) => {
-            room.state.hexTanks.onAdd = async (
-                tank: any,
-                sessionId: string
-            ) => {
-                var currentHexTank = new HexTank(
-                    tank.x,
-                    tank.z,
-                    sessionId,
-                    this._scene,
-                    this._shadowGenerator
-                );
-                await currentHexTank.loadModel();
+    async createWorld() {
+        await this.connect();
 
-                this._hexTanks[sessionId] = currentHexTank.mesh;
+        console.log(this._client);
 
-                this._positions[sessionId] = {
-                    x: currentHexTank.x,
-                    z: currentHexTank.z,
-                };
+        this._room.state.hexTanks.onAdd = async (serverHexTank: any) => {
+            var clientHexTank = new HexTank(
+                serverHexTank.x,
+                serverHexTank.z,
+                serverHexTank.id,
+                this._scene,
+                this._shadowGenerator
+            );
+            await clientHexTank.loadModel();
 
-                tank.onChange = () => {
-                    this._positions[sessionId] = {
-                        x: tank.x,
-                        z: tank.z,
-                    };
-                };
-            };
+            this._hexTanks[serverHexTank.id] = clientHexTank.mesh;
 
-            room.state.hexTanks.onRemove = (tank: any, tankId: string) => {
-                this._hexTanks[tankId].dispose();
-                delete this._hexTanks[tankId];
-                delete this._positions[tankId];
-            };
-
-            room.onLeave((code) => {
-                //console.log(code);
+            console.log(`HexTank ${serverHexTank.id} joined at: `, {
+                x: serverHexTank.x,
+                z: serverHexTank.z,
             });
 
-            this._scene.onPointerDown = (event, pointer) => {
-                this._positions[room.sessionId] = {
-                    x: pointer.pickedPoint!.x,
-                    z: pointer.pickedPoint!.z,
-                };
-
-                room.send("moveHexTank", {
-                    x: pointer.pickedPoint!.x,
-                    z: pointer.pickedPoint!.z,
+            serverHexTank.onChange = () => {
+                console.log(`HexTank ${serverHexTank.id} moved to: `, {
+                    x: serverHexTank.x,
+                    z: serverHexTank.z,
                 });
-            };
+            }
+        };
+
+        this._room.state.hexTanks.onRemove = (serverHexTank: any) => {
+            console.log(`HexTank ${serverHexTank.id} left!`);
+            this._hexTanks[serverHexTank.id].dispose();
+            delete this._hexTanks[serverHexTank.id];
+        };
+
+        this._room.onLeave((code) => {
+            //console.log(code);
         });
+
+        this._scene.onPointerDown = (event, pointer) => {
+            this._room.send("moveHexTank", {
+                x: pointer.pickedPoint!.x,
+                z: pointer.pickedPoint!.z,
+            });
+        };
+
     }
 
     updateWorld(): void {
@@ -282,11 +277,11 @@ export default class World {
             this._torus.rotation.z += 0.02;
             this._fpsText.text = this._engine.getFps().toFixed().toString();
 
-            for (let sessionId in this._hexTanks) {
-                const entity = this._hexTanks[sessionId];
-                const targetPosition = this._positions[sessionId];
-                entity.position.x = targetPosition.x;
-                entity.position.z = targetPosition.z;
+            for (let index in this._hexTanks) {
+                this._hexTanks[index].position.x =
+                    this._room.state.hexTanks[index].x;
+                this._hexTanks[index].position.z =
+                    this._room.state.hexTanks[index].z;
             }
         });
     }
