@@ -2,7 +2,7 @@ import { Engine } from "@babylonjs/core/Engines/engine";
 import { Scene } from "@babylonjs/core/scene";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
-import { FollowCamera } from "@babylonjs/core/Cameras/followCamera";
+import { UniversalCamera } from "@babylonjs/core/Cameras/universalCamera";
 import { HemisphericLight } from "@babylonjs/core/Lights/hemisphericLight";
 import { ShadowGenerator } from "@babylonjs/core/Lights/Shadows/shadowGenerator";
 import { DirectionalLight } from "@babylonjs/core/Lights/directionalLight";
@@ -42,7 +42,7 @@ export default class World {
 
     private _scene: Scene;
 
-    private _camera!: ArcRotateCamera;
+    private _camera!: UniversalCamera;
 
     private _wordlLight!: HemisphericLight;
     private _directionalLight!: DirectionalLight;
@@ -78,19 +78,24 @@ export default class World {
     }
 
     initWorld() {
-        this._camera = new ArcRotateCamera(
+        /* this._camera = new ArcRotateCamera(
             "Camera",
             -Math.PI / 2,
             Math.PI / 2.2,
             15,
             new Vector3(0, 0.5, 0),
             this._scene
+        ); */
+        this._camera = new UniversalCamera(
+            "Camera",
+            new Vector3(0, 2, 0),
+            this._scene
         );
-        this._camera.lowerBetaLimit = 0.5;
+        /* this._camera.lowerBetaLimit = 0.5;
         this._camera.upperBetaLimit = (Math.PI / 2) * 0.9;
         this._camera.lowerRadiusLimit = 3;
-        this._camera.upperRadiusLimit = 50;
-        this._camera.attachControl(this._canvas, true);
+        this._camera.upperRadiusLimit = 50; */
+        //this._camera.attachControl(this._canvas, true);
 
         this._wordlLight = new HemisphericLight(
             "wordlLight",
@@ -245,7 +250,7 @@ export default class World {
                     x: serverHexTank.x,
                     z: serverHexTank.z,
                 });
-            }
+            };
         };
 
         this._room.state.hexTanks.onRemove = (serverHexTank: any) => {
@@ -259,12 +264,44 @@ export default class World {
         });
 
         this._scene.onPointerDown = (event, pointer) => {
-            this._room.send("moveHexTank", {
+            /* this._room.send("moveHexTank", {
                 x: pointer.pickedPoint!.x,
                 z: pointer.pickedPoint!.z,
-            });
+            }); */
         };
 
+        this._scene.onKeyboardObservable.add((keyboardInfo) => {
+            if (keyboardInfo.type === KeyboardEventTypes.KEYDOWN) {
+                if (
+                    keyboardInfo.event.key === "ArrowUp" ||
+                    keyboardInfo.event.key === "w" ||
+                    keyboardInfo.event.key === "W"
+                ) {
+                    this._room.send("up");
+                }
+                if (
+                    keyboardInfo.event.key === "ArrowDown" ||
+                    keyboardInfo.event.key === "s" ||
+                    keyboardInfo.event.key === "S"
+                ) {
+                    this._room.send("down");
+                }
+                if (
+                    keyboardInfo.event.key === "ArrowLeft" ||
+                    keyboardInfo.event.key === "a" ||
+                    keyboardInfo.event.key === "A"
+                ) {
+                    this._room.send("left");
+                }
+                if (
+                    keyboardInfo.event.key === "ArrowRight" ||
+                    keyboardInfo.event.key === "d" ||
+                    keyboardInfo.event.key === "D"
+                ) {
+                    this._room.send("right");
+                }
+            }
+        });
     }
 
     updateWorld(): void {
@@ -282,6 +319,19 @@ export default class World {
                     this._room.state.hexTanks[index].x;
                 this._hexTanks[index].position.z =
                     this._room.state.hexTanks[index].z;
+                this._hexTanks[index].rotation.y =
+                    this._room.state.hexTanks[index].angle;
+
+                if (this._room.sessionId === index) {
+                    //this._camera.setTarget(this._hexTanks[index].position);
+                    this._camera.position.x =
+                        this._hexTanks[index].position.x;
+                    this._camera.position.z =
+                        this._hexTanks[index].position.z - 7;
+                    this._camera.position.y =
+                        this._hexTanks[index].position.y + 2;
+                    //this._camera.rotation.y += 0.01; 
+                }
             }
         });
     }
