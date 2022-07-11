@@ -2,7 +2,7 @@ import { Scene } from "@babylonjs/core/scene";
 import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
 import { AbstractMesh } from "@babylonjs/core/Meshes/abstractMesh";
 import { ShadowGenerator } from "@babylonjs/core/Lights/Shadows/shadowGenerator";
-import HexTankModel from "./assets/models/HexTankFinalDraco.glb";
+import HexTankModel from "./assets/models/HexTankFinalTest3.glb";
 
 export default class HexTank {
     x: number;
@@ -38,6 +38,8 @@ export default class HexTank {
         this.mesh.position.z = this.z;
         this.mesh.rotationQuaternion!.toEulerAnglesToRef(this.mesh.rotation);
         this.mesh.rotationQuaternion = null;
+        //console.log(this.mesh.rotation.setAll(0));
+        this.mesh.rotation.setAll(0);
         this._currentShadowGenerator.addShadowCaster(this.mesh, true);
     }
 }

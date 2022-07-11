@@ -2,11 +2,9 @@ import { Engine } from "@babylonjs/core/Engines/engine";
 import { Scene } from "@babylonjs/core/scene";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
-import { UniversalCamera } from "@babylonjs/core/Cameras/universalCamera";
 import { HemisphericLight } from "@babylonjs/core/Lights/hemisphericLight";
 import { ShadowGenerator } from "@babylonjs/core/Lights/Shadows/shadowGenerator";
 import { DirectionalLight } from "@babylonjs/core/Lights/directionalLight";
-import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
 import { Mesh } from "@babylonjs/core/Meshes/mesh";
 import { AbstractMesh } from "@babylonjs/core/Meshes/abstractMesh";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
@@ -21,7 +19,6 @@ import { TextBlock } from "@babylonjs/gui/2D/controls/textBlock";
 import "@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent";
 import "@babylonjs/core/Culling/ray";
 import "@babylonjs/loaders/glTF/2.0/Extensions/KHR_draco_mesh_compression";
-//import "@babylonjs/loaders/glTF/glTFFileLoader";
 
 import { Client, Room } from "colyseus.js";
 
@@ -42,7 +39,7 @@ export default class World {
 
     private _scene: Scene;
 
-    private _camera!: UniversalCamera;
+    private _camera!: ArcRotateCamera;
 
     private _wordlLight!: HemisphericLight;
     private _directionalLight!: DirectionalLight;
@@ -78,24 +75,14 @@ export default class World {
     }
 
     initWorld() {
-        /* this._camera = new ArcRotateCamera(
+        this._camera = new ArcRotateCamera(
             "Camera",
-            -Math.PI / 2,
-            Math.PI / 2.2,
-            15,
-            new Vector3(0, 0.5, 0),
-            this._scene
-        ); */
-        this._camera = new UniversalCamera(
-            "Camera",
+            0,
+            Math.PI / 2 - 5 * (Math.PI / 180),
+            7,
             new Vector3(0, 2, 0),
             this._scene
         );
-        /* this._camera.lowerBetaLimit = 0.5;
-        this._camera.upperBetaLimit = (Math.PI / 2) * 0.9;
-        this._camera.lowerRadiusLimit = 3;
-        this._camera.upperRadiusLimit = 50; */
-        //this._camera.attachControl(this._canvas, true);
 
         this._wordlLight = new HemisphericLight(
             "wordlLight",
@@ -109,10 +96,10 @@ export default class World {
 
         this._directionalLight = new DirectionalLight(
             "directionalLight",
-            new Vector3(-0.87, -1, 0),
+            new Vector3(1, -1, 0),
             this._scene
         );
-        this._directionalLight.position = new Vector3(0, 10, 0);
+        this._directionalLight.position = new Vector3(0, 100, 0);
         this._directionalLight.diffuse = Color3.FromHexString("#FFFFFF");
         this._directionalLight.specular = Color3.FromHexString("#FFFFFF");
         this._directionalLight.intensity = 2.5;
@@ -168,13 +155,13 @@ export default class World {
 
         this._torus = MeshBuilder.CreateTorus("torus");
         this._torus.position.y = 5;
-        this._torus.position.x = 2;
+        this._torus.position.x = 0;
 
         this._shadowGenerator = new ShadowGenerator(
             1024,
             this._directionalLight
         );
-        this._shadowGenerator.useExponentialShadowMap = false;
+        this._shadowGenerator.useExponentialShadowMap = true;
         this._shadowGenerator.usePoissonSampling = false;
         this._shadowGenerator.addShadowCaster(this._torus);
 
@@ -271,6 +258,7 @@ export default class World {
         };
 
         this._scene.onKeyboardObservable.add((keyboardInfo) => {
+            console.log(keyboardInfo.event.key);
             if (keyboardInfo.type === KeyboardEventTypes.KEYDOWN) {
                 if (
                     keyboardInfo.event.key === "ArrowUp" ||
@@ -323,14 +311,9 @@ export default class World {
                     this._room.state.hexTanks[index].angle;
 
                 if (this._room.sessionId === index) {
-                    //this._camera.setTarget(this._hexTanks[index].position);
-                    this._camera.position.x =
-                        this._hexTanks[index].position.x;
-                    this._camera.position.z =
-                        this._hexTanks[index].position.z - 7;
-                    this._camera.position.y =
-                        this._hexTanks[index].position.y + 2;
-                    //this._camera.rotation.y += 0.01; 
+                    this._camera.alpha = -this._hexTanks[index].rotation.y;
+                    this._camera.target.x = this._hexTanks[index].position.x;
+                    this._camera.target.z = this._hexTanks[index].position.z;
                 }
             }
         });
