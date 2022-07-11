@@ -38,7 +38,6 @@ export default class HexTank {
         this.mesh.position.z = this.z;
         this.mesh.rotationQuaternion!.toEulerAnglesToRef(this.mesh.rotation);
         this.mesh.rotationQuaternion = null;
-        //console.log(this.mesh.rotation.setAll(0));
         this.mesh.rotation.setAll(0);
         this._currentShadowGenerator.addShadowCaster(this.mesh, true);
     }
