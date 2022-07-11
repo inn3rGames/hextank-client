@@ -64,6 +64,11 @@ export default class World {
     private _client!: Client;
     private _room!: Room;
 
+    private _up: Boolean = false;
+    private _down: Boolean = false;
+    private _left: Boolean = false;
+    private _right: Boolean = false;
+
     constructor() {
         this._canvas = document.getElementById(
             "hextankgame"
@@ -258,38 +263,99 @@ export default class World {
         };
 
         this._scene.onKeyboardObservable.add((keyboardInfo) => {
-            console.log(keyboardInfo.event.key);
             if (keyboardInfo.type === KeyboardEventTypes.KEYDOWN) {
                 if (
                     keyboardInfo.event.key === "ArrowUp" ||
                     keyboardInfo.event.key === "w" ||
                     keyboardInfo.event.key === "W"
                 ) {
-                    this._room.send("up");
+                    this._up = true;
                 }
                 if (
                     keyboardInfo.event.key === "ArrowDown" ||
                     keyboardInfo.event.key === "s" ||
                     keyboardInfo.event.key === "S"
                 ) {
-                    this._room.send("down");
+                    this._down = true;
                 }
                 if (
                     keyboardInfo.event.key === "ArrowLeft" ||
                     keyboardInfo.event.key === "a" ||
                     keyboardInfo.event.key === "A"
                 ) {
-                    this._room.send("left");
+                    this._left = true;
                 }
                 if (
                     keyboardInfo.event.key === "ArrowRight" ||
                     keyboardInfo.event.key === "d" ||
                     keyboardInfo.event.key === "D"
                 ) {
-                    this._room.send("right");
+                    this._right = true;
+                }
+            }
+            if (keyboardInfo.type === KeyboardEventTypes.KEYUP) {
+                if (
+                    keyboardInfo.event.key === "ArrowUp" ||
+                    keyboardInfo.event.key === "w" ||
+                    keyboardInfo.event.key === "W"
+                ) {
+                    this._up = false;
+                }
+                if (
+                    keyboardInfo.event.key === "ArrowDown" ||
+                    keyboardInfo.event.key === "s" ||
+                    keyboardInfo.event.key === "S"
+                ) {
+                    this._down = false;
+                }
+                if (
+                    keyboardInfo.event.key === "ArrowLeft" ||
+                    keyboardInfo.event.key === "a" ||
+                    keyboardInfo.event.key === "A"
+                ) {
+                    this._left = false;
+                }
+                if (
+                    keyboardInfo.event.key === "ArrowRight" ||
+                    keyboardInfo.event.key === "d" ||
+                    keyboardInfo.event.key === "D"
+                ) {
+                    this._right = false;
                 }
             }
         });
+    }
+
+    private _monitorKeys() {
+        if (this._up === true) {
+            this._room.send("up");
+        }
+        if (this._down === true) {
+            this._room.send("down");
+        }
+        if (this._left === true) {
+            this._room.send("left");
+        }
+        if (this._right === true) {
+            this._room.send("right");
+        }
+    }
+
+    private _updateHexTanks() {
+        for (let index in this._hexTanks) {
+            this._hexTanks[index].position.x =
+                this._room.state.hexTanks[index].x;
+            this._hexTanks[index].position.z =
+                this._room.state.hexTanks[index].z;
+            this._hexTanks[index].rotation.y =
+                this._room.state.hexTanks[index].angle;
+
+            if (this._room.sessionId === index) {
+                this._camera.alpha = -this._hexTanks[index].rotation.y;
+                this._camera.target.x = this._hexTanks[index].position.x;
+                this._camera.target.z = this._hexTanks[index].position.z;
+            }
+        }
     }
 
     updateWorld(): void {
@@ -302,20 +368,8 @@ export default class World {
             this._torus.rotation.z += 0.02;
             this._fpsText.text = this._engine.getFps().toFixed().toString();
 
-            for (let index in this._hexTanks) {
-                this._hexTanks[index].position.x =
-                    this._room.state.hexTanks[index].x;
-                this._hexTanks[index].position.z =
-                    this._room.state.hexTanks[index].z;
-                this._hexTanks[index].rotation.y =
-                    this._room.state.hexTanks[index].angle;
-
-                if (this._room.sessionId === index) {
-                    this._camera.alpha = -this._hexTanks[index].rotation.y;
-                    this._camera.target.x = this._hexTanks[index].position.x;
-                    this._camera.target.z = this._hexTanks[index].position.z;
-                }
-            }
+            this._monitorKeys();
+            this._updateHexTanks();
         });
     }
 }
