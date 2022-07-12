@@ -16,6 +16,7 @@ import { Texture } from "@babylonjs/core/Materials/Textures/texture";
 import { KeyboardEventTypes } from "@babylonjs/core/Events/keyboardEvents";
 import { AdvancedDynamicTexture } from "@babylonjs/gui/2D/advancedDynamicTexture";
 import { TextBlock } from "@babylonjs/gui/2D/controls/textBlock";
+import { AxesViewer } from "@babylonjs/core/Debug/axesViewer";
 import "@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent";
 import "@babylonjs/core/Culling/ray";
 import "@babylonjs/loaders/glTF/2.0/Extensions/KHR_draco_mesh_compression";
@@ -68,6 +69,10 @@ export default class World {
     private _down: Boolean = false;
     private _left: Boolean = false;
     private _right: Boolean = false;
+
+    private _linearInterpolationFrames: number = 0;
+    private _maxLinearInterpolationFrames: number = 10;
+    private _linearInperpolationPercent: number = 0;
 
     constructor() {
         this._canvas = document.getElementById(
@@ -196,6 +201,8 @@ export default class World {
         this._canvas.addEventListener("touchmove", (e) => {
             e.preventDefault();
         });
+
+        //const localAxes = new AxesViewer(this._scene, 1);
     }
 
     async connect() {
@@ -341,19 +348,67 @@ export default class World {
         }
     }
 
+    private _linearInterpolation(
+        start: number,
+        end: number,
+        percent: number
+    ): number {
+        return start + (end - start) * percent;
+    }
+
+    private _updateLinearInterpolation(): number {
+        if (
+            this._linearInterpolationFrames < this._maxLinearInterpolationFrames
+        ) {
+            this._linearInperpolationPercent =
+                this._linearInterpolationFrames /
+                this._maxLinearInterpolationFrames;
+            this._linearInterpolationFrames += 1;
+        } else {
+            this._linearInterpolationFrames = 0;
+            this._linearInperpolationPercent = 0;
+        }
+        return this._linearInperpolationPercent;
+    }
+
     private _updateHexTanks() {
+        //let percent = this._updateLinearInterpolation();
+
+    
         for (let index in this._hexTanks) {
-            this._hexTanks[index].position.x =
-                this._room.state.hexTanks[index].x;
-            this._hexTanks[index].position.z =
-                this._room.state.hexTanks[index].z;
-            this._hexTanks[index].rotation.y =
-                this._room.state.hexTanks[index].angle;
+            let clientHexTank = this._hexTanks[index];
+            let serverHexTank = this._room.state.hexTanks[index];
+
+            /* console.log(
+                this._linearInterpolation(
+                    clientHexTank.position.x,
+                    serverHexTank.x,
+                    0.2
+                )
+            ); */
+
+            clientHexTank.position.x = this._linearInterpolation(
+                clientHexTank.position.x,
+                serverHexTank.x,
+                0.2
+            );
+            //console.log(clientHexTank.position.x, serverHexTank.x);
+
+            clientHexTank.position.z = this._linearInterpolation(
+                clientHexTank.position.z,
+                serverHexTank.z,
+                0.2
+            );
+            clientHexTank.rotation.y = this._linearInterpolation(
+                clientHexTank.rotation.y,
+                serverHexTank.angle,
+                0.2
+            );
 
             if (this._room.sessionId === index) {
-                this._camera.alpha = -this._hexTanks[index].rotation.y;
-                this._camera.target.x = this._hexTanks[index].position.x;
-                this._camera.target.z = this._hexTanks[index].position.z;
+                this._camera.alpha = -clientHexTank.rotation.y;
+                this._camera.target.x = clientHexTank.position.x;
+                this._camera.target.z = clientHexTank.position.z;
             }
         }
     }
