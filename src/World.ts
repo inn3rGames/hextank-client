@@ -361,10 +361,40 @@ export default class World {
         percent: number
     ): number {
         let difference = Math.round(Math.abs(end - start) * 1000) / 1000;
+        
         if (difference === 0) {
             return end;
         } else {
             return start + (end - start) * percent;
+        }
+    }
+
+    private _shortestAngle(currentAngle: number, targetAngle: number) {
+        let convertRadToDegrees = 180 / Math.PI;
+        let converDegreesToRad = Math.PI / 180;
+
+        let currentAngleDegrees = currentAngle * convertRadToDegrees;
+        let targetAngleDegrees = targetAngle * convertRadToDegrees;
+
+        let shortestAngleDistanceDegrees =
+            ((targetAngleDegrees - currentAngleDegrees + 180) % 360) - 180;
+
+        let shortestAngleRadDistance =
+            shortestAngleDistanceDegrees * converDegreesToRad;
+
+        let difference = Math.round(shortestAngleDistanceDegrees * 1000) / 1000;
+
+        console.log(
+            currentAngleDegrees,
+            targetAngleDegrees,
+            shortestAngleDistanceDegrees,
+            difference
+        );
+
+        if (difference === 0) {
+            return targetAngle;
+        } else {
+            return currentAngle + shortestAngleRadDistance;
         }
     }
 
@@ -384,11 +414,17 @@ export default class World {
                 serverHexTank.z,
                 this._linearInperpolationPercent
             );
-            clientHexTank.rotation.y = this._linearInterpolation(
-                clientHexTank.rotation.y,
-                serverHexTank.angle,
-                this._linearInperpolationPercent
-            );
+
+            clientHexTank.rotation.y =
+                this._linearInterpolation(
+                    clientHexTank.rotation.y,
+                    this._shortestAngle(
+                        clientHexTank.rotation.y,
+                        serverHexTank.angle
+                    ),
+                    this._linearInperpolationPercent
+                ) %
+                (2 * Math.PI);
 
             if (this._room.sessionId === index) {
                 this._camera.alpha = -clientHexTank.rotation.y;
