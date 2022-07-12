@@ -72,7 +72,7 @@ export default class World {
 
     private _linearInterpolationFrames: number = 0;
     private _maxLinearInterpolationFrames: number = 10;
-    private _linearInperpolationPercent: number = 0;
+    private _linearInperpolationPercent: number = 0.2;
 
     constructor() {
         this._canvas = document.getElementById(
@@ -353,56 +353,62 @@ export default class World {
         end: number,
         percent: number
     ): number {
-        return start + (end - start) * percent;
+        //console.log(Math.abs(end - start));
+        let difference = Math.round(Math.abs(end - start) * 100) / 100;
+        if (difference === 0) {
+            return end;
+        } else {
+            return start + (end - start) * percent;
+        }
     }
 
     private _updateLinearInterpolation(): number {
         if (
-            this._linearInterpolationFrames < this._maxLinearInterpolationFrames
+            this._linearInterpolationFrames <=
+            this._maxLinearInterpolationFrames
         ) {
             this._linearInperpolationPercent =
                 this._linearInterpolationFrames /
                 this._maxLinearInterpolationFrames;
-            this._linearInterpolationFrames += 1;
         } else {
             this._linearInterpolationFrames = 0;
             this._linearInperpolationPercent = 0;
         }
+        this._linearInterpolationFrames += 1;
         return this._linearInperpolationPercent;
     }
 
     private _updateHexTanks() {
-        //let percent = this._updateLinearInterpolation();
+        let percent = this._updateLinearInterpolation();
+        percent = 0.2;
 
-    
         for (let index in this._hexTanks) {
             let clientHexTank = this._hexTanks[index];
             let serverHexTank = this._room.state.hexTanks[index];
 
-            /* console.log(
+            console.log(
                 this._linearInterpolation(
                     clientHexTank.position.x,
                     serverHexTank.x,
-                    0.2
+                    percent
                 )
-            ); */
+            );
 
             clientHexTank.position.x = this._linearInterpolation(
                 clientHexTank.position.x,
                 serverHexTank.x,
-                0.2
+                percent
             );
-            //console.log(clientHexTank.position.x, serverHexTank.x);
 
             clientHexTank.position.z = this._linearInterpolation(
                 clientHexTank.position.z,
                 serverHexTank.z,
-                0.2
+                percent
             );
             clientHexTank.rotation.y = this._linearInterpolation(
                 clientHexTank.rotation.y,
                 serverHexTank.angle,
-                0.2
+                percent
             );
 
             if (this._room.sessionId === index) {
