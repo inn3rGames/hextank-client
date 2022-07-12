@@ -361,7 +361,7 @@ export default class World {
         percent: number
     ): number {
         let difference = Math.round(Math.abs(end - start) * 1000) / 1000;
-        
+
         if (difference === 0) {
             return end;
         } else {
@@ -383,13 +383,6 @@ export default class World {
             shortestAngleDistanceDegrees * converDegreesToRad;
 
         let difference = Math.round(shortestAngleDistanceDegrees * 1000) / 1000;
-
-        console.log(
-            currentAngleDegrees,
-            targetAngleDegrees,
-            shortestAngleDistanceDegrees,
-            difference
-        );
 
         if (difference === 0) {
             return targetAngle;
