@@ -13,10 +13,8 @@ import { CubeTexture } from "@babylonjs/core/Materials/Textures/cubeTexture";
 import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
 import { PBRMetallicRoughnessMaterial } from "@babylonjs/core/Materials/PBR/pbrMetallicRoughnessMaterial";
 import { Texture } from "@babylonjs/core/Materials/Textures/texture";
-import { KeyboardEventTypes } from "@babylonjs/core/Events/keyboardEvents";
 import { AdvancedDynamicTexture } from "@babylonjs/gui/2D/advancedDynamicTexture";
 import { TextBlock } from "@babylonjs/gui/2D/controls/textBlock";
-import { AxesViewer } from "@babylonjs/core/Debug/axesViewer";
 import "@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent";
 import "@babylonjs/core/Culling/ray";
 import "@babylonjs/loaders/glTF/2.0/Extensions/KHR_draco_mesh_compression";
@@ -70,8 +68,6 @@ export default class World {
     private _left: Boolean = false;
     private _right: Boolean = false;
 
-    private _linearInterpolationFrames: number = 0;
-    private _maxLinearInterpolationFrames: number = 10;
     private _linearInperpolationPercent: number = 0.2;
 
     constructor() {
@@ -201,8 +197,6 @@ export default class World {
         this._canvas.addEventListener("touchmove", (e) => {
             e.preventDefault();
         });
-
-        //const localAxes = new AxesViewer(this._scene, 1);
     }
 
     async connect() {
@@ -269,66 +263,65 @@ export default class World {
             }); */
         };
 
-        this._scene.onKeyboardObservable.add((keyboardInfo) => {
-            if (keyboardInfo.type === KeyboardEventTypes.KEYDOWN) {
-                if (
-                    keyboardInfo.event.key === "ArrowUp" ||
-                    keyboardInfo.event.key === "w" ||
-                    keyboardInfo.event.key === "W"
-                ) {
-                    this._up = true;
-                }
-                if (
-                    keyboardInfo.event.key === "ArrowDown" ||
-                    keyboardInfo.event.key === "s" ||
-                    keyboardInfo.event.key === "S"
-                ) {
-                    this._down = true;
-                }
-                if (
-                    keyboardInfo.event.key === "ArrowLeft" ||
-                    keyboardInfo.event.key === "a" ||
-                    keyboardInfo.event.key === "A"
-                ) {
-                    this._left = true;
-                }
-                if (
-                    keyboardInfo.event.key === "ArrowRight" ||
-                    keyboardInfo.event.key === "d" ||
-                    keyboardInfo.event.key === "D"
-                ) {
-                    this._right = true;
-                }
+        window.addEventListener("keydown", (event) => {
+            if (
+                event.key === "ArrowUp" ||
+                event.key === "w" ||
+                event.key === "W"
+            ) {
+                this._up = true;
             }
-            if (keyboardInfo.type === KeyboardEventTypes.KEYUP) {
-                if (
-                    keyboardInfo.event.key === "ArrowUp" ||
-                    keyboardInfo.event.key === "w" ||
-                    keyboardInfo.event.key === "W"
-                ) {
-                    this._up = false;
-                }
-                if (
-                    keyboardInfo.event.key === "ArrowDown" ||
-                    keyboardInfo.event.key === "s" ||
-                    keyboardInfo.event.key === "S"
-                ) {
-                    this._down = false;
-                }
-                if (
-                    keyboardInfo.event.key === "ArrowLeft" ||
-                    keyboardInfo.event.key === "a" ||
-                    keyboardInfo.event.key === "A"
-                ) {
-                    this._left = false;
-                }
-                if (
-                    keyboardInfo.event.key === "ArrowRight" ||
-                    keyboardInfo.event.key === "d" ||
-                    keyboardInfo.event.key === "D"
-                ) {
-                    this._right = false;
-                }
+            if (
+                event.key === "ArrowDown" ||
+                event.key === "s" ||
+                event.key === "S"
+            ) {
+                this._down = true;
+            }
+            if (
+                event.key === "ArrowLeft" ||
+                event.key === "a" ||
+                event.key === "A"
+            ) {
+                this._left = true;
+            }
+            if (
+                event.key === "ArrowRight" ||
+                event.key === "d" ||
+                event.key === "D"
+            ) {
+                this._right = true;
+            }
+        });
+
+        window.addEventListener("keyup", (event) => {
+            if (
+                event.key === "ArrowUp" ||
+                event.key === "w" ||
+                event.key === "W"
+            ) {
+                this._up = false;
+            }
+            if (
+                event.key === "ArrowDown" ||
+                event.key === "s" ||
+                event.key === "S"
+            ) {
+                this._down = false;
+            }
+            if (
+                event.key === "ArrowLeft" ||
+                event.key === "a" ||
+                event.key === "A"
+            ) {
+                this._left = false;
+            }
+            if (
+                event.key === "ArrowRight" ||
+                event.key === "d" ||
+                event.key === "D"
+            ) {
+                this._right = false;
             }
         });
     }
@@ -353,8 +346,7 @@ export default class World {
         end: number,
         percent: number
     ): number {
-        //console.log(Math.abs(end - start));
-        let difference = Math.round(Math.abs(end - start) * 100) / 100;
+        let difference = Math.round(Math.abs(end - start) * 1000) / 1000;
         if (difference === 0) {
             return end;
         } else {
@@ -362,53 +354,26 @@ export default class World {
         }
     }
 
-    private _updateLinearInterpolation(): number {
-        if (
-            this._linearInterpolationFrames <=
-            this._maxLinearInterpolationFrames
-        ) {
-            this._linearInperpolationPercent =
-                this._linearInterpolationFrames /
-                this._maxLinearInterpolationFrames;
-        } else {
-            this._linearInterpolationFrames = 0;
-            this._linearInperpolationPercent = 0;
-        }
-        this._linearInterpolationFrames += 1;
-        return this._linearInperpolationPercent;
-    }
-
     private _updateHexTanks() {
-        let percent = this._updateLinearInterpolation();
-        percent = 0.2;
-
         for (let index in this._hexTanks) {
             let clientHexTank = this._hexTanks[index];
             let serverHexTank = this._room.state.hexTanks[index];
 
-            console.log(
-                this._linearInterpolation(
-                    clientHexTank.position.x,
-                    serverHexTank.x,
-                    percent
-                )
-            );
-
             clientHexTank.position.x = this._linearInterpolation(
                 clientHexTank.position.x,
                 serverHexTank.x,
-                percent
+                this._linearInperpolationPercent
             );
 
             clientHexTank.position.z = this._linearInterpolation(
                 clientHexTank.position.z,
                 serverHexTank.z,
-                percent
+                this._linearInperpolationPercent
             );
             clientHexTank.rotation.y = this._linearInterpolation(
                 clientHexTank.rotation.y,
                 serverHexTank.angle,
-                percent
+                this._linearInperpolationPercent
             );
 
             if (this._room.sessionId === index) {
