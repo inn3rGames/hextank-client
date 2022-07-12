@@ -70,6 +70,8 @@ export default class World {
 
     private _linearInperpolationPercent: number = 0.2;
 
+    private _debug: boolean = false;
+
     constructor() {
         this._canvas = document.getElementById(
             "hextankgame"
@@ -204,22 +206,28 @@ export default class World {
         if (window.location.protocol === "http:") {
             serverAddress = "ws://localhost:2567";
             console.log("%c Development mode.", "background-color: #FFFF00");
+            this._debug = true;
         } else {
             console.log("%c Production mode.", "background-color: #00FF00");
+            this._debug = false;
         }
 
         this._client = new Client(serverAddress);
         try {
             this._room = await this._client.join("world_room");
         } catch (e) {
-            console.log(e);
+            if (this._debug === true) {
+                console.log(e);
+            }
         }
     }
 
     async createWorld() {
         await this.connect();
 
-        console.log(this._client);
+        if (this._debug === true) {
+            console.log(this._client);
+        }
 
         this._room.state.hexTanks.onAdd = async (serverHexTank: any) => {
             var clientHexTank = new HexTank(
@@ -233,21 +241,27 @@ export default class World {
 
             this._hexTanks[serverHexTank.id] = clientHexTank.mesh;
 
-            console.log(`HexTank ${serverHexTank.id} joined at: `, {
-                x: serverHexTank.x,
-                z: serverHexTank.z,
-            });
-
-            serverHexTank.onChange = () => {
-                console.log(`HexTank ${serverHexTank.id} moved to: `, {
+            if (this._debug === true) {
+                console.log(`HexTank ${serverHexTank.id} joined at: `, {
                     x: serverHexTank.x,
                     z: serverHexTank.z,
                 });
+            }
+
+            serverHexTank.onChange = () => {
+                if (this._debug === true) {
+                    console.log(`HexTank ${serverHexTank.id} moved to: `, {
+                        x: serverHexTank.x,
+                        z: serverHexTank.z,
+                    });
+                }
             };
         };
 
         this._room.state.hexTanks.onRemove = (serverHexTank: any) => {
-            console.log(`HexTank ${serverHexTank.id} left!`);
+            if (this._debug === true) {
+                console.log(`HexTank ${serverHexTank.id} left!`);
+            }
             this._hexTanks[serverHexTank.id].dispose();
             delete this._hexTanks[serverHexTank.id];
         };
