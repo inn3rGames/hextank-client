@@ -70,6 +70,9 @@ export default class World {
 
     private _linearInperpolationPercent: number = 0.2;
 
+    private _convertRadToDegrees = 180 / Math.PI;
+    private _convertDegreesToRad = Math.PI / 180;
+
     private _debug: boolean = false;
 
     constructor() {
@@ -369,26 +372,19 @@ export default class World {
         }
     }
 
-    private _shortestAngle(currentAngle: number, targetAngle: number) {
-        let convertRadToDegrees = 180 / Math.PI;
-        let converDegreesToRad = Math.PI / 180;
-
-        let currentAngleDegrees = currentAngle * convertRadToDegrees;
-        let targetAngleDegrees = targetAngle * convertRadToDegrees;
-
-        let shortestAngleDistanceDegrees =
-            ((targetAngleDegrees - currentAngleDegrees + 180) % 360) - 180;
-
-        let shortestAngleRadDistance =
-            shortestAngleDistanceDegrees * converDegreesToRad;
-
-        let difference = Math.round(shortestAngleDistanceDegrees * 1000) / 1000;
-
-        if (difference === 0) {
-            return targetAngle;
-        } else {
-            return currentAngle + shortestAngleRadDistance;
+    private _angleInterpolation(
+        currentAngle: number,
+        targetAngle: number,
+        percent: number
+    ) {
+        while (currentAngle > targetAngle + 180) {
+            targetAngle += 360;
         }
+        while (targetAngle > currentAngle + 180) {
+            targetAngle -= 360;
+        }
+
+        return this._linearInterpolation(currentAngle, targetAngle, percent);
     }
 
     private _updateHexTanks() {
@@ -409,15 +405,11 @@ export default class World {
             );
 
             clientHexTank.rotation.y =
-                this._linearInterpolation(
-                    clientHexTank.rotation.y,
-                    this._shortestAngle(
-                        clientHexTank.rotation.y,
-                        serverHexTank.angle
-                    ),
+                this._angleInterpolation(
+                    clientHexTank.rotation.y * this._convertRadToDegrees,
+                    serverHexTank.angle * this._convertRadToDegrees,
                     this._linearInperpolationPercent
-                ) %
-                (2 * Math.PI);
+                ) * this._convertDegreesToRad;
 
             if (this._room.sessionId === index) {
                 this._camera.alpha = -clientHexTank.rotation.y;
