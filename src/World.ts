@@ -379,32 +379,21 @@ export default class World {
     ) {
         let currentAngle = startAngle;
         let targetAngle = endAngle;
+        let differenceBetweenAngles = targetAngle - currentAngle;
 
-        /* console.log(
-            startAngle * this._convertRadToDegrees,
-            endAngle * this._convertRadToDegrees,
-            "begin"
-        );
- */
-        while (currentAngle > targetAngle + Math.PI) {
+        while (differenceBetweenAngles < -Math.PI) {
             targetAngle += 2 * Math.PI;
-            /* console.log("first"); */
+            differenceBetweenAngles = targetAngle - currentAngle;
         }
-        while (targetAngle > currentAngle + Math.PI) {
+        while (differenceBetweenAngles > Math.PI) {
             targetAngle -= 2 * Math.PI;
-            /* console.log("last"); */
+            differenceBetweenAngles = targetAngle - currentAngle;
         }
-
-        /* console.log(
-            currentAngle * this._convertRadToDegrees,
-            targetAngle * this._convertRadToDegrees,
-            "end"
-        ); */
 
         return this._linearInterpolation(currentAngle, targetAngle, percent);
     }
 
-    private _computeAngle(angle: number): number {
+    private _positiveAngle(angle: number): number {
         let computeAngle = angle;
         computeAngle = computeAngle % (2 * Math.PI);
         if (computeAngle < 0) {
@@ -430,7 +419,7 @@ export default class World {
                 this._linearInperpolationPercent
             );
 
-            clientHexTank.rotation.y = this._computeAngle(
+            clientHexTank.rotation.y = this._positiveAngle(
                 this._angleInterpolation(
                     clientHexTank.rotation.y,
                     serverHexTank.angle,
