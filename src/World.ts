@@ -380,12 +380,12 @@ export default class World {
         let currentAngle = startAngle;
         let targetAngle = endAngle;
 
-        console.log(
+        /* console.log(
             startAngle * this._convertRadToDegrees,
             endAngle * this._convertRadToDegrees,
             "begin"
         );
-
+ */
         while (currentAngle > targetAngle + Math.PI) {
             targetAngle += 2 * Math.PI;
             console.log("first");
@@ -395,11 +395,11 @@ export default class World {
             console.log("last");
         }
 
-        console.log(
+        /* console.log(
             currentAngle * this._convertRadToDegrees,
             targetAngle * this._convertRadToDegrees,
             "end"
-        );
+        ); */
 
         return this._linearInterpolation(currentAngle, targetAngle, percent);
     }
