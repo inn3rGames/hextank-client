@@ -373,18 +373,44 @@ export default class World {
     }
 
     private _angleInterpolation(
-        currentAngle: number,
-        targetAngle: number,
+        startAngle: number,
+        endAngle: number,
         percent: number
     ) {
-        while (currentAngle > targetAngle + 180) {
-            targetAngle += 360;
+        let currentAngle = startAngle;
+        let targetAngle = endAngle;
+
+        console.log(
+            startAngle * this._convertRadToDegrees,
+            endAngle * this._convertRadToDegrees,
+            "begin"
+        );
+
+        while (currentAngle > targetAngle + Math.PI) {
+            targetAngle += 2 * Math.PI;
+            console.log("first");
         }
-        while (targetAngle > currentAngle + 180) {
-            targetAngle -= 360;
+        while (targetAngle > currentAngle + Math.PI) {
+            targetAngle -= 2 * Math.PI;
+            console.log("last");
         }
 
+        console.log(
+            currentAngle * this._convertRadToDegrees,
+            targetAngle * this._convertRadToDegrees,
+            "end"
+        );
+
         return this._linearInterpolation(currentAngle, targetAngle, percent);
+    }
+
+    private _computeAngle(angle: number): number {
+        let computeAngle = angle;
+        computeAngle = computeAngle % (2 * Math.PI);
+        if (computeAngle < 0) {
+            computeAngle += 2 * Math.PI;
+        }
+        return computeAngle;
     }
 
     private _updateHexTanks() {
@@ -404,12 +430,13 @@ export default class World {
                 this._linearInperpolationPercent
             );
 
-            clientHexTank.rotation.y =
+            clientHexTank.rotation.y = this._computeAngle(
                 this._angleInterpolation(
-                    clientHexTank.rotation.y * this._convertRadToDegrees,
-                    serverHexTank.angle * this._convertRadToDegrees,
+                    clientHexTank.rotation.y,
+                    serverHexTank.angle,
                     this._linearInperpolationPercent
-                ) * this._convertDegreesToRad;
+                )
+            );
 
             if (this._room.sessionId === index) {
                 this._camera.alpha = -clientHexTank.rotation.y;
