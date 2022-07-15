@@ -388,11 +388,11 @@ export default class World {
  */
         while (currentAngle > targetAngle + Math.PI) {
             targetAngle += 2 * Math.PI;
-            console.log("first");
+            /* console.log("first"); */
         }
         while (targetAngle > currentAngle + Math.PI) {
             targetAngle -= 2 * Math.PI;
-            console.log("last");
+            /* console.log("last"); */
         }
 
         /* console.log(
