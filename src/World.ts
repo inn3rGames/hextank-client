@@ -50,6 +50,7 @@ export default class World {
     private _groundMaterial!: PBRMetallicRoughnessMaterial;
     private _sandTexture!: Texture;
     private _ground!: Mesh;
+    private _worldSize: number = 200;
 
     private _torus!: Mesh;
 
@@ -67,6 +68,9 @@ export default class World {
     private _down: Boolean = false;
     private _left: Boolean = false;
     private _right: Boolean = false;
+
+    private _speed: number = 0.5;
+    private _rotationSpeed: number = 5 * (Math.PI / 180);
 
     private _linearInperpolationPercent: number = 0.2;
 
@@ -157,8 +161,8 @@ export default class World {
         this._groundMaterial.roughness = 0;
         this._groundMaterial.baseColor = Color3.FromHexString("#D18212");
         this._ground = MeshBuilder.CreateGround("ground", {
-            height: 200,
-            width: 200,
+            height: this._worldSize,
+            width: this._worldSize,
             subdivisions: 0,
         });
         this._ground.material = this._groundMaterial;
@@ -343,18 +347,44 @@ export default class World {
         });
     }
 
-    private _monitorKeys() {
+    private __positiveAngle(angle: number, direction: number): number {
+        let computeAngle = angle;
+        computeAngle += this._rotationSpeed * direction;
+        computeAngle = computeAngle % (2 * Math.PI);
+        if (computeAngle < 0) {
+            computeAngle += 2 * Math.PI;
+        }
+        return computeAngle;
+    }
+
+    private _updateCurrentHexTank(currentHexTank: AbstractMesh) {
         if (this._up === true) {
             this._room.send("up");
+            currentHexTank.position.x -=
+                this._speed * Math.cos(currentHexTank.rotation.y);
+            currentHexTank.position.z -=
+                this._speed * -Math.sin(currentHexTank.rotation.y);
         }
         if (this._down === true) {
             this._room.send("down");
+            currentHexTank.position.x +=
+                this._speed * Math.cos(currentHexTank.rotation.y);
+            currentHexTank.position.z +=
+                this._speed * -Math.sin(currentHexTank.rotation.y);
         }
         if (this._left === true) {
             this._room.send("left");
+            currentHexTank.rotation.y = this.__positiveAngle(
+                currentHexTank.rotation.y,
+                -1
+            );
         }
         if (this._right === true) {
             this._room.send("right");
+            currentHexTank.rotation.y = this.__positiveAngle(
+                currentHexTank.rotation.y,
+                1
+            );
         }
     }
 
@@ -407,30 +437,54 @@ export default class World {
             let clientHexTank = this._hexTanks[index];
             let serverHexTank = this._room.state.hexTanks[index];
 
-            clientHexTank.position.x = this._linearInterpolation(
-                clientHexTank.position.x,
-                serverHexTank.x,
-                this._linearInperpolationPercent
-            );
-
-            clientHexTank.position.z = this._linearInterpolation(
-                clientHexTank.position.z,
-                serverHexTank.z,
-                this._linearInperpolationPercent
-            );
-
-            clientHexTank.rotation.y = this._positiveAngle(
-                this._angleInterpolation(
-                    clientHexTank.rotation.y,
-                    serverHexTank.angle,
+            if (this._room.sessionId !== index) {
+                clientHexTank.position.x = this._linearInterpolation(
+                    clientHexTank.position.x,
+                    serverHexTank.x,
                     this._linearInperpolationPercent
-                )
-            );
+                );
 
-            if (this._room.sessionId === index) {
+                clientHexTank.position.z = this._linearInterpolation(
+                    clientHexTank.position.z,
+                    serverHexTank.z,
+                    this._linearInperpolationPercent
+                );
+
+                clientHexTank.rotation.y = this._positiveAngle(
+                    this._angleInterpolation(
+                        clientHexTank.rotation.y,
+                        serverHexTank.angle,
+                        this._linearInperpolationPercent
+                    )
+                );
+            } else {
+                this._updateCurrentHexTank(clientHexTank);
+
+                //clientHexTank.position.x = serverHexTank.x;
+                //clientHexTank.position.z = serverHexTank.z;
+                //clientHexTank.rotation.y = serverHexTank.angle;
+
                 this._camera.alpha = -clientHexTank.rotation.y;
                 this._camera.target.x = clientHexTank.position.x;
-                this._camera.target.z = clientHexTank.position.z;
+                this._camera.target.z = clientHexTank.position.z; 
+
+                /* this._camera.alpha = this._positiveAngle(
+                    this._angleInterpolation(
+                        this._camera.alpha,
+                        -clientHexTank.rotation.y,
+                        this._linearInperpolationPercent
+                    )
+                );
+                this._camera.target.x = this._linearInterpolation(
+                    this._camera.target.x,
+                    clientHexTank.position.x,
+                    this._linearInperpolationPercent
+                );
+                this._camera.target.z = this._linearInterpolation(
+                    this._camera.target.z,
+                    clientHexTank.position.z,
+                    this._linearInperpolationPercent
+                ); */
             }
         }
     }
@@ -445,7 +499,6 @@ export default class World {
             this._torus.rotation.z += 0.02;
             this._fpsText.text = this._engine.getFps().toFixed().toString();
 
-            this._monitorKeys();
             this._updateHexTanks();
         });
     }
