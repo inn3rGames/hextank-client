@@ -347,44 +347,86 @@ export default class World {
         });
     }
 
-    private __positiveAngle(angle: number, direction: number): number {
-        let computeAngle = angle;
+    private _rotateHexTank(currentHexTank: AbstractMesh, direction: number) {
+        let computeAngle = currentHexTank.rotation.y;
         computeAngle += this._rotationSpeed * direction;
-        computeAngle = computeAngle % (2 * Math.PI);
-        if (computeAngle < 0) {
-            computeAngle += 2 * Math.PI;
-        }
-        return computeAngle;
+        computeAngle = this._positiveAngle(computeAngle);
+        currentHexTank.rotation.y = computeAngle;
     }
 
-    private _updateCurrentHexTank(currentHexTank: AbstractMesh) {
+    private _moveHexTank(
+        currentHexTank: AbstractMesh,
+        serverHexTank: any,
+        direction: number
+    ) {
+        let serverClientDistanceX = Math.abs(
+            serverHexTank.x - currentHexTank.position.x
+        );
+        let interpolationDistanceX = Math.abs(
+            serverHexTank.x -
+                this._linearInterpolation(
+                    currentHexTank.position.x,
+                    serverHexTank.x,
+                    0.2
+                )
+        );
+
+        console.log(serverClientDistanceX+"server", interpolationDistanceX+"lerp");
+
+        if (serverClientDistanceX > interpolationDistanceX) {
+            currentHexTank.position.x +=
+                this._speed * Math.cos(currentHexTank.rotation.y) * direction;
+        } else {
+            currentHexTank.position.x = this._linearInterpolation(
+                currentHexTank.position.x,
+                serverHexTank.x,
+                this._linearInperpolationPercent
+            );
+        }
+
+        let serverClientDistanceZ = Math.abs(
+            serverHexTank.z - currentHexTank.position.z
+        );
+        let interpolationDistanceZ = Math.abs(
+            serverHexTank.z -
+                this._linearInterpolation(
+                    currentHexTank.position.z,
+                    serverHexTank.z,
+                    0.2
+                )
+        );
+
+        if (serverClientDistanceZ > interpolationDistanceZ) {
+            currentHexTank.position.z +=
+                this._speed * -Math.sin(currentHexTank.rotation.y) * direction;
+        } else {
+            currentHexTank.position.z = this._linearInterpolation(
+                currentHexTank.position.z,
+                serverHexTank.z,
+                this._linearInperpolationPercent
+            );
+        }
+    }
+
+    private _updateCurrentHexTank(
+        currentHexTank: AbstractMesh,
+        serverHexTank: any
+    ) {
         if (this._up === true) {
             this._room.send("up");
-            currentHexTank.position.x -=
-                this._speed * Math.cos(currentHexTank.rotation.y);
-            currentHexTank.position.z -=
-                this._speed * -Math.sin(currentHexTank.rotation.y);
+            this._moveHexTank(currentHexTank, serverHexTank, -1);
         }
         if (this._down === true) {
             this._room.send("down");
-            currentHexTank.position.x +=
-                this._speed * Math.cos(currentHexTank.rotation.y);
-            currentHexTank.position.z +=
-                this._speed * -Math.sin(currentHexTank.rotation.y);
+            this._moveHexTank(currentHexTank, serverHexTank, 1);
         }
         if (this._left === true) {
             this._room.send("left");
-            currentHexTank.rotation.y = this.__positiveAngle(
-                currentHexTank.rotation.y,
-                -1
-            );
+            this._rotateHexTank(currentHexTank, -1);
         }
         if (this._right === true) {
             this._room.send("right");
-            currentHexTank.rotation.y = this.__positiveAngle(
-                currentHexTank.rotation.y,
-                1
-            );
+            this._rotateHexTank(currentHexTank, 1);
         }
     }
 
@@ -458,33 +500,11 @@ export default class World {
                     )
                 );
             } else {
-                this._updateCurrentHexTank(clientHexTank);
-
-                //clientHexTank.position.x = serverHexTank.x;
-                //clientHexTank.position.z = serverHexTank.z;
-                //clientHexTank.rotation.y = serverHexTank.angle;
+                this._updateCurrentHexTank(clientHexTank, serverHexTank);
 
                 this._camera.alpha = -clientHexTank.rotation.y;
                 this._camera.target.x = clientHexTank.position.x;
-                this._camera.target.z = clientHexTank.position.z; 
-
-                /* this._camera.alpha = this._positiveAngle(
-                    this._angleInterpolation(
-                        this._camera.alpha,
-                        -clientHexTank.rotation.y,
-                        this._linearInperpolationPercent
-                    )
-                );
-                this._camera.target.x = this._linearInterpolation(
-                    this._camera.target.x,
-                    clientHexTank.position.x,
-                    this._linearInperpolationPercent
-                );
-                this._camera.target.z = this._linearInterpolation(
-                    this._camera.target.z,
-                    clientHexTank.position.z,
-                    this._linearInperpolationPercent
-                ); */
+                this._camera.target.z = clientHexTank.position.z;
             }
         }
     }
