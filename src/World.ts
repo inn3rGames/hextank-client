@@ -74,6 +74,10 @@ export default class World {
 
     private _linearInperpolationPercent: number = 0.2;
 
+    private _enableClientInterpolation: boolean = false;
+    private _latencyLimit: number = 20;
+    private _disableInput: boolean = false;
+
     private _convertRadToDegrees = 180 / Math.PI;
     private _convertDegreesToRad = Math.PI / 180;
 
@@ -347,89 +351,6 @@ export default class World {
         });
     }
 
-    private _rotateHexTank(currentHexTank: AbstractMesh, direction: number) {
-        let computeAngle = currentHexTank.rotation.y;
-        computeAngle += this._rotationSpeed * direction;
-        computeAngle = this._positiveAngle(computeAngle);
-        currentHexTank.rotation.y = computeAngle;
-    }
-
-    private _moveHexTank(
-        currentHexTank: AbstractMesh,
-        serverHexTank: any,
-        direction: number
-    ) {
-        let serverClientDistanceX = Math.abs(
-            serverHexTank.x - currentHexTank.position.x
-        );
-        let interpolationDistanceX = Math.abs(
-            serverHexTank.x -
-                this._linearInterpolation(
-                    currentHexTank.position.x,
-                    serverHexTank.x,
-                    0.2
-                )
-        );
-
-        console.log(serverClientDistanceX+"server", interpolationDistanceX+"lerp");
-
-        if (serverClientDistanceX > interpolationDistanceX) {
-            currentHexTank.position.x +=
-                this._speed * Math.cos(currentHexTank.rotation.y) * direction;
-        } else {
-            currentHexTank.position.x = this._linearInterpolation(
-                currentHexTank.position.x,
-                serverHexTank.x,
-                this._linearInperpolationPercent
-            );
-        }
-
-        let serverClientDistanceZ = Math.abs(
-            serverHexTank.z - currentHexTank.position.z
-        );
-        let interpolationDistanceZ = Math.abs(
-            serverHexTank.z -
-                this._linearInterpolation(
-                    currentHexTank.position.z,
-                    serverHexTank.z,
-                    0.2
-                )
-        );
-
-        if (serverClientDistanceZ > interpolationDistanceZ) {
-            currentHexTank.position.z +=
-                this._speed * -Math.sin(currentHexTank.rotation.y) * direction;
-        } else {
-            currentHexTank.position.z = this._linearInterpolation(
-                currentHexTank.position.z,
-                serverHexTank.z,
-                this._linearInperpolationPercent
-            );
-        }
-    }
-
-    private _updateCurrentHexTank(
-        currentHexTank: AbstractMesh,
-        serverHexTank: any
-    ) {
-        if (this._up === true) {
-            this._room.send("up");
-            this._moveHexTank(currentHexTank, serverHexTank, -1);
-        }
-        if (this._down === true) {
-            this._room.send("down");
-            this._moveHexTank(currentHexTank, serverHexTank, 1);
-        }
-        if (this._left === true) {
-            this._room.send("left");
-            this._rotateHexTank(currentHexTank, -1);
-        }
-        if (this._right === true) {
-            this._room.send("right");
-            this._rotateHexTank(currentHexTank, 1);
-        }
-    }
-
     private _linearInterpolation(
         start: number,
         end: number,
@@ -472,6 +393,85 @@ export default class World {
             computeAngle += 2 * Math.PI;
         }
         return computeAngle;
+    }
+
+    private _getDistance(
+        currentHexTank: AbstractMesh,
+        serverHexTank: any
+    ): number {
+        let dX = currentHexTank.position.x - serverHexTank.x;
+        let dZ = currentHexTank.position.z - serverHexTank.z;
+
+        return Math.sqrt(dX * dX + dZ * dZ);
+    }
+
+    private _rotateHexTank(currentHexTank: AbstractMesh, direction: number) {
+        let computeAngle = currentHexTank.rotation.y;
+        computeAngle += this._rotationSpeed * direction;
+        computeAngle = this._positiveAngle(computeAngle);
+        currentHexTank.rotation.y = computeAngle;
+    }
+
+    private _moveHexTank(currentHexTank: AbstractMesh, direction: number) {
+        currentHexTank.position.x +=
+            this._speed * Math.cos(currentHexTank.rotation.y) * direction;
+        currentHexTank.position.z +=
+            this._speed * -Math.sin(currentHexTank.rotation.y) * direction;
+    }
+
+    private _updateCurrentHexTank(
+        currentHexTank: AbstractMesh,
+        serverHexTank: any
+    ) {
+        let serverClientDistance = this._getDistance(
+            currentHexTank,
+            serverHexTank
+        );
+
+        if (
+            serverClientDistance >= 20 ||
+            this._enableClientInterpolation === true
+        ) {
+            if (this._enableClientInterpolation === false) {
+                this._enableClientInterpolation = true;
+            }
+
+            currentHexTank.position.x = this._linearInterpolation(
+                currentHexTank.position.x,
+                serverHexTank.x,
+                this._linearInperpolationPercent
+            );
+            currentHexTank.position.z = this._linearInterpolation(
+                currentHexTank.position.z,
+                serverHexTank.z,
+                this._linearInperpolationPercent
+            );
+
+            if (serverClientDistance === 0) {
+                this._enableClientInterpolation = false;
+            }
+        }
+
+        if (this._up === true) {
+            if (this._enableClientInterpolation === false) {
+                this._room.send("up");
+                this._moveHexTank(currentHexTank, -1);
+            }
+        }
+        if (this._down === true) {
+            if (this._enableClientInterpolation === false) {
+                this._room.send("down");
+                this._moveHexTank(currentHexTank, 1);
+            }
+        }
+        if (this._left === true) {
+            this._room.send("left");
+            this._rotateHexTank(currentHexTank, -1);
+        }
+        if (this._right === true) {
+            this._room.send("right");
+            this._rotateHexTank(currentHexTank, 1);
+        }
     }
 
     private _updateHexTanks() {
