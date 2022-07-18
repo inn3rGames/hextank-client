@@ -30,7 +30,6 @@ import skyboxNz from "./assets/textures/skybox3/skybox_nz.png";
 import sand from "./assets/textures/sand.png";
 
 import HexTank from "./HexTank";
-import { WindowsMotionController } from "@babylonjs/core";
 
 export default class World {
     private _canvas: HTMLCanvasElement;
