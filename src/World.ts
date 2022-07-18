@@ -460,6 +460,14 @@ export default class World {
                 this._linearInperpolationPercent
             );
 
+            currentHexTank.rotation.y = this._positiveAngle(
+                this._angleInterpolation(
+                    currentHexTank.rotation.y,
+                    serverHexTank.angle,
+                    this._linearInperpolationPercent
+                )
+            );
+
             if (serverClientDistance === 0) {
                 this._enableClientInterpolation = false;
             }
@@ -478,12 +486,16 @@ export default class World {
             }
         }
         if (this._left === true) {
-            this._room.send("left");
-            this._rotateHexTank(currentHexTank, -1);
+            if (this._enableClientInterpolation === false) {
+                this._room.send("left");
+                this._rotateHexTank(currentHexTank, -1);
+            }
         }
         if (this._right === true) {
-            this._room.send("right");
-            this._rotateHexTank(currentHexTank, 1);
+            if (this._enableClientInterpolation === false) {
+                this._room.send("right");
+                this._rotateHexTank(currentHexTank, 1);
+            }
         }
     }
 
