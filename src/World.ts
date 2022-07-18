@@ -532,7 +532,15 @@ export default class World {
     updateWorld(): void {
         this._torus.rotation.x += 0.01;
         this._torus.rotation.z += 0.02;
-        this._fpsText.text = this._engine.getFps().toFixed().toString();
+        this._fpsText.text = `Simulated: ${+this._engine
+            .getFps()
+            .toFixed()
+            .toString()}, Real: ${(
+            (this._delta / this._fixedUpdateDuration) *
+            60
+        )
+            .toFixed()
+            .toString()}`;
 
         this._currentFrame = performance.now();
         this._delta = this._currentFrame - this._lastFrame;
@@ -543,8 +551,8 @@ export default class World {
             this._elapsed -= this._fixedUpdateDuration;
             this._fixedTick();
         }
-        
-        console.log(this._elapsed);
+
+        //console.log(this._elapsed);
 
         window.requestAnimationFrame(() => {
             this.updateWorld();
