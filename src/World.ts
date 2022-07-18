@@ -536,7 +536,7 @@ export default class World {
             .getFps()
             .toFixed()
             .toString()}, Real: ${(
-            (this._delta / this._fixedUpdateDuration) *
+            (this._fixedUpdateDuration / this._delta) *
             60
         )
             .toFixed()
