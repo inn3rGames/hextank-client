@@ -79,6 +79,12 @@ export default class World {
     private _latencyLimit: number = 20;
     private _disableInput: boolean = false;
 
+    private _lastFrame = 0;
+    private _currentFrame = 0;
+    private _delta = 1000 / 60;
+    private _fixedFrameDuration = 1000 / 60;
+    private _currentFrameDuration = 0;
+
     private _convertRadToDegrees = 180 / Math.PI;
     private _convertDegreesToRad = Math.PI / 180;
 
@@ -430,7 +436,7 @@ export default class World {
         );
 
         if (
-            serverClientDistance >= 20 ||
+            serverClientDistance >= this._latencyLimit ||
             this._enableClientInterpolation === true
         ) {
             if (this._enableClientInterpolation === false) {
@@ -510,21 +516,7 @@ export default class World {
         }
     }
 
-    _lastFrame = performance.now();
-    _currentFrame = performance.now();
-    _delta = 1000 / 60;
-    _fixedUpdateDuration = 1000 / 60;
-    _elapsed = 1000;
-
-    /* computeDelta() {
-        let lastFrame = 0;
-        let currentFrame = performance.now();
-        let delta = currentFrame - lastFrame;
-        lastFrame = currentFrame;
-    }
- */
-
-    _fixedTick() {
+    _fixedUpdate() {
         this._updateHexTanks();
         this._scene.render();
     }
@@ -532,11 +524,12 @@ export default class World {
     updateWorld(): void {
         this._torus.rotation.x += 0.01;
         this._torus.rotation.z += 0.02;
+        
         this._fpsText.text = `Simulated: ${+this._engine
             .getFps()
             .toFixed()
             .toString()}, Real: ${(
-            (this._fixedUpdateDuration / this._delta) *
+            (this._fixedFrameDuration / this._delta) *
             60
         )
             .toFixed()
@@ -546,13 +539,11 @@ export default class World {
         this._delta = this._currentFrame - this._lastFrame;
         this._lastFrame = this._currentFrame;
 
-        this._elapsed += this._delta;
-        while (this._elapsed >= this._fixedUpdateDuration) {
-            this._elapsed -= this._fixedUpdateDuration;
-            this._fixedTick();
+        this._currentFrameDuration += this._delta;
+        while (this._currentFrameDuration >= this._fixedFrameDuration) {
+            this._currentFrameDuration -= this._fixedFrameDuration;
+            this._fixedUpdate();
         }
-
-        //console.log(this._elapsed);
 
         window.requestAnimationFrame(() => {
             this.updateWorld();
