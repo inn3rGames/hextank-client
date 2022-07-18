@@ -30,6 +30,7 @@ import skyboxNz from "./assets/textures/skybox3/skybox_nz.png";
 import sand from "./assets/textures/sand.png";
 
 import HexTank from "./HexTank";
+import { WindowsMotionController } from "@babylonjs/core";
 
 export default class World {
     private _canvas: HTMLCanvasElement;
@@ -509,17 +510,44 @@ export default class World {
         }
     }
 
+    _lastFrame = performance.now();
+    _currentFrame = performance.now();
+    _delta = 1000 / 60;
+    _fixedUpdateDuration = 1000 / 60;
+    _elapsed = 1000;
+
+    /* computeDelta() {
+        let lastFrame = 0;
+        let currentFrame = performance.now();
+        let delta = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+    }
+ */
+
+    _fixedTick() {
+        this._updateHexTanks();
+        this._scene.render();
+    }
+
     updateWorld(): void {
-        this._engine.runRenderLoop(() => {
-            this._scene.render();
-        });
+        this._torus.rotation.x += 0.01;
+        this._torus.rotation.z += 0.02;
+        this._fpsText.text = this._engine.getFps().toFixed().toString();
 
-        this._scene.registerBeforeRender(() => {
-            this._torus.rotation.x += 0.01;
-            this._torus.rotation.z += 0.02;
-            this._fpsText.text = this._engine.getFps().toFixed().toString();
+        this._currentFrame = performance.now();
+        this._delta = this._currentFrame - this._lastFrame;
+        this._lastFrame = this._currentFrame;
 
-            this._updateHexTanks();
+        this._elapsed += this._delta;
+        while (this._elapsed >= this._fixedUpdateDuration) {
+            this._elapsed -= this._fixedUpdateDuration;
+            this._fixedTick();
+        }
+        
+        console.log(this._elapsed);
+
+        window.requestAnimationFrame(() => {
+            this.updateWorld();
         });
     }
 }
