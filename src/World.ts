@@ -84,7 +84,8 @@ export default class World {
     private _currentFrame: number = 0;
     private _delta: number = 1000 / this._fpsLimit;
     private _fixedFrameDuration: number = 1000 / this._fpsLimit;
-    private _elapsedTime: number = 0;
+    private _elapsedTime: number = Math.round(this._fixedFrameDuration);
+    private _resetElapsedTime: boolean = true;
 
     private _convertRadToDegrees: number = 180 / Math.PI;
     private _convertDegreesToRad: number = Math.PI / 180;
@@ -357,6 +358,10 @@ export default class World {
                 this._right = false;
             }
         });
+
+        window.addEventListener("focus", () => {
+            this._focusRegained();
+        });
     }
 
     private _linearInterpolation(
@@ -525,6 +530,21 @@ export default class World {
         this._scene.render();
     }
 
+    private _focusRegained() {
+        this._resetElapsedTime = true;
+
+        this._lastFrame = performance.now();
+
+        for (let index in this._hexTanks) {
+            let clientHexTank = this._hexTanks[index];
+            let serverHexTank = this._room.state.hexTanks[index];
+
+            clientHexTank.position.x = serverHexTank.x;
+            clientHexTank.position.z = serverHexTank.z;
+            clientHexTank.rotation.y = serverHexTank.angle;
+        }
+    }
+
     updateWorld(): void {
         this._fpsText.text = `Simulated: ${+this._engine
             .getFps()
@@ -542,7 +562,11 @@ export default class World {
 
         this._elapsedTime += this._delta;
 
-        if (Math.abs(this._elapsedTime) >= 200) {
+        if (
+            Math.abs(this._elapsedTime) >= 200 ||
+            this._resetElapsedTime === true
+        ) {
+            this._resetElapsedTime = false;
             this._elapsedTime = Math.round(this._fixedFrameDuration);
         }
 
