@@ -79,14 +79,15 @@ export default class World {
     private _latencyLimit: number = 20;
     private _disableInput: boolean = false;
 
-    private _lastFrame = 0;
-    private _currentFrame = 0;
-    private _delta = 1000 / 60;
-    private _fixedFrameDuration = 1000 / 60;
-    private _currentFrameDuration = 0;
+    private _fpsLimit: number = 60;
+    private _lastFrame: number = 0;
+    private _currentFrame: number = 0;
+    private _delta: number = 1000 / this._fpsLimit;
+    private _fixedFrameDuration: number = 1000 / this._fpsLimit;
+    private _elapsedTime: number = 0;
 
-    private _convertRadToDegrees = 180 / Math.PI;
-    private _convertDegreesToRad = Math.PI / 180;
+    private _convertRadToDegrees: number = 180 / Math.PI;
+    private _convertDegreesToRad: number = Math.PI / 180;
 
     private _debug: boolean = false;
 
@@ -516,21 +517,21 @@ export default class World {
         }
     }
 
-    _fixedUpdate() {
+    private _fixedUpdate() {
+        this._torus.rotation.x += 0.01;
+        this._torus.rotation.z += 0.02;
+
         this._updateHexTanks();
         this._scene.render();
     }
 
     updateWorld(): void {
-        this._torus.rotation.x += 0.01;
-        this._torus.rotation.z += 0.02;
-        
         this._fpsText.text = `Simulated: ${+this._engine
             .getFps()
             .toFixed()
             .toString()}, Real: ${(
             (this._fixedFrameDuration / this._delta) *
-            60
+            this._fpsLimit
         )
             .toFixed()
             .toString()}`;
@@ -539,9 +540,14 @@ export default class World {
         this._delta = this._currentFrame - this._lastFrame;
         this._lastFrame = this._currentFrame;
 
-        this._currentFrameDuration += this._delta;
-        while (this._currentFrameDuration >= this._fixedFrameDuration) {
-            this._currentFrameDuration -= this._fixedFrameDuration;
+        this._elapsedTime += this._delta;
+
+        if (Math.abs(this._elapsedTime) >= 200) {
+            this._elapsedTime = Math.round(this._fixedFrameDuration);
+        }
+
+        while (this._elapsedTime >= this._fixedFrameDuration) {
+            this._elapsedTime -= this._fixedFrameDuration;
             this._fixedUpdate();
         }
 
