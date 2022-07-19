@@ -271,7 +271,6 @@ export default class World {
             }
 
             serverHexTank.onChange = () => {
-                this._debug = true;
                 if (this._debug === true) {
                     console.log(
                         `Server HexTank ${serverHexTank.id} moved to: `,
