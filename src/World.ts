@@ -86,7 +86,7 @@ export default class World {
     private _elapsedTime: number = Math.round(this._fixedFrameDuration);
     private _resetElapsedTime: boolean = true;
 
-    private _commandsLimit: number = 10;
+    private _commandsPerFrame: number = 10;
     private _commandsCounter: number = 0;
 
     private _convertRadToDegrees: number = 180 / Math.PI;
@@ -482,7 +482,7 @@ export default class World {
         if (this._up === true) {
             if (
                 this._enableClientInterpolation === false &&
-                this._commandsCounter < this._commandsLimit
+                this._commandsCounter < this._commandsPerFrame
             ) {
                 this._room.send("command", "up");
                 this._moveHexTank(currentHexTank, -1);
@@ -491,7 +491,7 @@ export default class World {
         if (this._down === true) {
             if (
                 this._enableClientInterpolation === false &&
-                this._commandsCounter < this._commandsLimit
+                this._commandsCounter < this._commandsPerFrame
             ) {
                 this._room.send("command", "down");
                 this._moveHexTank(currentHexTank, 1);
@@ -500,7 +500,7 @@ export default class World {
         if (this._left === true) {
             if (
                 this._enableClientInterpolation === false &&
-                this._commandsCounter < this._commandsLimit
+                this._commandsCounter < this._commandsPerFrame
             ) {
                 this._room.send("command", "left");
                 this._rotateHexTank(currentHexTank, -1);
@@ -509,7 +509,7 @@ export default class World {
         if (this._right === true) {
             if (
                 this._enableClientInterpolation === false &&
-                this._commandsCounter < this._commandsLimit
+                this._commandsCounter < this._commandsPerFrame
             ) {
                 this._room.send("command", "right");
                 this._rotateHexTank(currentHexTank, 1);
