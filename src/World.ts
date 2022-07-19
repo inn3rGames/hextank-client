@@ -86,6 +86,9 @@ export default class World {
     private _elapsedTime: number = Math.round(this._fixedFrameDuration);
     private _resetElapsedTime: boolean = true;
 
+    private _commandsLimit: number = 10;
+    private _commandsCounter: number = 0;
+
     private _convertRadToDegrees: number = 180 / Math.PI;
     private _convertDegreesToRad: number = Math.PI / 180;
 
@@ -303,6 +306,7 @@ export default class World {
                 event.key === "W"
             ) {
                 this._up = true;
+                this._commandsCounter += 1;
             }
             if (
                 event.key === "ArrowDown" ||
@@ -310,6 +314,7 @@ export default class World {
                 event.key === "S"
             ) {
                 this._down = true;
+                this._commandsCounter += 1;
             }
             if (
                 event.key === "ArrowLeft" ||
@@ -317,6 +322,7 @@ export default class World {
                 event.key === "A"
             ) {
                 this._left = true;
+                this._commandsCounter += 1;
             }
             if (
                 event.key === "ArrowRight" ||
@@ -324,6 +330,7 @@ export default class World {
                 event.key === "D"
             ) {
                 this._right = true;
+                this._commandsCounter += 1;
             }
         });
 
@@ -473,29 +480,43 @@ export default class World {
         }
 
         if (this._up === true) {
-            if (this._enableClientInterpolation === false) {
-                this._room.send("up");
+            if (
+                this._enableClientInterpolation === false &&
+                this._commandsCounter < this._commandsLimit
+            ) {
+                this._room.send("command", "up");
                 this._moveHexTank(currentHexTank, -1);
             }
         }
         if (this._down === true) {
-            if (this._enableClientInterpolation === false) {
-                this._room.send("down");
+            if (
+                this._enableClientInterpolation === false &&
+                this._commandsCounter < this._commandsLimit
+            ) {
+                this._room.send("command", "down");
                 this._moveHexTank(currentHexTank, 1);
             }
         }
         if (this._left === true) {
-            if (this._enableClientInterpolation === false) {
-                this._room.send("left");
+            if (
+                this._enableClientInterpolation === false &&
+                this._commandsCounter < this._commandsLimit
+            ) {
+                this._room.send("command", "left");
                 this._rotateHexTank(currentHexTank, -1);
             }
         }
         if (this._right === true) {
-            if (this._enableClientInterpolation === false) {
-                this._room.send("right");
+            if (
+                this._enableClientInterpolation === false &&
+                this._commandsCounter < this._commandsLimit
+            ) {
+                this._room.send("command", "right");
                 this._rotateHexTank(currentHexTank, 1);
             }
         }
+
+        this._commandsCounter = 0;
     }
 
     private _updateHexTanks() {
