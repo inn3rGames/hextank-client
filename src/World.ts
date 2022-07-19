@@ -278,6 +278,7 @@ export default class World {
                         {
                             x: serverHexTank.x,
                             z: serverHexTank.z,
+                            angle: serverHexTank.angle,
                         }
                     );
 
@@ -288,6 +289,7 @@ export default class World {
                         {
                             x: this._hexTanks[serverHexTank.id].position.x,
                             z: this._hexTanks[serverHexTank.id].position.z,
+                            angle: this._hexTanks[serverHexTank.id].rotation.y,
                         }
                     );
                 }
