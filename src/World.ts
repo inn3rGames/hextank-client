@@ -271,11 +271,25 @@ export default class World {
             }
 
             serverHexTank.onChange = () => {
+                this._debug = true;
                 if (this._debug === true) {
-                    console.log(`HexTank ${serverHexTank.id} moved to: `, {
-                        x: serverHexTank.x,
-                        z: serverHexTank.z,
-                    });
+                    console.log(
+                        `Server HexTank ${serverHexTank.id} moved to: `,
+                        {
+                            x: serverHexTank.x,
+                            z: serverHexTank.z,
+                        }
+                    );
+
+                    console.log(
+                        `Client HexTank ${
+                            this._hexTanks[serverHexTank.id]
+                        } moved to: `,
+                        {
+                            x: this._hexTanks[serverHexTank.id].position.x,
+                            z: this._hexTanks[serverHexTank.id].position.z,
+                        }
+                    );
                 }
             };
         };
