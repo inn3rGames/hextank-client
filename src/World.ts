@@ -59,24 +59,12 @@ export default class World {
     private _fpsTexture!: AdvancedDynamicTexture;
     private _fpsText!: TextBlock;
 
-    private _hexTanks!: { [tankId: string]: AbstractMesh };
+    private _hexTanks!: { [tankId: string]: HexTank };
 
     private _client!: Client;
     private _room!: Room;
 
-    private _up: Boolean = false;
-    private _down: Boolean = false;
-    private _left: Boolean = false;
-    private _right: Boolean = false;
-
-    private _speed: number = 0.5;
-    private _rotationSpeed: number = 5 * (Math.PI / 180);
-
     private _linearInperpolationPercent: number = 0.2;
-
-    private _enableClientInterpolation: boolean = false;
-    private _latencyLimit: number = 20;
-    private _disableInput: boolean = false;
 
     private _fpsLimit: number = 60;
     private _lastFrame: number = 0;
@@ -86,11 +74,7 @@ export default class World {
     private _elapsedTime: number = Math.round(this._fixedFrameDuration);
     private _resetElapsedTime: boolean = true;
 
-    private _commandsPerFrame: number = 10;
-    private _commandsCounter: number = 0;
-
-    private _convertRadToDegrees: number = 180 / Math.PI;
-    private _convertDegreesToRad: number = Math.PI / 180;
+    private _currentHexTank!: HexTank;
 
     private _debug: boolean = false;
 
@@ -255,16 +239,23 @@ export default class World {
         }
 
         this._room.state.hexTanks.onAdd = async (serverHexTank: any) => {
-            var clientHexTank = new HexTank(
+            let clientHexTank = new HexTank(
                 serverHexTank.x,
                 serverHexTank.z,
                 serverHexTank.id,
+                this._room,
                 this._scene,
+                this._camera,
                 this._shadowGenerator
             );
             await clientHexTank.loadModel();
 
-            this._hexTanks[serverHexTank.id] = clientHexTank.mesh;
+            this._hexTanks[serverHexTank.id] = clientHexTank;
+
+            if (this._room.sessionId === serverHexTank.id) {
+                this._currentHexTank = clientHexTank;
+                this._currentHexTank.enableInput();
+            }
 
             if (this._debug === true) {
                 console.log(`HexTank ${serverHexTank.id} joined at: `, {
@@ -286,12 +277,13 @@ export default class World {
 
                     console.log(
                         `Client HexTank ${
-                            this._hexTanks[serverHexTank.id]
+                            this._hexTanks[serverHexTank.id].id
                         } moved to: `,
                         {
-                            x: this._hexTanks[serverHexTank.id].position.x,
-                            z: this._hexTanks[serverHexTank.id].position.z,
-                            angle: this._hexTanks[serverHexTank.id].rotation.y,
+                            x: this._hexTanks[serverHexTank.id].mesh.position.x,
+                            z: this._hexTanks[serverHexTank.id].mesh.position.z,
+                            angle: this._hexTanks[serverHexTank.id].mesh
+                                .rotation.y,
                         }
                     );
                 }
@@ -302,7 +294,7 @@ export default class World {
             if (this._debug === true) {
                 console.log(`HexTank ${serverHexTank.id} left!`);
             }
-            this._hexTanks[serverHexTank.id].dispose();
+            this._hexTanks[serverHexTank.id].mesh.dispose();
             delete this._hexTanks[serverHexTank.id];
         };
 
@@ -317,224 +309,9 @@ export default class World {
             }); */
         };
 
-        window.addEventListener("keydown", (event) => {
-            if (
-                event.key === "ArrowUp" ||
-                event.key === "w" ||
-                event.key === "W"
-            ) {
-                this._up = true;
-                this._commandsCounter += 1;
-            }
-            if (
-                event.key === "ArrowDown" ||
-                event.key === "s" ||
-                event.key === "S"
-            ) {
-                this._down = true;
-                this._commandsCounter += 1;
-            }
-            if (
-                event.key === "ArrowLeft" ||
-                event.key === "a" ||
-                event.key === "A"
-            ) {
-                this._left = true;
-                this._commandsCounter += 1;
-            }
-            if (
-                event.key === "ArrowRight" ||
-                event.key === "d" ||
-                event.key === "D"
-            ) {
-                this._right = true;
-                this._commandsCounter += 1;
-            }
-        });
-
-        window.addEventListener("keyup", (event) => {
-            if (
-                event.key === "ArrowUp" ||
-                event.key === "w" ||
-                event.key === "W"
-            ) {
-                this._up = false;
-            }
-            if (
-                event.key === "ArrowDown" ||
-                event.key === "s" ||
-                event.key === "S"
-            ) {
-                this._down = false;
-            }
-            if (
-                event.key === "ArrowLeft" ||
-                event.key === "a" ||
-                event.key === "A"
-            ) {
-                this._left = false;
-            }
-            if (
-                event.key === "ArrowRight" ||
-                event.key === "d" ||
-                event.key === "D"
-            ) {
-                this._right = false;
-            }
-        });
-
         window.addEventListener("focus", () => {
             this._focusRegained();
         });
-    }
-
-    private _linearInterpolation(
-        start: number,
-        end: number,
-        percent: number
-    ): number {
-        let difference = Math.round(Math.abs(end - start) * 1000) / 1000;
-
-        if (difference === 0) {
-            return end;
-        } else {
-            return start + (end - start) * percent;
-        }
-    }
-
-    private _angleInterpolation(
-        startAngle: number,
-        endAngle: number,
-        percent: number
-    ) {
-        let currentAngle = startAngle;
-        let targetAngle = endAngle;
-        let differenceBetweenAngles = targetAngle - currentAngle;
-
-        while (differenceBetweenAngles < -Math.PI) {
-            targetAngle += 2 * Math.PI;
-            differenceBetweenAngles = targetAngle - currentAngle;
-        }
-        while (differenceBetweenAngles > Math.PI) {
-            targetAngle -= 2 * Math.PI;
-            differenceBetweenAngles = targetAngle - currentAngle;
-        }
-
-        return this._linearInterpolation(currentAngle, targetAngle, percent);
-    }
-
-    private _positiveAngle(angle: number): number {
-        let computeAngle = angle;
-        computeAngle = computeAngle % (2 * Math.PI);
-        if (computeAngle < 0) {
-            computeAngle += 2 * Math.PI;
-        }
-        return computeAngle;
-    }
-
-    private _getDistance(
-        currentHexTank: AbstractMesh,
-        serverHexTank: any
-    ): number {
-        let dX = currentHexTank.position.x - serverHexTank.x;
-        let dZ = currentHexTank.position.z - serverHexTank.z;
-
-        return Math.sqrt(dX * dX + dZ * dZ);
-    }
-
-    private _rotateHexTank(currentHexTank: AbstractMesh, direction: number) {
-        let computeAngle = currentHexTank.rotation.y;
-        computeAngle += this._rotationSpeed * direction;
-        computeAngle = this._positiveAngle(computeAngle);
-        currentHexTank.rotation.y = computeAngle;
-    }
-
-    private _moveHexTank(currentHexTank: AbstractMesh, direction: number) {
-        currentHexTank.position.x +=
-            this._speed * Math.cos(currentHexTank.rotation.y) * direction;
-        currentHexTank.position.z +=
-            this._speed * -Math.sin(currentHexTank.rotation.y) * direction;
-    }
-
-    private _updateCurrentHexTank(
-        currentHexTank: AbstractMesh,
-        serverHexTank: any
-    ) {
-        let serverClientDistance = this._getDistance(
-            currentHexTank,
-            serverHexTank
-        );
-
-        if (
-            serverClientDistance >= this._latencyLimit ||
-            this._enableClientInterpolation === true
-        ) {
-            if (this._enableClientInterpolation === false) {
-                this._enableClientInterpolation = true;
-            }
-
-            currentHexTank.position.x = this._linearInterpolation(
-                currentHexTank.position.x,
-                serverHexTank.x,
-                this._linearInperpolationPercent
-            );
-            currentHexTank.position.z = this._linearInterpolation(
-                currentHexTank.position.z,
-                serverHexTank.z,
-                this._linearInperpolationPercent
-            );
-
-            currentHexTank.rotation.y = this._positiveAngle(
-                this._angleInterpolation(
-                    currentHexTank.rotation.y,
-                    serverHexTank.angle,
-                    this._linearInperpolationPercent
-                )
-            );
-
-            if (serverClientDistance === 0) {
-                this._enableClientInterpolation = false;
-            }
-        }
-
-        if (this._up === true) {
-            if (
-                this._enableClientInterpolation === false &&
-                this._commandsCounter < this._commandsPerFrame
-            ) {
-                this._room.send("command", "up");
-                this._moveHexTank(currentHexTank, -1);
-            }
-        }
-        if (this._down === true) {
-            if (
-                this._enableClientInterpolation === false &&
-                this._commandsCounter < this._commandsPerFrame
-            ) {
-                this._room.send("command", "down");
-                this._moveHexTank(currentHexTank, 1);
-            }
-        }
-        if (this._left === true) {
-            if (
-                this._enableClientInterpolation === false &&
-                this._commandsCounter < this._commandsPerFrame
-            ) {
-                this._room.send("command", "left");
-                this._rotateHexTank(currentHexTank, -1);
-            }
-        }
-        if (this._right === true) {
-            if (
-                this._enableClientInterpolation === false &&
-                this._commandsCounter < this._commandsPerFrame
-            ) {
-                this._room.send("command", "right");
-                this._rotateHexTank(currentHexTank, 1);
-            }
-        }
-
-        this._commandsCounter = 0;
     }
 
     private _updateHexTanks() {
@@ -543,31 +320,29 @@ export default class World {
             let serverHexTank = this._room.state.hexTanks[index];
 
             if (this._room.sessionId !== index) {
-                clientHexTank.position.x = this._linearInterpolation(
-                    clientHexTank.position.x,
-                    serverHexTank.x,
-                    this._linearInperpolationPercent
-                );
+                clientHexTank.mesh.position.x =
+                    clientHexTank.linearInterpolation(
+                        clientHexTank.mesh.position.x,
+                        serverHexTank.x,
+                        this._linearInperpolationPercent
+                    );
 
-                clientHexTank.position.z = this._linearInterpolation(
-                    clientHexTank.position.z,
-                    serverHexTank.z,
-                    this._linearInperpolationPercent
-                );
+                clientHexTank.mesh.position.z =
+                    clientHexTank.linearInterpolation(
+                        clientHexTank.mesh.position.z,
+                        serverHexTank.z,
+                        this._linearInperpolationPercent
+                    );
 
-                clientHexTank.rotation.y = this._positiveAngle(
-                    this._angleInterpolation(
-                        clientHexTank.rotation.y,
+                clientHexTank.mesh.rotation.y = clientHexTank.positiveAngle(
+                    clientHexTank.angleInterpolation(
+                        clientHexTank.mesh.rotation.y,
                         serverHexTank.angle,
                         this._linearInperpolationPercent
                     )
                 );
             } else {
-                this._updateCurrentHexTank(clientHexTank, serverHexTank);
-
-                this._camera.alpha = -clientHexTank.rotation.y;
-                this._camera.target.x = clientHexTank.position.x;
-                this._camera.target.z = clientHexTank.position.z;
+                clientHexTank.update(serverHexTank);
             }
         }
     }
@@ -589,9 +364,9 @@ export default class World {
             let clientHexTank = this._hexTanks[index];
             let serverHexTank = this._room.state.hexTanks[index];
 
-            clientHexTank.position.x = serverHexTank.x;
-            clientHexTank.position.z = serverHexTank.z;
-            clientHexTank.rotation.y = serverHexTank.angle;
+            clientHexTank.mesh.position.x = serverHexTank.x;
+            clientHexTank.mesh.position.z = serverHexTank.z;
+            clientHexTank.mesh.rotation.y = serverHexTank.angle;
         }
     }
 
