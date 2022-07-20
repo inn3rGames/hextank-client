@@ -352,9 +352,11 @@ export default class World {
             let clientHexTank = this._hexTanks[index];
             let serverHexTank = this._room.state.hexTanks[index];
 
-            clientHexTank.mesh.position.x = serverHexTank.x;
-            clientHexTank.mesh.position.z = serverHexTank.z;
-            clientHexTank.mesh.rotation.y = serverHexTank.angle;
+            if (typeof clientHexTank.mesh !== "undefined") {
+                clientHexTank.mesh.position.x = serverHexTank.x;
+                clientHexTank.mesh.position.z = serverHexTank.z;
+                clientHexTank.mesh.rotation.y = serverHexTank.angle;
+            }
         }
     }
 

@@ -20,7 +20,14 @@ export default class HexTank {
     private _convertRadToDegrees: number = 180 / Math.PI;
     private _convertDegreesToRad: number = Math.PI / 180;
 
-    private _speed: number = 0.5;
+    private _speed: number = 0;
+    private _speedLimit: number = 1;
+    private _speedAcceralation: number =
+        1 * (this._speedLimit / this._fpsLimit);
+    private _speedDirection: number = 1;
+    private _speedDecelerate: boolean = false;
+    private _speedPreviousDirection: number = 0;
+
     private _rotationSpeed: number = 0;
     private _rotationSpeedLimit: number = 5 * this._convertDegreesToRad;
     private _rotationAcceralation =
@@ -134,11 +141,23 @@ export default class HexTank {
     }
 
     private _move(direction: number) {
-        this.mesh.position.x +=
-            this._speed * Math.cos(this.mesh.rotation.y) * direction;
+        this._speedDecelerate = false;
 
-        this.mesh.position.z +=
-            this._speed * -Math.sin(this.mesh.rotation.y) * direction;
+        if (this._speedPreviousDirection !== direction) {
+            this._speed = 0;
+        }
+
+        this._speed += this._speedAcceralation;
+        if (this._speed > this._speedLimit) {
+            this._speed = this._speedLimit;
+        }
+
+        this._speedDirection = direction;
+        this._speedPreviousDirection = direction;
+    }
+
+    private _stopMove() {
+        this._speedDecelerate = true;
     }
 
     enableInput() {
@@ -268,10 +287,12 @@ export default class HexTank {
 
             if (currentCommand === "upKeyUp") {
                 this._room.send("command", "upKeyUp");
+                this._stopMove();
             }
 
             if (currentCommand === "downKeyUp") {
                 this._room.send("command", "downKeyUp");
+                this._stopMove();
             }
 
             if (currentCommand === "leftKeyUp") {
@@ -284,6 +305,24 @@ export default class HexTank {
                 this._stopRotate();
             }
         }
+    }
+
+    private _updateMovement() {
+        if (this._speedDecelerate === true) {
+            this._speed -= this._speedAcceralation;
+            if (this._speed <= 0) {
+                this._speed = 0;
+                this._speedDecelerate = false;
+            }
+        }
+
+        this.mesh.position.x +=
+            this._speed * Math.cos(this.mesh.rotation.y) * this._speedDirection;
+
+        this.mesh.position.z +=
+            this._speed *
+            -Math.sin(this.mesh.rotation.y) *
+            this._speedDirection;
     }
 
     private _updateCamera() {
@@ -301,6 +340,7 @@ export default class HexTank {
         ) {
             if (this._enableClientInterpolation === false) {
                 this._enableClientInterpolation = true;
+                console.log("Lag detected!");
             }
 
             this.mesh.position.x = this.linearInterpolation(
@@ -329,6 +369,7 @@ export default class HexTank {
 
         this._addCommands();
         this._processCommands();
+        this._updateMovement();
         this._updateCamera();
     }
 }
