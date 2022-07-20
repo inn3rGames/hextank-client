@@ -74,8 +74,6 @@ export default class World {
     private _elapsedTime: number = Math.round(this._fixedFrameDuration);
     private _resetElapsedTime: boolean = true;
 
-    private _currentHexTank!: HexTank;
-
     private _debug: boolean = false;
 
     constructor() {
@@ -248,13 +246,10 @@ export default class World {
                 this._camera,
                 this._shadowGenerator
             );
-            await clientHexTank.loadModel();
-
             this._hexTanks[serverHexTank.id] = clientHexTank;
-
-            if (this._room.sessionId === serverHexTank.id) {
-                this._currentHexTank = clientHexTank;
-                this._currentHexTank.enableInput();
+            await clientHexTank.loadModel();
+            if (this._room.sessionId === clientHexTank.id) {
+                clientHexTank.enableInput();
             }
 
             if (this._debug === true) {
@@ -298,17 +293,6 @@ export default class World {
             delete this._hexTanks[serverHexTank.id];
         };
 
-        this._room.onLeave((code) => {
-            //console.log(code);
-        });
-
-        this._scene.onPointerDown = (event, pointer) => {
-            /* this._room.send("moveHexTank", {
-                x: pointer.pickedPoint!.x,
-                z: pointer.pickedPoint!.z,
-            }); */
-        };
-
         window.addEventListener("focus", () => {
             this._focusRegained();
         });
@@ -318,6 +302,10 @@ export default class World {
         for (let index in this._hexTanks) {
             let clientHexTank = this._hexTanks[index];
             let serverHexTank = this._room.state.hexTanks[index];
+
+            if (typeof clientHexTank.mesh === "undefined") {
+                continue;
+            }
 
             if (this._room.sessionId !== index) {
                 clientHexTank.mesh.position.x =
