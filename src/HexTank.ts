@@ -251,42 +251,42 @@ export default class HexTank {
         ) {
             if (currentCommand === "upKeyDown") {
                 this._room.send("command", "upKeyDown");
-                //this._move(-1);
+                this._moveForward();
             }
 
             if (currentCommand === "downKeyDown") {
                 this._room.send("command", "downKeyDown");
-                //this._move(1);
+                this._moveBackward();
             }
 
             if (currentCommand === "leftKeyDown") {
                 this._room.send("command", "leftKeyDown");
-                //this._rotate(-1);
+                this._rotate(-1);
             }
 
             if (currentCommand === "rightKeyDown") {
                 this._room.send("command", "rightKeyDown");
-                //this._rotate(1);
+                this._rotate(1);
             }
 
             if (currentCommand === "upKeyUp") {
                 this._room.send("command", "upKeyUp");
-                //this._stopMove();
+                this._stopMoveForward();
             }
 
             if (currentCommand === "downKeyUp") {
                 this._room.send("command", "downKeyUp");
-                //this._stopMove();
+                this._stopMoveBackward();
             }
 
             if (currentCommand === "leftKeyUp") {
                 this._room.send("command", "leftKeyUp");
-                //this._stopRotate();
+                this._stopRotate();
             }
 
             if (currentCommand === "rightKeyUp") {
                 this._room.send("command", "rightKeyUp");
-                //this._stopRotate();
+                this._stopRotate();
             }
         }
     }
@@ -368,10 +368,10 @@ export default class HexTank {
     }
 
     update(serverHexTank: any) {
+        this.syncWithServer(serverHexTank);
         this._addCommands();
         this._processCommands();
-        this.syncWithServer(serverHexTank);
-        //this._updateMovement();
+        this._updateMovement();
         this._updateCamera();
     }
 }
