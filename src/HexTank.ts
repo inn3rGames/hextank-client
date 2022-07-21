@@ -24,9 +24,9 @@ export default class HexTank {
     private _speedLimit: number = 1;
     private _speedAcceralation: number =
         1 * (this._speedLimit / this._fpsLimit);
-    private _speedDirection: number = 1;
-    private _speedDecelerate: boolean = false;
-    private _speedPreviousDirection: number = 0;
+
+    private _speedForward: boolean = false;
+    private _speedBackward: boolean = false;
 
     private _rotationSpeed: number = 0;
     private _rotationSpeedLimit: number = 5 * this._convertDegreesToRad;
@@ -34,8 +34,6 @@ export default class HexTank {
         (25 / this._fpsLimit) * this._convertDegreesToRad;
 
     private _linearInperpolationPercent: number = 0.2;
-    private _enableClientInterpolation: boolean = false;
-    private _latencyLimit: number = 20;
 
     private _commandsPerFrame: number = 10;
 
@@ -44,7 +42,7 @@ export default class HexTank {
     private _left: number = 0;
     private _right: number = 0;
 
-    commands: Array<string> = [];
+    private _commands: Array<string> = [];
 
     constructor(
         x: number,
@@ -116,13 +114,6 @@ export default class HexTank {
         return computeAngle;
     }
 
-    private _getDistance(serverHexTank: any): number {
-        let dX = this.mesh.position.x - serverHexTank.x;
-        let dZ = this.mesh.position.z - serverHexTank.z;
-
-        return Math.sqrt(dX * dX + dZ * dZ);
-    }
-
     private _rotate(direction: number) {
         let computeAngle = this.mesh.rotation.y;
 
@@ -140,24 +131,20 @@ export default class HexTank {
         this._rotationSpeed = 0;
     }
 
-    private _move(direction: number) {
-        this._speedDecelerate = false;
-
-        if (this._speedPreviousDirection !== direction) {
-            this._speed = 0;
-        }
-
-        this._speed += this._speedAcceralation;
-        if (this._speed > this._speedLimit) {
-            this._speed = this._speedLimit;
-        }
-
-        this._speedDirection = direction;
-        this._speedPreviousDirection = direction;
+    private _moveForward() {
+        this._speedForward = true;
     }
 
-    private _stopMove() {
-        this._speedDecelerate = true;
+    private _stopMoveForward() {
+        this._speedForward = false;
+    }
+
+    private _moveBackward() {
+        this._speedBackward = true;
+    }
+
+    private _stopMoveBackward() {
+        this._speedBackward = false;
     }
 
     enableInput() {
@@ -225,36 +212,33 @@ export default class HexTank {
     }
 
     private _addCommands() {
-        if (
-            this._enableClientInterpolation === false &&
-            this.commands.length < this._commandsPerFrame
-        ) {
+        if (this._commands.length <= this._commandsPerFrame) {
             if (this._up === 1) {
-                this.commands.push("upKeyDown");
+                this._commands.push("upKeyDown");
             }
             if (this._down === 1) {
-                this.commands.push("downKeyDown");
+                this._commands.push("downKeyDown");
             }
             if (this._left === 1) {
-                this.commands.push("leftKeyDown");
+                this._commands.push("leftKeyDown");
             }
             if (this._right === 1) {
-                this.commands.push("rightKeyDown");
+                this._commands.push("rightKeyDown");
             }
             if (this._up === 2) {
-                this.commands.push("upKeyUp");
+                this._commands.push("upKeyUp");
                 this._up = 0;
             }
             if (this._down === 2) {
-                this.commands.push("downKeyUp");
+                this._commands.push("downKeyUp");
                 this._down = 0;
             }
             if (this._left === 2) {
-                this.commands.push("leftKeyUp");
+                this._commands.push("leftKeyUp");
                 this._left = 0;
             }
             if (this._right === 2) {
-                this.commands.push("rightKeyUp");
+                this._commands.push("rightKeyUp");
                 this._right = 0;
             }
         }
@@ -263,66 +247,97 @@ export default class HexTank {
     private _processCommands() {
         let currentCommand;
         while (
-            typeof (currentCommand = this.commands.shift()) !== "undefined"
+            typeof (currentCommand = this._commands.shift()) !== "undefined"
         ) {
             if (currentCommand === "upKeyDown") {
                 this._room.send("command", "upKeyDown");
-                this._move(-1);
+                //this._move(-1);
             }
 
             if (currentCommand === "downKeyDown") {
                 this._room.send("command", "downKeyDown");
-                this._move(1);
+                //this._move(1);
             }
 
             if (currentCommand === "leftKeyDown") {
                 this._room.send("command", "leftKeyDown");
-                this._rotate(-1);
+                //this._rotate(-1);
             }
 
             if (currentCommand === "rightKeyDown") {
                 this._room.send("command", "rightKeyDown");
-                this._rotate(1);
+                //this._rotate(1);
             }
 
             if (currentCommand === "upKeyUp") {
                 this._room.send("command", "upKeyUp");
-                this._stopMove();
+                //this._stopMove();
             }
 
             if (currentCommand === "downKeyUp") {
                 this._room.send("command", "downKeyUp");
-                this._stopMove();
+                //this._stopMove();
             }
 
             if (currentCommand === "leftKeyUp") {
                 this._room.send("command", "leftKeyUp");
-                this._stopRotate();
+                //this._stopRotate();
             }
 
             if (currentCommand === "rightKeyUp") {
                 this._room.send("command", "rightKeyUp");
-                this._stopRotate();
+                //this._stopRotate();
             }
         }
     }
 
-    private _updateMovement() {
-        if (this._speedDecelerate === true) {
-            this._speed -= this._speedAcceralation;
-            if (this._speed <= 0) {
-                this._speed = 0;
-                this._speedDecelerate = false;
+    private _decelerate() {
+        if (this._speedForward === false && this._speedBackward === false) {
+            if (this._speed !== 0) {
+                if (this._speed >= 0) {
+                    this._speed -= this._speedAcceralation;
+                    if (this._speed <= 0) {
+                        this._speed = 0;
+                    }
+                } else {
+                    this._speed += this._speedAcceralation;
+                    if (this._speed > 0) {
+                        this._speed = 0;
+                    }
+                }
             }
         }
+    }
 
-        this.mesh.position.x +=
-            this._speed * Math.cos(this.mesh.rotation.y) * this._speedDirection;
+    private _accelerate() {
+        if (this._speedForward === true) {
+            this._speed -= this._speedAcceralation;
+        }
+        if (this._speedBackward === true) {
+            this._speed += this._speedAcceralation;
+        }
+    }
 
-        this.mesh.position.z +=
-            this._speed *
-            -Math.sin(this.mesh.rotation.y) *
-            this._speedDirection;
+    private _limitTopSpeed() {
+        if (Math.abs(this._speed) > this._speedLimit) {
+            if (this._speed >= 0) {
+                this._speed = this._speedLimit;
+            } else {
+                this._speed = -this._speedLimit;
+            }
+        }
+    }
+
+    private _setNewPosition() {
+        this.mesh.position.x += this._speed * Math.cos(this.mesh.rotation.y);
+        this.mesh.position.z += this._speed * -Math.sin(this.mesh.rotation.y);
+    }
+
+    private _updateMovement() {
+        this._decelerate();
+        this._accelerate();
+        this._limitTopSpeed();
+        this._setNewPosition();
     }
 
     private _updateCamera() {
@@ -331,45 +346,32 @@ export default class HexTank {
         this._camera.target.z = this.mesh.position.z;
     }
 
+    syncWithServer(serverHexTank: any) {
+        this.mesh.position.x = this.linearInterpolation(
+            this.mesh.position.x,
+            serverHexTank.x,
+            this._linearInperpolationPercent
+        );
+        this.mesh.position.z = this.linearInterpolation(
+            this.mesh.position.z,
+            serverHexTank.z,
+            this._linearInperpolationPercent
+        );
+
+        this.mesh.rotation.y = this.positiveAngle(
+            this.angleInterpolation(
+                this.mesh.rotation.y,
+                serverHexTank.angle,
+                this._linearInperpolationPercent
+            )
+        );
+    }
+
     update(serverHexTank: any) {
-        let serverClientDistance = this._getDistance(serverHexTank);
-
-        if (
-            serverClientDistance >= this._latencyLimit ||
-            this._enableClientInterpolation === true
-        ) {
-            if (this._enableClientInterpolation === false) {
-                this._enableClientInterpolation = true;
-                console.log("Lag detected!");
-            }
-
-            this.mesh.position.x = this.linearInterpolation(
-                this.mesh.position.x,
-                serverHexTank.x,
-                this._linearInperpolationPercent
-            );
-            this.mesh.position.z = this.linearInterpolation(
-                this.mesh.position.z,
-                serverHexTank.z,
-                this._linearInperpolationPercent
-            );
-
-            this.mesh.rotation.y = this.positiveAngle(
-                this.angleInterpolation(
-                    this.mesh.rotation.y,
-                    serverHexTank.angle,
-                    this._linearInperpolationPercent
-                )
-            );
-
-            if (serverClientDistance === 0) {
-                this._enableClientInterpolation = false;
-            }
-        }
-
         this._addCommands();
         this._processCommands();
-        this._updateMovement();
+        this.syncWithServer(serverHexTank);
+        //this._updateMovement();
         this._updateCamera();
     }
 }

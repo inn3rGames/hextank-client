@@ -258,31 +258,6 @@ export default class World {
                     z: serverHexTank.z,
                 });
             }
-
-            serverHexTank.onChange = () => {
-                if (this._debug === true) {
-                    console.log(
-                        `Server HexTank ${serverHexTank.id} moved to: `,
-                        {
-                            x: serverHexTank.x,
-                            z: serverHexTank.z,
-                            angle: serverHexTank.angle,
-                        }
-                    );
-
-                    console.log(
-                        `Client HexTank ${
-                            this._hexTanks[serverHexTank.id].id
-                        } moved to: `,
-                        {
-                            x: this._hexTanks[serverHexTank.id].mesh.position.x,
-                            z: this._hexTanks[serverHexTank.id].mesh.position.z,
-                            angle: this._hexTanks[serverHexTank.id].mesh
-                                .rotation.y,
-                        }
-                    );
-                }
-            };
         };
 
         this._room.state.hexTanks.onRemove = (serverHexTank: any) => {
@@ -308,27 +283,7 @@ export default class World {
             }
 
             if (this._room.sessionId !== index) {
-                clientHexTank.mesh.position.x =
-                    clientHexTank.linearInterpolation(
-                        clientHexTank.mesh.position.x,
-                        serverHexTank.x,
-                        this._linearInperpolationPercent
-                    );
-
-                clientHexTank.mesh.position.z =
-                    clientHexTank.linearInterpolation(
-                        clientHexTank.mesh.position.z,
-                        serverHexTank.z,
-                        this._linearInperpolationPercent
-                    );
-
-                clientHexTank.mesh.rotation.y = clientHexTank.positiveAngle(
-                    clientHexTank.angleInterpolation(
-                        clientHexTank.mesh.rotation.y,
-                        serverHexTank.angle,
-                        this._linearInperpolationPercent
-                    )
-                );
+                clientHexTank.syncWithServer(serverHexTank);
             } else {
                 clientHexTank.update(serverHexTank);
             }
