@@ -368,7 +368,7 @@ export default class HexTank {
     }
 
     update(serverHexTank: any) {
-        this.syncWithServer(serverHexTank);
+        //this.syncWithServer(serverHexTank);
         this._addCommands();
         this._processCommands();
         this._updateMovement();
