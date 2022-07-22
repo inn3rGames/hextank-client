@@ -27,7 +27,7 @@ export default class HexTank {
 
     private _commands: Array<string> = [];
 
-    private _gamepad: any;
+    private _gamepad!: Gamepad;
     private _defaultControls: boolean = true;
 
     private _debug: boolean;
@@ -350,7 +350,7 @@ export default class HexTank {
         window.addEventListener("gamepadconnected", (event) => {
             event.preventDefault();
             this._defaultControls = false;
-            this._gamepad = navigator.getGamepads()[0];
+            this._gamepad = navigator.getGamepads()[0] as Gamepad;
             if (this._debug === true) {
                 console.log("Gamepad connected.");
             }
@@ -359,7 +359,6 @@ export default class HexTank {
         window.addEventListener("gamepaddisconnected", (event) => {
             event.preventDefault();
             this._defaultControls = true;
-            this._gamepad = { axes: [] };
             if (this._debug === true) {
                 console.log("Gamepad disconnected.");
             }
@@ -367,43 +366,37 @@ export default class HexTank {
     }
 
     private _gamepadInput() {
-        if (typeof this._gamepad === "object") {
-            if (typeof this._gamepad.axes !== undefined) {
-                if (this._gamepad.axes.length >= 4) {
-                    this._gamepad = navigator.getGamepads()[0];
+        if (typeof this._gamepad !== "undefined" && this._gamepad !== null) {
+            if (this._gamepad.axes.length >= 4) {
+                this._gamepad = navigator.getGamepads()[0] as Gamepad;
 
-                    for (let i = 0; i < this._gamepad.axes.length; i++) {
-                        if (this._gamepad.axes[i] !== 0) {
-                            this._defaultControls = false;
-                        }
+                for (let i = 0; i < this._gamepad.axes.length; i++) {
+                    if (this._gamepad.axes[i] !== 0) {
+                        this._defaultControls = false;
+                    }
+                }
+
+                if (this._defaultControls === false) {
+                    if (this._gamepad.axes[1] < 0) {
+                        this._up = 1;
+                    } else if (this._up === 1) {
+                        this._up = 2;
+                    }
+                    if (this._gamepad.axes[1] > 0) {
+                        this._down = 1;
+                    } else if (this._down === 1) {
+                        this._down = 2;
                     }
 
-                    if (this._defaultControls === false) {
-                        if (typeof this._gamepad.axes[1] !== undefined) {
-                            if (this._gamepad.axes[1] < 0) {
-                                this._up = 1;
-                            } else if (this._up === 1) {
-                                this._up = 2;
-                            }
-                            if (this._gamepad.axes[1] > 0) {
-                                this._down = 1;
-                            } else if (this._down === 1) {
-                                this._down = 2;
-                            }
-                        }
-
-                        if (typeof this._gamepad.axes[2] !== undefined) {
-                            if (this._gamepad.axes[2] < 0) {
-                                this._left = 1;
-                            } else if (this._left === 1) {
-                                this._left = 2;
-                            }
-                            if (this._gamepad.axes[2] > 0) {
-                                this._right = 1;
-                            } else if (this._right === 1) {
-                                this._right = 2;
-                            }
-                        }
+                    if (this._gamepad.axes[2] < 0) {
+                        this._left = 1;
+                    } else if (this._left === 1) {
+                        this._left = 2;
+                    }
+                    if (this._gamepad.axes[2] > 0) {
+                        this._right = 1;
+                    } else if (this._right === 1) {
+                        this._right = 2;
                     }
                 }
             }
