@@ -107,6 +107,7 @@ export default class HexTank {
 
     enableInput() {
         window.addEventListener("keydown", (event) => {
+            event.preventDefault();
             if (
                 event.key === "ArrowUp" ||
                 event.key === "w" ||
@@ -138,6 +139,7 @@ export default class HexTank {
         });
 
         window.addEventListener("keyup", (event) => {
+            event.preventDefault();
             if (
                 event.key === "ArrowUp" ||
                 event.key === "w" ||
@@ -182,29 +184,29 @@ export default class HexTank {
         buttonUp.style.backgroundColor = "rgba(255, 255, 255, 0.5)";
         buttonUp.style.borderRadius = "18px 18px 6px 6px";
 
-        buttonUp.addEventListener("touchstart", (e) => {
-            e.preventDefault();
+        buttonUp.addEventListener("touchstart", (event) => {
+            event.preventDefault();
             this._up = 1;
         });
-        buttonUp.addEventListener("touchend", (e) => {
-            e.preventDefault();
+        buttonUp.addEventListener("touchend", (event) => {
+            event.preventDefault();
             this._up = 2;
         });
-        buttonUp.addEventListener("cancel", (e) => {
-            e.preventDefault();
+        buttonUp.addEventListener("cancel", (event) => {
+            event.preventDefault();
             this._up = 2;
         });
 
-        buttonUp.addEventListener("mousedown", (e) => {
-            e.preventDefault();
+        buttonUp.addEventListener("mousedown", (event) => {
+            event.preventDefault();
             this._up = 1;
         });
-        buttonUp.addEventListener("mouseup", (e) => {
-            e.preventDefault();
+        buttonUp.addEventListener("mouseup", (event) => {
+            event.preventDefault();
             this._up = 2;
         });
-        buttonUp.addEventListener("mouseleave", (e) => {
-            e.preventDefault();
+        buttonUp.addEventListener("mouseleave", (event) => {
+            event.preventDefault();
             this._up = 2;
         });
 
@@ -218,29 +220,29 @@ export default class HexTank {
         buttonDown.style.backgroundColor = "rgba(255, 255, 255, 0.5)";
         buttonDown.style.borderRadius = "6px 6px 18px 18px";
 
-        buttonDown.addEventListener("touchstart", (e) => {
-            e.preventDefault();
+        buttonDown.addEventListener("touchstart", (event) => {
+            event.preventDefault();
             this._down = 1;
         });
-        buttonDown.addEventListener("touchend", (e) => {
-            e.preventDefault();
+        buttonDown.addEventListener("touchend", (event) => {
+            event.preventDefault();
             this._down = 2;
         });
-        buttonDown.addEventListener("touchcancel", (e) => {
-            e.preventDefault();
+        buttonDown.addEventListener("touchcancel", (event) => {
+            event.preventDefault();
             this._down = 2;
         });
 
-        buttonDown.addEventListener("mousedown", (e) => {
-            e.preventDefault();
+        buttonDown.addEventListener("mousedown", (event) => {
+            event.preventDefault();
             this._down = 1;
         });
-        buttonDown.addEventListener("mouseup", (e) => {
-            e.preventDefault();
+        buttonDown.addEventListener("mouseup", (event) => {
+            event.preventDefault();
             this._down = 2;
         });
-        buttonDown.addEventListener("mouseleave", (e) => {
-            e.preventDefault();
+        buttonDown.addEventListener("mouseleave", (event) => {
+            event.preventDefault();
             this._down = 2;
         });
 
@@ -255,29 +257,29 @@ export default class HexTank {
         buttonLeft.style.backgroundColor = "rgba(255, 255, 255, 0.5)";
         buttonLeft.style.borderRadius = "18px 6px 6px 18px";
 
-        buttonLeft.addEventListener("touchstart", (e) => {
-            e.preventDefault();
+        buttonLeft.addEventListener("touchstart", (event) => {
+            event.preventDefault();
             this._left = 1;
         });
-        buttonLeft.addEventListener("touchend", (e) => {
-            e.preventDefault();
+        buttonLeft.addEventListener("touchend", (event) => {
+            event.preventDefault();
             this._left = 2;
         });
-        buttonLeft.addEventListener("touchcancel", (e) => {
-            e.preventDefault();
+        buttonLeft.addEventListener("touchcancel", (event) => {
+            event.preventDefault();
             this._left = 2;
         });
 
-        buttonLeft.addEventListener("mousedown", (e) => {
-            e.preventDefault();
+        buttonLeft.addEventListener("mousedown", (event) => {
+            event.preventDefault();
             this._left = 1;
         });
-        buttonLeft.addEventListener("mouseup", (e) => {
-            e.preventDefault();
+        buttonLeft.addEventListener("mouseup", (event) => {
+            event.preventDefault();
             this._left = 2;
         });
-        buttonLeft.addEventListener("mouseleave", (e) => {
-            e.preventDefault();
+        buttonLeft.addEventListener("mouseleave", (event) => {
+            event.preventDefault();
             this._left = 2;
         });
 
@@ -292,29 +294,29 @@ export default class HexTank {
         buttonRight.style.backgroundColor = "rgba(255, 255, 255, 0.5)";
         buttonRight.style.borderRadius = "6px 18px 18px 6px";
 
-        buttonRight.addEventListener("touchstart", (e) => {
-            e.preventDefault();
+        buttonRight.addEventListener("touchstart", (event) => {
+            event.preventDefault();
             this._right = 1;
         });
-        buttonRight.addEventListener("touchend", (e) => {
-            e.preventDefault();
+        buttonRight.addEventListener("touchend", (event) => {
+            event.preventDefault();
             this._right = 2;
         });
-        buttonRight.addEventListener("touchcancel", (e) => {
-            e.preventDefault();
+        buttonRight.addEventListener("touchcancel", (event) => {
+            event.preventDefault();
             this._right = 2;
         });
 
-        buttonRight.addEventListener("mousedown", (e) => {
-            e.preventDefault();
+        buttonRight.addEventListener("mousedown", (event) => {
+            event.preventDefault();
             this._right = 1;
         });
-        buttonRight.addEventListener("mouseup", (e) => {
-            e.preventDefault();
+        buttonRight.addEventListener("mouseup", (event) => {
+            event.preventDefault();
             this._right = 2;
         });
-        buttonRight.addEventListener("mouseleave", (e) => {
-            e.preventDefault();
+        buttonRight.addEventListener("mouseleave", (event) => {
+            event.preventDefault();
             this._right = 2;
         });
     }
