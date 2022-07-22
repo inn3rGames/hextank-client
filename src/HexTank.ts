@@ -172,8 +172,6 @@ export default class HexTank {
             "main-container"
         ) as HTMLElement;
 
-        
-
         let buttonUp = document.createElement("div");
         container.appendChild(buttonUp);
         buttonUp.style.position = "fixed";
@@ -187,11 +185,27 @@ export default class HexTank {
         buttonUp.addEventListener("touchstart", (e) => {
             e.preventDefault();
             this._up = 1;
-        })
-
+        });
         buttonUp.addEventListener("touchend", (e) => {
             e.preventDefault();
-             this._up = 2;
+            this._up = 2;
+        });
+        buttonUp.addEventListener("cancel", (e) => {
+            e.preventDefault();
+            this._up = 2;
+        });
+
+        buttonUp.addEventListener("mousedown", (e) => {
+            e.preventDefault();
+            this._up = 1;
+        });
+        buttonUp.addEventListener("mouseup", (e) => {
+            e.preventDefault();
+            this._up = 2;
+        });
+        buttonUp.addEventListener("mouseleave", (e) => {
+            e.preventDefault();
+            this._up = 2;
         });
 
         let buttonDown = document.createElement("div");
@@ -208,8 +222,24 @@ export default class HexTank {
             e.preventDefault();
             this._down = 1;
         });
-
         buttonDown.addEventListener("touchend", (e) => {
+            e.preventDefault();
+            this._down = 2;
+        });
+        buttonDown.addEventListener("touchcancel", (e) => {
+            e.preventDefault();
+            this._down = 2;
+        });
+
+        buttonDown.addEventListener("mousedown", (e) => {
+            e.preventDefault();
+            this._down = 1;
+        });
+        buttonDown.addEventListener("mouseup", (e) => {
+            e.preventDefault();
+            this._down = 2;
+        });
+        buttonDown.addEventListener("mouseleave", (e) => {
             e.preventDefault();
             this._down = 2;
         });
@@ -229,8 +259,24 @@ export default class HexTank {
             e.preventDefault();
             this._left = 1;
         });
-
         buttonLeft.addEventListener("touchend", (e) => {
+            e.preventDefault();
+            this._left = 2;
+        });
+        buttonLeft.addEventListener("touchcancel", (e) => {
+            e.preventDefault();
+            this._left = 2;
+        });
+
+        buttonLeft.addEventListener("mousedown", (e) => {
+            e.preventDefault();
+            this._left = 1;
+        });
+        buttonLeft.addEventListener("mouseup", (e) => {
+            e.preventDefault();
+            this._left = 2;
+        });
+        buttonLeft.addEventListener("mouseleave", (e) => {
             e.preventDefault();
             this._left = 2;
         });
@@ -250,8 +296,24 @@ export default class HexTank {
             e.preventDefault();
             this._right = 1;
         });
-
         buttonRight.addEventListener("touchend", (e) => {
+            e.preventDefault();
+            this._right = 2;
+        });
+        buttonRight.addEventListener("touchcancel", (e) => {
+            e.preventDefault();
+            this._right = 2;
+        });
+
+        buttonRight.addEventListener("mousedown", (e) => {
+            e.preventDefault();
+            this._right = 1;
+        });
+        buttonRight.addEventListener("mouseup", (e) => {
+            e.preventDefault();
+            this._right = 2;
+        });
+        buttonRight.addEventListener("mouseleave", (e) => {
             e.preventDefault();
             this._right = 2;
         });
