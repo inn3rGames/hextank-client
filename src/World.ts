@@ -244,7 +244,8 @@ export default class World {
                 this._room,
                 this._scene,
                 this._camera,
-                this._shadowGenerator
+                this._shadowGenerator,
+                this._debug
             );
             this._hexTanks[serverHexTank.id] = clientHexTank;
             await clientHexTank.loadModel();
