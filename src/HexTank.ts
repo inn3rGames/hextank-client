@@ -30,6 +30,7 @@ export default class HexTank {
     private _gamepad!: Gamepad;
     private _defaultControls: boolean = true;
     private _gamepadDidRun: boolean = true;
+    private _touchDidRun: boolean = true;
 
     private _debug: boolean;
 
@@ -117,7 +118,8 @@ export default class HexTank {
         window.addEventListener("keydown", (event) => {
             event.preventDefault();
             this._defaultControls = true;
-            this._resetGamepadKeys();
+            this._resetGamepadButtons();
+            this._resetTouchButtons();
             if (
                 event.key === "ArrowUp" ||
                 event.key === "w" ||
@@ -198,8 +200,9 @@ export default class HexTank {
 
         buttonUp.addEventListener("touchstart", (event) => {
             event.preventDefault();
-            this._resetGamepadKeys();
+            this._resetGamepadButtons();
             this._defaultControls = true;
+            this._touchDidRun = true;
             this._up = 1;
         });
         buttonUp.addEventListener("touchend", (event) => {
@@ -215,8 +218,9 @@ export default class HexTank {
 
         buttonUp.addEventListener("mousedown", (event) => {
             event.preventDefault();
-            this._resetGamepadKeys();
+            this._resetGamepadButtons();
             this._defaultControls = true;
+            this._touchDidRun = true;
             this._up = 1;
         });
         buttonUp.addEventListener("mouseup", (event) => {
@@ -242,8 +246,9 @@ export default class HexTank {
 
         buttonDown.addEventListener("touchstart", (event) => {
             event.preventDefault();
-            this._resetGamepadKeys();
+            this._resetGamepadButtons();
             this._defaultControls = true;
+            this._touchDidRun = true;
             this._down = 1;
         });
         buttonDown.addEventListener("touchend", (event) => {
@@ -259,8 +264,9 @@ export default class HexTank {
 
         buttonDown.addEventListener("mousedown", (event) => {
             event.preventDefault();
-            this._resetGamepadKeys();
+            this._resetGamepadButtons();
             this._defaultControls = true;
+            this._touchDidRun = true;
             this._down = 1;
         });
         buttonDown.addEventListener("mouseup", (event) => {
@@ -287,8 +293,9 @@ export default class HexTank {
 
         buttonLeft.addEventListener("touchstart", (event) => {
             event.preventDefault();
-            this._resetGamepadKeys();
+            this._resetGamepadButtons();
             this._defaultControls = true;
+            this._touchDidRun = true;
             this._left = 1;
         });
         buttonLeft.addEventListener("touchend", (event) => {
@@ -304,8 +311,9 @@ export default class HexTank {
 
         buttonLeft.addEventListener("mousedown", (event) => {
             event.preventDefault();
-            this._resetGamepadKeys();
+            this._resetGamepadButtons();
             this._defaultControls = true;
+            this._touchDidRun = true;
             this._left = 1;
         });
         buttonLeft.addEventListener("mouseup", (event) => {
@@ -332,8 +340,9 @@ export default class HexTank {
 
         buttonRight.addEventListener("touchstart", (event) => {
             event.preventDefault();
-            this._resetGamepadKeys();
+            this._resetGamepadButtons();
             this._defaultControls = true;
+            this._touchDidRun = true;
             this._right = 1;
         });
         buttonRight.addEventListener("touchend", (event) => {
@@ -349,8 +358,9 @@ export default class HexTank {
 
         buttonRight.addEventListener("mousedown", (event) => {
             event.preventDefault();
-            this._resetGamepadKeys();
+            this._resetGamepadButtons();
             this._defaultControls = true;
+            this._touchDidRun = true;
             this._right = 1;
         });
         buttonRight.addEventListener("mouseup", (event) => {
@@ -415,9 +425,19 @@ export default class HexTank {
         }
     }
 
-    private _resetGamepadKeys() {
+    private _resetGamepadButtons() {
         if (this._gamepadDidRun === true) {
             this._gamepadDidRun = false;
+            this._up = 2;
+            this._down = 2;
+            this._left = 2;
+            this._right = 2;
+        }
+    }
+
+    private _resetTouchButtons() {
+        if (this._touchDidRun === true) {
+            this._touchDidRun = false;
             this._up = 2;
             this._down = 2;
             this._left = 2;
