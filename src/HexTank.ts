@@ -527,7 +527,6 @@ export default class HexTank {
     update(serverHexTank: any) {
         this.syncWithServer(serverHexTank);
         this._gamepadInput();
-        //console.log(this._left, this._right);
         this._addCommands();
         this._processCommands();
         this._updateCamera();
