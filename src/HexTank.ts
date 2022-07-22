@@ -148,7 +148,8 @@ export default class HexTank {
 
         window.addEventListener("keyup", (event) => {
             event.preventDefault();
-            this._defaultControls = true;
+            this._defaultControls = false;
+
             if (
                 event.key === "ArrowUp" ||
                 event.key === "w" ||
@@ -194,34 +195,34 @@ export default class HexTank {
         buttonUp.style.borderRadius = "18px 18px 6px 6px";
 
         buttonUp.addEventListener("touchstart", (event) => {
-            this._defaultControls = true;
             event.preventDefault();
+            this._defaultControls = true;
             this._up = 1;
         });
         buttonUp.addEventListener("touchend", (event) => {
-            this._defaultControls = true;
             event.preventDefault();
+            this._defaultControls = false;
             this._up = 2;
         });
         buttonUp.addEventListener("cancel", (event) => {
-            this._defaultControls = true;
             event.preventDefault();
+            this._defaultControls = false;
             this._up = 2;
         });
 
         buttonUp.addEventListener("mousedown", (event) => {
-            this._defaultControls = true;
             event.preventDefault();
+            this._defaultControls = true;
             this._up = 1;
         });
         buttonUp.addEventListener("mouseup", (event) => {
-            this._defaultControls = true;
             event.preventDefault();
+            this._defaultControls = false;
             this._up = 2;
         });
         buttonUp.addEventListener("mouseleave", (event) => {
-            this._defaultControls = true;
             event.preventDefault();
+            this._defaultControls = false;
             this._up = 2;
         });
 
@@ -236,34 +237,34 @@ export default class HexTank {
         buttonDown.style.borderRadius = "6px 6px 18px 18px";
 
         buttonDown.addEventListener("touchstart", (event) => {
-            this._defaultControls = true;
             event.preventDefault();
+            this._defaultControls = true;
             this._down = 1;
         });
         buttonDown.addEventListener("touchend", (event) => {
-            this._defaultControls = true;
             event.preventDefault();
+            this._defaultControls = false;
             this._down = 2;
         });
         buttonDown.addEventListener("touchcancel", (event) => {
-            this._defaultControls = true;
             event.preventDefault();
+            this._defaultControls = false;
             this._down = 2;
         });
 
         buttonDown.addEventListener("mousedown", (event) => {
-            this._defaultControls = true;
             event.preventDefault();
+            this._defaultControls = true;
             this._down = 1;
         });
         buttonDown.addEventListener("mouseup", (event) => {
-            this._defaultControls = true;
             event.preventDefault();
+            this._defaultControls = false;
             this._down = 2;
         });
         buttonDown.addEventListener("mouseleave", (event) => {
-            this._defaultControls = true;
             event.preventDefault();
+            this._defaultControls = false;
             this._down = 2;
         });
 
@@ -279,34 +280,34 @@ export default class HexTank {
         buttonLeft.style.borderRadius = "18px 6px 6px 18px";
 
         buttonLeft.addEventListener("touchstart", (event) => {
-            this._defaultControls = true;
             event.preventDefault();
+            this._defaultControls = true;
             this._left = 1;
         });
         buttonLeft.addEventListener("touchend", (event) => {
-            this._defaultControls = true;
             event.preventDefault();
+            this._defaultControls = false;
             this._left = 2;
         });
         buttonLeft.addEventListener("touchcancel", (event) => {
-            this._defaultControls = true;
             event.preventDefault();
+            this._defaultControls = false;
             this._left = 2;
         });
 
         buttonLeft.addEventListener("mousedown", (event) => {
-            this._defaultControls = true;
             event.preventDefault();
+            this._defaultControls = true;
             this._left = 1;
         });
         buttonLeft.addEventListener("mouseup", (event) => {
-            this._defaultControls = true;
             event.preventDefault();
+            this._defaultControls = false;
             this._left = 2;
         });
         buttonLeft.addEventListener("mouseleave", (event) => {
-            this._defaultControls = true;
             event.preventDefault();
+            this._defaultControls = false;
             this._left = 2;
         });
 
@@ -323,27 +324,33 @@ export default class HexTank {
 
         buttonRight.addEventListener("touchstart", (event) => {
             event.preventDefault();
+            this._defaultControls = true;
             this._right = 1;
         });
         buttonRight.addEventListener("touchend", (event) => {
             event.preventDefault();
+            this._defaultControls = false;
             this._right = 2;
         });
         buttonRight.addEventListener("touchcancel", (event) => {
             event.preventDefault();
+            this._defaultControls = false;
             this._right = 2;
         });
 
         buttonRight.addEventListener("mousedown", (event) => {
             event.preventDefault();
+            this._defaultControls = true;
             this._right = 1;
         });
         buttonRight.addEventListener("mouseup", (event) => {
             event.preventDefault();
+            this._defaultControls = false;
             this._right = 2;
         });
         buttonRight.addEventListener("mouseleave", (event) => {
             event.preventDefault();
+            this._defaultControls = false;
             this._right = 2;
         });
 
@@ -370,11 +377,11 @@ export default class HexTank {
             if (this._gamepad.axes.length >= 4) {
                 this._gamepad = navigator.getGamepads()[0] as Gamepad;
 
-                for (let i = 0; i < this._gamepad.axes.length; i++) {
+                /* for (let i = 0; i < this._gamepad.axes.length; i++) {
                     if (this._gamepad.axes[i] !== 0) {
                         this._defaultControls = false;
                     }
-                }
+                } */
 
                 if (this._defaultControls === false) {
                     if (this._gamepad.axes[1] < 0) {
@@ -505,6 +512,7 @@ export default class HexTank {
     update(serverHexTank: any) {
         this.syncWithServer(serverHexTank);
         this._gamepadInput();
+        //console.log(this._left, this._right);
         this._addCommands();
         this._processCommands();
         this._updateCamera();
