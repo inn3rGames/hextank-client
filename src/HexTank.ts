@@ -213,6 +213,48 @@ export default class HexTank {
             e.preventDefault();
             this._down = 2;
         });
+
+        let buttonLeft = document.createElement("div");
+        container.appendChild(buttonLeft);
+        buttonLeft.style.position = "fixed";
+        buttonLeft.style.width = "100px";
+        buttonLeft.style.height = "60px";
+        buttonLeft.style.right = "100px";
+        buttonLeft.style.marginTop = "300px";
+        buttonLeft.style.marginRight = "55px";
+        buttonLeft.style.backgroundColor = "rgba(255, 255, 255, 0.5)";
+        buttonLeft.style.borderRadius = "18px 6px 6px 18px";
+
+        buttonLeft.addEventListener("touchstart", (e) => {
+            e.preventDefault();
+            this._left = 1;
+        });
+
+        buttonLeft.addEventListener("touchend", (e) => {
+            e.preventDefault();
+            this._left = 2;
+        });
+
+        let buttonRight = document.createElement("div");
+        container.appendChild(buttonRight);
+        buttonRight.style.position = "fixed";
+        buttonRight.style.width = "100px";
+        buttonRight.style.height = "60px";
+        buttonRight.style.right = "100px";
+        buttonRight.style.marginTop = "300px";
+        buttonRight.style.marginRight = "-55px";
+        buttonRight.style.backgroundColor = "rgba(255, 255, 255, 0.5)";
+        buttonRight.style.borderRadius = "6px 18px 18px 6px";
+
+        buttonRight.addEventListener("touchstart", (e) => {
+            e.preventDefault();
+            this._right = 1;
+        });
+
+        buttonRight.addEventListener("touchend", (e) => {
+            e.preventDefault();
+            this._right = 2;
+        });
     }
 
     private _addCommands() {
