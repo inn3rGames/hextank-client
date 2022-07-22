@@ -352,6 +352,7 @@ export default class HexTank {
         window.addEventListener("gamepaddisconnected", (event) => {
             event.preventDefault();
             this._defaultControls = true;
+            this._gamepad = undefined;
         });
     }
 
