@@ -167,6 +167,52 @@ export default class HexTank {
                 this._right = 2;
             }
         });
+
+        let container = document.getElementById(
+            "main-container"
+        ) as HTMLElement;
+
+        
+
+        let buttonUp = document.createElement("div");
+        container.appendChild(buttonUp);
+        buttonUp.style.position = "fixed";
+        buttonUp.style.width = "60px";
+        buttonUp.style.height = "100px";
+        buttonUp.style.left = "100px";
+        buttonUp.style.marginTop = "200px";
+        buttonUp.style.backgroundColor = "rgba(255, 255, 255, 0.5)";
+        buttonUp.style.borderRadius = "18px 18px 6px 6px";
+
+        buttonUp.addEventListener("touchstart", (e) => {
+            e.preventDefault();
+            this._up = 1;
+        })
+
+        buttonUp.addEventListener("touchend", (e) => {
+            e.preventDefault();
+             this._up = 2;
+        });
+
+        let buttonDown = document.createElement("div");
+        container.appendChild(buttonDown);
+        buttonDown.style.position = "fixed";
+        buttonDown.style.width = "60px";
+        buttonDown.style.height = "100px";
+        buttonDown.style.left = "100px";
+        buttonDown.style.marginTop = "415px";
+        buttonDown.style.backgroundColor = "rgba(255, 255, 255, 0.5)";
+        buttonDown.style.borderRadius = "6px 6px 18px 18px";
+
+        buttonDown.addEventListener("touchstart", (e) => {
+            e.preventDefault();
+            this._down = 1;
+        });
+
+        buttonDown.addEventListener("touchend", (e) => {
+            e.preventDefault();
+            this._down = 2;
+        });
     }
 
     private _addCommands() {
