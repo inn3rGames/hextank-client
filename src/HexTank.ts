@@ -29,6 +29,7 @@ export default class HexTank {
 
     private _gamepad!: Gamepad;
     private _defaultControls: boolean = true;
+    private _gamepadDidRun: boolean = true;
 
     private _debug: boolean;
 
@@ -116,6 +117,7 @@ export default class HexTank {
         window.addEventListener("keydown", (event) => {
             event.preventDefault();
             this._defaultControls = true;
+            this._resetGamepadKeys();
             if (
                 event.key === "ArrowUp" ||
                 event.key === "w" ||
@@ -196,6 +198,7 @@ export default class HexTank {
 
         buttonUp.addEventListener("touchstart", (event) => {
             event.preventDefault();
+            this._resetGamepadKeys();
             this._defaultControls = true;
             this._up = 1;
         });
@@ -212,6 +215,7 @@ export default class HexTank {
 
         buttonUp.addEventListener("mousedown", (event) => {
             event.preventDefault();
+            this._resetGamepadKeys();
             this._defaultControls = true;
             this._up = 1;
         });
@@ -238,6 +242,7 @@ export default class HexTank {
 
         buttonDown.addEventListener("touchstart", (event) => {
             event.preventDefault();
+            this._resetGamepadKeys();
             this._defaultControls = true;
             this._down = 1;
         });
@@ -254,6 +259,7 @@ export default class HexTank {
 
         buttonDown.addEventListener("mousedown", (event) => {
             event.preventDefault();
+            this._resetGamepadKeys();
             this._defaultControls = true;
             this._down = 1;
         });
@@ -281,6 +287,7 @@ export default class HexTank {
 
         buttonLeft.addEventListener("touchstart", (event) => {
             event.preventDefault();
+            this._resetGamepadKeys();
             this._defaultControls = true;
             this._left = 1;
         });
@@ -297,6 +304,7 @@ export default class HexTank {
 
         buttonLeft.addEventListener("mousedown", (event) => {
             event.preventDefault();
+            this._resetGamepadKeys();
             this._defaultControls = true;
             this._left = 1;
         });
@@ -324,6 +332,7 @@ export default class HexTank {
 
         buttonRight.addEventListener("touchstart", (event) => {
             event.preventDefault();
+            this._resetGamepadKeys();
             this._defaultControls = true;
             this._right = 1;
         });
@@ -340,6 +349,7 @@ export default class HexTank {
 
         buttonRight.addEventListener("mousedown", (event) => {
             event.preventDefault();
+            this._resetGamepadKeys();
             this._defaultControls = true;
             this._right = 1;
         });
@@ -377,12 +387,6 @@ export default class HexTank {
             if (this._gamepad.axes.length >= 4) {
                 this._gamepad = navigator.getGamepads()[0] as Gamepad;
 
-                /* for (let i = 0; i < this._gamepad.axes.length; i++) {
-                    if (this._gamepad.axes[i] !== 0) {
-                        this._defaultControls = false;
-                    }
-                } */
-
                 if (this._defaultControls === false) {
                     if (this._gamepad.axes[1] < 0) {
                         this._up = 1;
@@ -405,8 +409,19 @@ export default class HexTank {
                     } else if (this._right === 1) {
                         this._right = 2;
                     }
+                    this._gamepadDidRun = true;
                 }
             }
+        }
+    }
+
+    private _resetGamepadKeys() {
+        if (this._gamepadDidRun === true) {
+            this._gamepadDidRun = false;
+            this._up = 2;
+            this._down = 2;
+            this._left = 2;
+            this._right = 2;
         }
     }
 
