@@ -27,6 +27,9 @@ export default class HexTank {
 
     private _commands: Array<string> = [];
 
+    private _gamepad: any;
+    private _defaultControls: boolean = true;
+
     constructor(
         x: number,
         z: number,
@@ -108,6 +111,7 @@ export default class HexTank {
     enableInput() {
         window.addEventListener("keydown", (event) => {
             event.preventDefault();
+            this._defaultControls = true;
             if (
                 event.key === "ArrowUp" ||
                 event.key === "w" ||
@@ -140,6 +144,7 @@ export default class HexTank {
 
         window.addEventListener("keyup", (event) => {
             event.preventDefault();
+            this._defaultControls = true;
             if (
                 event.key === "ArrowUp" ||
                 event.key === "w" ||
@@ -185,27 +190,33 @@ export default class HexTank {
         buttonUp.style.borderRadius = "18px 18px 6px 6px";
 
         buttonUp.addEventListener("touchstart", (event) => {
+            this._defaultControls = true;
             event.preventDefault();
             this._up = 1;
         });
         buttonUp.addEventListener("touchend", (event) => {
+            this._defaultControls = true;
             event.preventDefault();
             this._up = 2;
         });
         buttonUp.addEventListener("cancel", (event) => {
+            this._defaultControls = true;
             event.preventDefault();
             this._up = 2;
         });
 
         buttonUp.addEventListener("mousedown", (event) => {
+            this._defaultControls = true;
             event.preventDefault();
             this._up = 1;
         });
         buttonUp.addEventListener("mouseup", (event) => {
+            this._defaultControls = true;
             event.preventDefault();
             this._up = 2;
         });
         buttonUp.addEventListener("mouseleave", (event) => {
+            this._defaultControls = true;
             event.preventDefault();
             this._up = 2;
         });
@@ -221,27 +232,33 @@ export default class HexTank {
         buttonDown.style.borderRadius = "6px 6px 18px 18px";
 
         buttonDown.addEventListener("touchstart", (event) => {
+            this._defaultControls = true;
             event.preventDefault();
             this._down = 1;
         });
         buttonDown.addEventListener("touchend", (event) => {
+            this._defaultControls = true;
             event.preventDefault();
             this._down = 2;
         });
         buttonDown.addEventListener("touchcancel", (event) => {
+            this._defaultControls = true;
             event.preventDefault();
             this._down = 2;
         });
 
         buttonDown.addEventListener("mousedown", (event) => {
+            this._defaultControls = true;
             event.preventDefault();
             this._down = 1;
         });
         buttonDown.addEventListener("mouseup", (event) => {
+            this._defaultControls = true;
             event.preventDefault();
             this._down = 2;
         });
         buttonDown.addEventListener("mouseleave", (event) => {
+            this._defaultControls = true;
             event.preventDefault();
             this._down = 2;
         });
@@ -258,27 +275,33 @@ export default class HexTank {
         buttonLeft.style.borderRadius = "18px 6px 6px 18px";
 
         buttonLeft.addEventListener("touchstart", (event) => {
+            this._defaultControls = true;
             event.preventDefault();
             this._left = 1;
         });
         buttonLeft.addEventListener("touchend", (event) => {
+            this._defaultControls = true;
             event.preventDefault();
             this._left = 2;
         });
         buttonLeft.addEventListener("touchcancel", (event) => {
+            this._defaultControls = true;
             event.preventDefault();
             this._left = 2;
         });
 
         buttonLeft.addEventListener("mousedown", (event) => {
+            this._defaultControls = true;
             event.preventDefault();
             this._left = 1;
         });
         buttonLeft.addEventListener("mouseup", (event) => {
+            this._defaultControls = true;
             event.preventDefault();
             this._left = 2;
         });
         buttonLeft.addEventListener("mouseleave", (event) => {
+            this._defaultControls = true;
             event.preventDefault();
             this._left = 2;
         });
@@ -319,6 +342,57 @@ export default class HexTank {
             event.preventDefault();
             this._right = 2;
         });
+
+        window.addEventListener("gamepadconnected", (event) => {
+            event.preventDefault();
+            this._defaultControls = false;
+            this._gamepad = navigator.getGamepads()[0];
+        });
+
+        window.addEventListener("gamepaddisconnected", (event) => {
+            event.preventDefault();
+            this._defaultControls = true;
+        });
+    }
+
+    private _gamepadInput() {
+        if (typeof this._gamepad === "object") {
+            this._gamepad = navigator.getGamepads()[0];
+
+            for (let i = 0; i < this._gamepad.axes.length; i++) {
+                if (this._gamepad.axes[i] !== 0) {
+                    this._defaultControls = false;
+                }
+            }
+
+            if (this._defaultControls === false) {
+                if (typeof this._gamepad.axes[1] !== undefined) {
+                    if (this._gamepad.axes[1] < 0) {
+                        this._up = 1;
+                    } else if (this._up === 1) {
+                        this._up = 2;
+                    }
+                    if (this._gamepad.axes[1] > 0) {
+                        this._down = 1;
+                    } else if (this._down === 1) {
+                        this._down = 2;
+                    }
+                }
+
+                if (typeof this._gamepad.axes[2] !== undefined) {
+                    if (this._gamepad.axes[2] < 0) {
+                        this._left = 1;
+                    } else if (this._left === 1) {
+                        this._left = 2;
+                    }
+                    if (this._gamepad.axes[2] > 0) {
+                        this._right = 1;
+                    } else if (this._right === 1) {
+                        this._right = 2;
+                    }
+                }
+            }
+        }
     }
 
     private _addCommands() {
@@ -422,6 +496,7 @@ export default class HexTank {
 
     update(serverHexTank: any) {
         this.syncWithServer(serverHexTank);
+        this._gamepadInput();
         this._addCommands();
         this._processCommands();
         this._updateCamera();
