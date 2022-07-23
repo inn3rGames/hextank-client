@@ -389,21 +389,6 @@ export default class HexTank {
 
         window.addEventListener("gamepaddisconnected", (event) => {
             event.preventDefault();
-            this._defaultControls = true;
-            for (let i = 0; i < navigator.getGamepads().length; i++) {
-                if (
-                    typeof navigator.getGamepads()[i] !== "undefined" &&
-                    navigator.getGamepads()[i] !== null
-                ) {
-                    if (
-                        navigator.getGamepads()[i]!.index !==
-                        event.gamepad.index
-                    ) {
-                        this._gamepadIndex = navigator.getGamepads()[i]!.index;
-                        break;
-                    }
-                }
-            }
             if (this._debug === true) {
                 console.log("Gamepad disconnected.");
             }
