@@ -28,6 +28,7 @@ export default class HexTank {
     private _commands: Array<string> = [];
 
     private _gamepad!: Gamepad;
+    private _gamepadIndex: number = 0;
     private _defaultControls: boolean = true;
     private _gamepadDidRun: boolean = true;
     private _touchDidRun: boolean = true;
@@ -377,7 +378,10 @@ export default class HexTank {
         window.addEventListener("gamepadconnected", (event) => {
             event.preventDefault();
             this._defaultControls = false;
-            this._gamepad = navigator.getGamepads()[0] as Gamepad;
+            this._gamepadIndex = event.gamepad.index;
+            this._gamepad = navigator.getGamepads()[
+                this._gamepadIndex
+            ] as Gamepad;
             if (this._debug === true) {
                 console.log("Gamepad connected.");
             }
@@ -386,6 +390,20 @@ export default class HexTank {
         window.addEventListener("gamepaddisconnected", (event) => {
             event.preventDefault();
             this._defaultControls = true;
+            for (let i = 0; i < navigator.getGamepads().length; i++) {
+                if (
+                    typeof navigator.getGamepads()[i] !== "undefined" &&
+                    navigator.getGamepads()[i] !== null
+                ) {
+                    if (
+                        navigator.getGamepads()[i]!.index !==
+                        event.gamepad.index
+                    ) {
+                        this._gamepadIndex = navigator.getGamepads()[i]!.index;
+                        break;
+                    }
+                }
+            }
             if (this._debug === true) {
                 console.log("Gamepad disconnected.");
             }
@@ -393,33 +411,68 @@ export default class HexTank {
     }
 
     private _gamepadInput() {
-        if (typeof this._gamepad !== "undefined" && this._gamepad !== null) {
-            if (this._gamepad.axes.length >= 4) {
-                this._gamepad = navigator.getGamepads()[0] as Gamepad;
+        if (
+            typeof navigator.getGamepads() !== "undefined" &&
+            navigator.getGamepads() !== null
+        ) {
+            for (let i = 0; i < navigator.getGamepads().length; i++) {
+                if (
+                    typeof navigator.getGamepads()[i] !== "undefined" &&
+                    navigator.getGamepads()[i] !== null
+                ) {
+                    for (
+                        let j = 0;
+                        j < navigator.getGamepads()[i]!.axes.length;
+                        j++
+                    ) {
+                        if (
+                            Math.round(
+                                navigator.getGamepads()[i]!.axes[j] * 100
+                            ) /
+                                100 !==
+                            0
+                        ) {
+                            this._gamepadIndex =
+                                navigator.getGamepads()[i]!.index;
+                        }
+                    }
+                }
+            }
 
-                if (this._defaultControls === false) {
-                    if (Math.round(this._gamepad.axes[1] * 100) / 100 < 0) {
-                        this._up = 1;
-                    } else if (this._up === 1) {
-                        this._up = 2;
-                    }
-                    if (Math.round(this._gamepad.axes[1] * 100) / 100 > 0) {
-                        this._down = 1;
-                    } else if (this._down === 1) {
-                        this._down = 2;
-                    }
+            if (
+                typeof navigator.getGamepads()[this._gamepadIndex] !==
+                    "undefined" &&
+                navigator.getGamepads()[this._gamepadIndex] !== null
+            ) {
+                this._gamepad = navigator.getGamepads()[
+                    this._gamepadIndex
+                ] as Gamepad;
 
-                    if (Math.round(this._gamepad.axes[2] * 100) / 100 < 0) {
-                        this._left = 1;
-                    } else if (this._left === 1) {
-                        this._left = 2;
+                if (this._gamepad.axes.length >= 4) {
+                    if (this._defaultControls === false) {
+                        if (Math.round(this._gamepad.axes[1] * 100) / 100 < 0) {
+                            this._up = 1;
+                        } else if (this._up === 1) {
+                            this._up = 2;
+                        }
+                        if (Math.round(this._gamepad.axes[1] * 100) / 100 > 0) {
+                            this._down = 1;
+                        } else if (this._down === 1) {
+                            this._down = 2;
+                        }
+
+                        if (Math.round(this._gamepad.axes[2] * 100) / 100 < 0) {
+                            this._left = 1;
+                        } else if (this._left === 1) {
+                            this._left = 2;
+                        }
+                        if (Math.round(this._gamepad.axes[2] * 100) / 100 > 0) {
+                            this._right = 1;
+                        } else if (this._right === 1) {
+                            this._right = 2;
+                        }
+                        this._gamepadDidRun = true;
                     }
-                    if (Math.round(this._gamepad.axes[2] * 100) / 100 > 0) {
-                        this._right = 1;
-                    } else if (this._right === 1) {
-                        this._right = 2;
-                    }
-                    this._gamepadDidRun = true;
                 }
             }
         }
