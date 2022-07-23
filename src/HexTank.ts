@@ -398,23 +398,23 @@ export default class HexTank {
                 this._gamepad = navigator.getGamepads()[0] as Gamepad;
 
                 if (this._defaultControls === false) {
-                    if (this._gamepad.axes[1] < 0) {
+                    if (Math.round(this._gamepad.axes[1] * 100) / 100 < 0) {
                         this._up = 1;
                     } else if (this._up === 1) {
                         this._up = 2;
                     }
-                    if (this._gamepad.axes[1] > 0) {
+                    if (Math.round(this._gamepad.axes[1] * 100) / 100 > 0) {
                         this._down = 1;
                     } else if (this._down === 1) {
                         this._down = 2;
                     }
 
-                    if (this._gamepad.axes[2] < 0) {
+                    if (Math.round(this._gamepad.axes[2] * 100) / 100 < 0) {
                         this._left = 1;
                     } else if (this._left === 1) {
                         this._left = 2;
                     }
-                    if (this._gamepad.axes[2] > 0) {
+                    if (Math.round(this._gamepad.axes[2] * 100) / 100 > 0) {
                         this._right = 1;
                     } else if (this._right === 1) {
                         this._right = 2;
