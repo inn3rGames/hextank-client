@@ -453,11 +453,7 @@ export default class HexTank {
                     ) {
                         if (j === 1 || j === 2) {
                             if (
-                                Math.round(
-                                    currentGamepadList[i]!.axes[j] * 100
-                                ) /
-                                    100 !==
-                                0
+                                Math.abs(currentGamepadList[i]!.axes[j]) > 0.5
                             ) {
                                 this._gamepadDidRun = true;
                                 currentGamepad = currentGamepadList[i]!;
