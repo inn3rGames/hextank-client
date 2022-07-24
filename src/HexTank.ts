@@ -595,18 +595,6 @@ export default class HexTank {
     update(serverHexTank: any) {
         this.syncWithServer(serverHexTank);
         this._gamepadInput();
-        if (this._up === 2) {
-            console.log("up double", performance.now());
-        }
-        if (this._down === 2) {
-            console.log("down double", performance.now());
-        }
-        if (this._left === 2) {
-            console.log("left double", performance.now());
-        }
-        if (this._right === 2) {
-            console.log("right double", performance.now());
-        }
         this._addCommands();
         this._processCommands();
         this._updateCamera();
