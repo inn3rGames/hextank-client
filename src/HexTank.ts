@@ -468,23 +468,23 @@ export default class HexTank {
             }
 
             if (this._gamepadDidRun === true) {
-                if (Math.round(currentGamepad!.axes[1] * 100) / 100 < 0) {
+                if (currentGamepad!.axes[1] < -0.5) {
                     this._up = 1;
                 } else if (this._up === 1) {
                     this._up = 2;
                 }
-                if (Math.round(currentGamepad!.axes[1] * 100) / 100 > 0) {
+                if (currentGamepad!.axes[1] > 0.5) {
                     this._down = 1;
                 } else if (this._down === 1) {
                     this._down = 2;
                 }
 
-                if (Math.round(currentGamepad!.axes[2] * 100) / 100 < 0) {
+                if (currentGamepad!.axes[2] < -0.5) {
                     this._left = 1;
                 } else if (this._left === 1) {
                     this._left = 2;
                 }
-                if (Math.round(currentGamepad!.axes[2] * 100) / 100 > 0) {
+                if (currentGamepad!.axes[2] > 0.5) {
                     this._right = 1;
                 } else if (this._right === 1) {
                     this._right = 2;
