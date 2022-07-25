@@ -194,12 +194,12 @@ export default class HexTank {
         let buttonUp = document.createElement("div");
         container.appendChild(buttonUp);
         buttonUp.style.position = "fixed";
-        buttonUp.style.width = "18vw";
-        buttonUp.style.height = "20vw";
-        buttonUp.style.left = "5vw";
-        buttonUp.style.bottom = "27vw";
+        buttonUp.style.width = "72px";
+        buttonUp.style.height = "80px";
+        buttonUp.style.left = "20px";
+        buttonUp.style.bottom = "108px";
         buttonUp.style.backgroundColor = "rgba(255, 255, 255, 0.25)";
-        buttonUp.style.borderRadius = "20vw 20vw 3vw 3vw";
+        buttonUp.style.borderRadius = "80px 80px 12px 12px";
 
         buttonUp.addEventListener("touchstart", (event) => {
             event.preventDefault();
@@ -240,12 +240,12 @@ export default class HexTank {
         let buttonDown = document.createElement("div");
         container.appendChild(buttonDown);
         buttonDown.style.position = "fixed";
-        buttonDown.style.width = "18vw";
-        buttonDown.style.height = "20vw";
-        buttonDown.style.left = "5vw";
-        buttonDown.style.bottom = "5vw";
+        buttonDown.style.width = "72px";
+        buttonDown.style.height = "80px";
+        buttonDown.style.left = "20px";
+        buttonDown.style.bottom = "20px";
         buttonDown.style.backgroundColor = "rgba(255, 255, 255, 0.25)";
-        buttonDown.style.borderRadius = "3vw 3vw 20vw 20vw";
+        buttonDown.style.borderRadius = "12px 12px 80px 80px";
 
         buttonDown.addEventListener("touchstart", (event) => {
             event.preventDefault();
@@ -286,12 +286,12 @@ export default class HexTank {
         let buttonLeft = document.createElement("div");
         container.appendChild(buttonLeft);
         buttonLeft.style.position = "fixed";
-        buttonLeft.style.width = "20vw";
-        buttonLeft.style.height = "18vw";
-        buttonLeft.style.right = "27vw";
-        buttonLeft.style.bottom = "17vw";
+        buttonLeft.style.width = "80px";
+        buttonLeft.style.height = "72px";
+        buttonLeft.style.right = "108px";
+        buttonLeft.style.bottom = "68px";
         buttonLeft.style.backgroundColor = "rgba(255, 255, 255, 0.25)";
-        buttonLeft.style.borderRadius = "20vw 3vw 3vw 20vw";
+        buttonLeft.style.borderRadius = "80px 12px 12px 80px";
 
         buttonLeft.addEventListener("touchstart", (event) => {
             event.preventDefault();
@@ -332,12 +332,12 @@ export default class HexTank {
         let buttonRight = document.createElement("div");
         container.appendChild(buttonRight);
         buttonRight.style.position = "fixed";
-        buttonRight.style.width = "20vw";
-        buttonRight.style.height = "18vw";
-        buttonRight.style.right = "5vw";
-        buttonRight.style.bottom = "17vw";
+        buttonRight.style.width = "80px";
+        buttonRight.style.height = "72px";
+        buttonRight.style.right = "20px";
+        buttonRight.style.bottom = "68px";
         buttonRight.style.backgroundColor = "rgba(255, 255, 255, 0.25)";
-        buttonRight.style.borderRadius = "3vw 20vw 20vw 3vw";
+        buttonRight.style.borderRadius = "12px 80px 80px 12px";
 
         buttonRight.addEventListener("touchstart", (event) => {
             event.preventDefault();
