@@ -493,8 +493,6 @@ export default class HexTank {
                     }
                 }
             }
-        } else {
-            return;
         }
     }
 
