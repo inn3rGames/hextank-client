@@ -266,8 +266,18 @@ export default class World {
             if (this._debug === true) {
                 console.log(`HexTank ${serverHexTank.id} left!`);
             }
-            this._hexTanks[serverHexTank.id].mesh.dispose();
-            delete this._hexTanks[serverHexTank.id];
+
+            if (typeof serverHexTank !== "undefined") {
+                if (typeof this._hexTanks[serverHexTank.id] !== "undefined") {
+                    if (
+                        typeof this._hexTanks[serverHexTank.id].mesh !==
+                        "undefined"
+                    ) {
+                        this._hexTanks[serverHexTank.id].mesh.dispose();
+                        delete this._hexTanks[serverHexTank.id];
+                    }
+                }
+            }
         };
 
         window.addEventListener("focus", () => {
@@ -280,14 +290,17 @@ export default class World {
             let clientHexTank = this._hexTanks[index];
             let serverHexTank = this._room.state.hexTanks[index];
 
-            if (typeof clientHexTank.mesh === "undefined") {
-                continue;
-            }
-
-            if (this._room.sessionId !== index) {
-                clientHexTank.syncWithServer(serverHexTank);
-            } else {
-                clientHexTank.update(serverHexTank);
+            if (typeof clientHexTank !== "undefined") {
+                if (
+                    typeof clientHexTank.mesh !== "undefined" &&
+                    typeof serverHexTank !== "undefined"
+                ) {
+                    if (this._room.sessionId !== index) {
+                        clientHexTank.syncWithServer(serverHexTank);
+                    } else {
+                        clientHexTank.update(serverHexTank);
+                    }
+                }
             }
         }
     }
@@ -309,10 +322,15 @@ export default class World {
             let clientHexTank = this._hexTanks[index];
             let serverHexTank = this._room.state.hexTanks[index];
 
-            if (typeof clientHexTank.mesh !== "undefined") {
-                clientHexTank.mesh.position.x = serverHexTank.x;
-                clientHexTank.mesh.position.z = serverHexTank.z;
-                clientHexTank.mesh.rotation.y = serverHexTank.angle;
+            if (typeof clientHexTank !== "undefined") {
+                if (
+                    typeof clientHexTank.mesh !== "undefined" &&
+                    typeof serverHexTank !== "undefined"
+                ) {
+                    clientHexTank.mesh.position.x = serverHexTank.x;
+                    clientHexTank.mesh.position.z = serverHexTank.z;
+                    clientHexTank.mesh.rotation.y = serverHexTank.angle;
+                }
             }
         }
     }
