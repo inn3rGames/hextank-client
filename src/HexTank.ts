@@ -188,18 +188,18 @@ export default class HexTank {
         });
 
         let container = document.getElementById(
-            "main-container"
+            "buttons-container"
         ) as HTMLElement;
 
         let buttonUp = document.createElement("div");
         container.appendChild(buttonUp);
         buttonUp.style.position = "fixed";
-        buttonUp.style.width = "60px";
-        buttonUp.style.height = "100px";
-        buttonUp.style.left = "100px";
-        buttonUp.style.marginTop = "200px";
-        buttonUp.style.backgroundColor = "rgba(255, 255, 255, 0.5)";
-        buttonUp.style.borderRadius = "18px 18px 6px 6px";
+        buttonUp.style.width = "18vw";
+        buttonUp.style.height = "20vw";
+        buttonUp.style.left = "5vw";
+        buttonUp.style.bottom = "27vw";
+        buttonUp.style.backgroundColor = "rgba(255, 255, 255, 0.25)";
+        buttonUp.style.borderRadius = "20vw 20vw 3vw 3vw";
 
         buttonUp.addEventListener("touchstart", (event) => {
             event.preventDefault();
@@ -240,12 +240,12 @@ export default class HexTank {
         let buttonDown = document.createElement("div");
         container.appendChild(buttonDown);
         buttonDown.style.position = "fixed";
-        buttonDown.style.width = "60px";
-        buttonDown.style.height = "100px";
-        buttonDown.style.left = "100px";
-        buttonDown.style.marginTop = "415px";
-        buttonDown.style.backgroundColor = "rgba(255, 255, 255, 0.5)";
-        buttonDown.style.borderRadius = "6px 6px 18px 18px";
+        buttonDown.style.width = "18vw";
+        buttonDown.style.height = "20vw";
+        buttonDown.style.left = "5vw";
+        buttonDown.style.bottom = "5vw";
+        buttonDown.style.backgroundColor = "rgba(255, 255, 255, 0.25)";
+        buttonDown.style.borderRadius = "3vw 3vw 20vw 20vw";
 
         buttonDown.addEventListener("touchstart", (event) => {
             event.preventDefault();
@@ -286,13 +286,12 @@ export default class HexTank {
         let buttonLeft = document.createElement("div");
         container.appendChild(buttonLeft);
         buttonLeft.style.position = "fixed";
-        buttonLeft.style.width = "100px";
-        buttonLeft.style.height = "60px";
-        buttonLeft.style.right = "100px";
-        buttonLeft.style.marginTop = "300px";
-        buttonLeft.style.marginRight = "55px";
-        buttonLeft.style.backgroundColor = "rgba(255, 255, 255, 0.5)";
-        buttonLeft.style.borderRadius = "18px 6px 6px 18px";
+        buttonLeft.style.width = "20vw";
+        buttonLeft.style.height = "18vw";
+        buttonLeft.style.right = "27vw";
+        buttonLeft.style.bottom = "17vw";
+        buttonLeft.style.backgroundColor = "rgba(255, 255, 255, 0.25)";
+        buttonLeft.style.borderRadius = "20vw 3vw 3vw 20vw";
 
         buttonLeft.addEventListener("touchstart", (event) => {
             event.preventDefault();
@@ -333,13 +332,12 @@ export default class HexTank {
         let buttonRight = document.createElement("div");
         container.appendChild(buttonRight);
         buttonRight.style.position = "fixed";
-        buttonRight.style.width = "100px";
-        buttonRight.style.height = "60px";
-        buttonRight.style.right = "100px";
-        buttonRight.style.marginTop = "300px";
-        buttonRight.style.marginRight = "-55px";
-        buttonRight.style.backgroundColor = "rgba(255, 255, 255, 0.5)";
-        buttonRight.style.borderRadius = "6px 18px 18px 6px";
+        buttonRight.style.width = "20vw";
+        buttonRight.style.height = "18vw";
+        buttonRight.style.right = "5vw";
+        buttonRight.style.bottom = "17vw";
+        buttonRight.style.backgroundColor = "rgba(255, 255, 255, 0.25)";
+        buttonRight.style.borderRadius = "3vw 20vw 20vw 3vw";
 
         buttonRight.addEventListener("touchstart", (event) => {
             event.preventDefault();
