@@ -4,6 +4,7 @@ import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
 import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
 import { AbstractMesh } from "@babylonjs/core/Meshes/abstractMesh";
 import { ShadowGenerator } from "@babylonjs/core/Lights/Shadows/shadowGenerator";
+import isMobile from "./Utilities";
 import HexTankModel from "./assets/models/hextankFinalTest3.glb";
 
 export default class HexTank {
@@ -187,220 +188,230 @@ export default class HexTank {
             }
         });
 
-        let container = document.getElementById(
-            "buttons-container"
-        ) as HTMLElement;
+        interface CustomWindow extends Window {
+            opera?: string;
+        }
+        let customWindow: CustomWindow = window;
+        let currentDeviceIsMobile = isMobile(
+            navigator.userAgent || navigator.vendor || customWindow.opera
+        );
 
-        let upColor = "rgba(255, 255, 255, 0.25)";
-        let downColor = "rgba(0, 0, 0, 0.25)";
+        if (currentDeviceIsMobile === true) {
+            let container = document.getElementById(
+                "buttons-container"
+            ) as HTMLElement;
 
-        let buttonUp = document.createElement("div");
-        container.appendChild(buttonUp);
-        buttonUp.style.position = "fixed";
-        buttonUp.style.width = "72px";
-        buttonUp.style.height = "80px";
-        buttonUp.style.left = "7.5vw";
-        buttonUp.style.bottom = "calc(5vw + 80px + 8px)";
-        buttonUp.style.backgroundColor = upColor;
-        buttonUp.style.borderRadius = "80px 80px 12px 12px";
+            let upColor = "rgba(255, 255, 255, 0.25)";
+            let downColor = "rgba(0, 0, 0, 0.25)";
 
-        buttonUp.addEventListener("touchstart", (event) => {
-            event.preventDefault();
-            this._resetGamepadButtons();
-            this._defaultControls = true;
-            this._touchDidRun = true;
-            this._up = 1;
-            buttonUp.style.backgroundColor = downColor;
-        });
-        buttonUp.addEventListener("touchend", (event) => {
-            event.preventDefault();
-            this._defaultControls = false;
-            this._up = 2;
+            let buttonUp = document.createElement("div");
+            container.appendChild(buttonUp);
+            buttonUp.style.position = "fixed";
+            buttonUp.style.width = "72px";
+            buttonUp.style.height = "80px";
+            buttonUp.style.left = "7.5vw";
+            buttonUp.style.bottom = "calc(5vw + 80px + 8px)";
             buttonUp.style.backgroundColor = upColor;
-        });
-        buttonUp.addEventListener("cancel", (event) => {
-            event.preventDefault();
-            this._defaultControls = false;
-            this._up = 2;
-            buttonUp.style.backgroundColor = upColor;
-        });
+            buttonUp.style.borderRadius = "80px 80px 12px 12px";
 
-        buttonUp.addEventListener("mousedown", (event) => {
-            event.preventDefault();
-            this._resetGamepadButtons();
-            this._defaultControls = true;
-            this._touchDidRun = true;
-            this._up = 1;
-            buttonUp.style.backgroundColor = downColor;
-        });
-        buttonUp.addEventListener("mouseup", (event) => {
-            event.preventDefault();
-            this._defaultControls = false;
-            this._up = 2;
-            buttonUp.style.backgroundColor = upColor;
-        });
-        buttonUp.addEventListener("mouseleave", (event) => {
-            event.preventDefault();
-            this._defaultControls = false;
-            this._up = 2;
-            buttonUp.style.backgroundColor = upColor;
-        });
+            buttonUp.addEventListener("touchstart", (event) => {
+                event.preventDefault();
+                this._resetGamepadButtons();
+                this._defaultControls = true;
+                this._touchDidRun = true;
+                this._up = 1;
+                buttonUp.style.backgroundColor = downColor;
+            });
+            buttonUp.addEventListener("touchend", (event) => {
+                event.preventDefault();
+                this._defaultControls = false;
+                this._up = 2;
+                buttonUp.style.backgroundColor = upColor;
+            });
+            buttonUp.addEventListener("cancel", (event) => {
+                event.preventDefault();
+                this._defaultControls = false;
+                this._up = 2;
+                buttonUp.style.backgroundColor = upColor;
+            });
 
-        let buttonDown = document.createElement("div");
-        container.appendChild(buttonDown);
-        buttonDown.style.position = "fixed";
-        buttonDown.style.width = "72px";
-        buttonDown.style.height = "80px";
-        buttonDown.style.left = "7.5vw";
-        buttonDown.style.bottom = "5vw";
-        buttonDown.style.backgroundColor = upColor;
-        buttonDown.style.borderRadius = "12px 12px 80px 80px";
+            buttonUp.addEventListener("mousedown", (event) => {
+                event.preventDefault();
+                this._resetGamepadButtons();
+                this._defaultControls = true;
+                this._touchDidRun = true;
+                this._up = 1;
+                buttonUp.style.backgroundColor = downColor;
+            });
+            buttonUp.addEventListener("mouseup", (event) => {
+                event.preventDefault();
+                this._defaultControls = false;
+                this._up = 2;
+                buttonUp.style.backgroundColor = upColor;
+            });
+            buttonUp.addEventListener("mouseleave", (event) => {
+                event.preventDefault();
+                this._defaultControls = false;
+                this._up = 2;
+                buttonUp.style.backgroundColor = upColor;
+            });
 
-        buttonDown.addEventListener("touchstart", (event) => {
-            event.preventDefault();
-            this._resetGamepadButtons();
-            this._defaultControls = true;
-            this._touchDidRun = true;
-            this._down = 1;
-            buttonDown.style.backgroundColor = downColor;
-        });
-        buttonDown.addEventListener("touchend", (event) => {
-            event.preventDefault();
-            this._defaultControls = false;
-            this._down = 2;
+            let buttonDown = document.createElement("div");
+            container.appendChild(buttonDown);
+            buttonDown.style.position = "fixed";
+            buttonDown.style.width = "72px";
+            buttonDown.style.height = "80px";
+            buttonDown.style.left = "7.5vw";
+            buttonDown.style.bottom = "5vw";
             buttonDown.style.backgroundColor = upColor;
-        });
-        buttonDown.addEventListener("touchcancel", (event) => {
-            event.preventDefault();
-            this._defaultControls = false;
-            this._down = 2;
-            buttonDown.style.backgroundColor = upColor;
-        });
+            buttonDown.style.borderRadius = "12px 12px 80px 80px";
 
-        buttonDown.addEventListener("mousedown", (event) => {
-            event.preventDefault();
-            this._resetGamepadButtons();
-            this._defaultControls = true;
-            this._touchDidRun = true;
-            this._down = 1;
-            buttonDown.style.backgroundColor = downColor;
-        });
-        buttonDown.addEventListener("mouseup", (event) => {
-            event.preventDefault();
-            this._defaultControls = false;
-            this._down = 2;
-            buttonDown.style.backgroundColor = upColor;
-        });
-        buttonDown.addEventListener("mouseleave", (event) => {
-            event.preventDefault();
-            this._defaultControls = false;
-            this._down = 2;
-            buttonDown.style.backgroundColor = upColor;
-        });
+            buttonDown.addEventListener("touchstart", (event) => {
+                event.preventDefault();
+                this._resetGamepadButtons();
+                this._defaultControls = true;
+                this._touchDidRun = true;
+                this._down = 1;
+                buttonDown.style.backgroundColor = downColor;
+            });
+            buttonDown.addEventListener("touchend", (event) => {
+                event.preventDefault();
+                this._defaultControls = false;
+                this._down = 2;
+                buttonDown.style.backgroundColor = upColor;
+            });
+            buttonDown.addEventListener("touchcancel", (event) => {
+                event.preventDefault();
+                this._defaultControls = false;
+                this._down = 2;
+                buttonDown.style.backgroundColor = upColor;
+            });
 
-        let buttonLeft = document.createElement("div");
-        container.appendChild(buttonLeft);
-        buttonLeft.style.position = "fixed";
-        buttonLeft.style.width = "80px";
-        buttonLeft.style.height = "72px";
-        buttonLeft.style.right = "calc(7.5vw + 80px + 8px)";
-        buttonLeft.style.bottom = "calc(5vw + 40px + 8px)";
-        buttonLeft.style.backgroundColor = upColor;
-        buttonLeft.style.borderRadius = "80px 12px 12px 80px";
+            buttonDown.addEventListener("mousedown", (event) => {
+                event.preventDefault();
+                this._resetGamepadButtons();
+                this._defaultControls = true;
+                this._touchDidRun = true;
+                this._down = 1;
+                buttonDown.style.backgroundColor = downColor;
+            });
+            buttonDown.addEventListener("mouseup", (event) => {
+                event.preventDefault();
+                this._defaultControls = false;
+                this._down = 2;
+                buttonDown.style.backgroundColor = upColor;
+            });
+            buttonDown.addEventListener("mouseleave", (event) => {
+                event.preventDefault();
+                this._defaultControls = false;
+                this._down = 2;
+                buttonDown.style.backgroundColor = upColor;
+            });
 
-        buttonLeft.addEventListener("touchstart", (event) => {
-            event.preventDefault();
-            this._resetGamepadButtons();
-            this._defaultControls = true;
-            this._touchDidRun = true;
-            this._left = 1;
-            buttonLeft.style.backgroundColor = downColor;
-        });
-        buttonLeft.addEventListener("touchend", (event) => {
-            event.preventDefault();
-            this._defaultControls = false;
-            this._left = 2;
+            let buttonLeft = document.createElement("div");
+            container.appendChild(buttonLeft);
+            buttonLeft.style.position = "fixed";
+            buttonLeft.style.width = "80px";
+            buttonLeft.style.height = "72px";
+            buttonLeft.style.right = "calc(7.5vw + 80px + 8px)";
+            buttonLeft.style.bottom = "calc(5vw + 40px + 8px)";
             buttonLeft.style.backgroundColor = upColor;
-        });
-        buttonLeft.addEventListener("touchcancel", (event) => {
-            event.preventDefault();
-            this._defaultControls = false;
-            this._left = 2;
-            buttonLeft.style.backgroundColor = upColor;
-        });
+            buttonLeft.style.borderRadius = "80px 12px 12px 80px";
 
-        buttonLeft.addEventListener("mousedown", (event) => {
-            event.preventDefault();
-            this._resetGamepadButtons();
-            this._defaultControls = true;
-            this._touchDidRun = true;
-            this._left = 1;
-            buttonLeft.style.backgroundColor = downColor;
-        });
-        buttonLeft.addEventListener("mouseup", (event) => {
-            event.preventDefault();
-            this._defaultControls = false;
-            this._left = 2;
-            buttonLeft.style.backgroundColor = upColor;
-        });
-        buttonLeft.addEventListener("mouseleave", (event) => {
-            event.preventDefault();
-            this._defaultControls = false;
-            this._left = 2;
-            buttonLeft.style.backgroundColor = upColor;
-        });
+            buttonLeft.addEventListener("touchstart", (event) => {
+                event.preventDefault();
+                this._resetGamepadButtons();
+                this._defaultControls = true;
+                this._touchDidRun = true;
+                this._left = 1;
+                buttonLeft.style.backgroundColor = downColor;
+            });
+            buttonLeft.addEventListener("touchend", (event) => {
+                event.preventDefault();
+                this._defaultControls = false;
+                this._left = 2;
+                buttonLeft.style.backgroundColor = upColor;
+            });
+            buttonLeft.addEventListener("touchcancel", (event) => {
+                event.preventDefault();
+                this._defaultControls = false;
+                this._left = 2;
+                buttonLeft.style.backgroundColor = upColor;
+            });
 
-        let buttonRight = document.createElement("div");
-        container.appendChild(buttonRight);
-        buttonRight.style.position = "fixed";
-        buttonRight.style.width = "80px";
-        buttonRight.style.height = "72px";
-        buttonRight.style.right = "7.5vw";
-        buttonRight.style.bottom = "calc(5vw + 40px + 8px)";
-        buttonRight.style.backgroundColor = upColor;
-        buttonRight.style.borderRadius = "12px 80px 80px 12px";
+            buttonLeft.addEventListener("mousedown", (event) => {
+                event.preventDefault();
+                this._resetGamepadButtons();
+                this._defaultControls = true;
+                this._touchDidRun = true;
+                this._left = 1;
+                buttonLeft.style.backgroundColor = downColor;
+            });
+            buttonLeft.addEventListener("mouseup", (event) => {
+                event.preventDefault();
+                this._defaultControls = false;
+                this._left = 2;
+                buttonLeft.style.backgroundColor = upColor;
+            });
+            buttonLeft.addEventListener("mouseleave", (event) => {
+                event.preventDefault();
+                this._defaultControls = false;
+                this._left = 2;
+                buttonLeft.style.backgroundColor = upColor;
+            });
 
-        buttonRight.addEventListener("touchstart", (event) => {
-            event.preventDefault();
-            this._resetGamepadButtons();
-            this._defaultControls = true;
-            this._touchDidRun = true;
-            this._right = 1;
-            buttonRight.style.backgroundColor = downColor;
-        });
-        buttonRight.addEventListener("touchend", (event) => {
-            event.preventDefault();
-            this._defaultControls = false;
-            this._right = 2;
+            let buttonRight = document.createElement("div");
+            container.appendChild(buttonRight);
+            buttonRight.style.position = "fixed";
+            buttonRight.style.width = "80px";
+            buttonRight.style.height = "72px";
+            buttonRight.style.right = "7.5vw";
+            buttonRight.style.bottom = "calc(5vw + 40px + 8px)";
             buttonRight.style.backgroundColor = upColor;
-        });
-        buttonRight.addEventListener("touchcancel", (event) => {
-            event.preventDefault();
-            this._defaultControls = false;
-            this._right = 2;
-            buttonRight.style.backgroundColor = upColor;
-        });
+            buttonRight.style.borderRadius = "12px 80px 80px 12px";
 
-        buttonRight.addEventListener("mousedown", (event) => {
-            event.preventDefault();
-            this._resetGamepadButtons();
-            this._defaultControls = true;
-            this._touchDidRun = true;
-            this._right = 1;
-            buttonRight.style.backgroundColor = downColor;
-        });
-        buttonRight.addEventListener("mouseup", (event) => {
-            event.preventDefault();
-            this._defaultControls = false;
-            this._right = 2;
-            buttonRight.style.backgroundColor = upColor;
-        });
-        buttonRight.addEventListener("mouseleave", (event) => {
-            event.preventDefault();
-            this._defaultControls = false;
-            this._right = 2;
-            buttonRight.style.backgroundColor = upColor;
-        });
+            buttonRight.addEventListener("touchstart", (event) => {
+                event.preventDefault();
+                this._resetGamepadButtons();
+                this._defaultControls = true;
+                this._touchDidRun = true;
+                this._right = 1;
+                buttonRight.style.backgroundColor = downColor;
+            });
+            buttonRight.addEventListener("touchend", (event) => {
+                event.preventDefault();
+                this._defaultControls = false;
+                this._right = 2;
+                buttonRight.style.backgroundColor = upColor;
+            });
+            buttonRight.addEventListener("touchcancel", (event) => {
+                event.preventDefault();
+                this._defaultControls = false;
+                this._right = 2;
+                buttonRight.style.backgroundColor = upColor;
+            });
+
+            buttonRight.addEventListener("mousedown", (event) => {
+                event.preventDefault();
+                this._resetGamepadButtons();
+                this._defaultControls = true;
+                this._touchDidRun = true;
+                this._right = 1;
+                buttonRight.style.backgroundColor = downColor;
+            });
+            buttonRight.addEventListener("mouseup", (event) => {
+                event.preventDefault();
+                this._defaultControls = false;
+                this._right = 2;
+                buttonRight.style.backgroundColor = upColor;
+            });
+            buttonRight.addEventListener("mouseleave", (event) => {
+                event.preventDefault();
+                this._defaultControls = false;
+                this._right = 2;
+                buttonRight.style.backgroundColor = upColor;
+            });
+        }
 
         window.addEventListener("gamepadconnected", (event) => {
             event.preventDefault();
