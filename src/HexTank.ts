@@ -115,7 +115,9 @@ export default class HexTank {
 
     enableInput() {
         window.addEventListener("keydown", (event) => {
-            event.preventDefault();
+            if (this._debug === false) {
+                event.preventDefault();
+            }
             this._defaultControls = true;
             this._resetGamepadButtons();
             this._resetTouchButtons();
@@ -150,7 +152,9 @@ export default class HexTank {
         });
 
         window.addEventListener("keyup", (event) => {
-            event.preventDefault();
+            if (this._debug === false) {
+                event.preventDefault();
+            }
             this._defaultControls = false;
 
             if (
@@ -426,66 +430,71 @@ export default class HexTank {
     }
 
     private _gamepadInput() {
-        if (this._defaultControls === true) {
-            return;
-        }
+        if (typeof navigator.getGamepads === "function") {
+            if (this._defaultControls === true) {
+                return;
+            }
 
-        this._resetGamepadButtons();
+            this._resetGamepadButtons();
 
-        let currentGamepadList = navigator.getGamepads();
-        let currentGamepad: Gamepad;
+            let currentGamepadList = navigator.getGamepads();
+            let currentGamepad: Gamepad;
 
-        if (
-            typeof currentGamepadList !== "undefined" &&
-            currentGamepadList !== null
-        ) {
-            for (let i = 0; i < currentGamepadList.length; i++) {
-                if (
-                    typeof currentGamepadList[i] !== "undefined" &&
-                    currentGamepadList[i] !== null
-                ) {
-                    if (currentGamepadList[i]!.axes.length >= 4) {
-                    }
-                    for (
-                        let j = 0;
-                        j < currentGamepadList[i]!.axes.length;
-                        j++
+            if (
+                typeof currentGamepadList !== "undefined" &&
+                currentGamepadList !== null
+            ) {
+                for (let i = 0; i < currentGamepadList.length; i++) {
+                    if (
+                        typeof currentGamepadList[i] !== "undefined" &&
+                        currentGamepadList[i] !== null
                     ) {
-                        if (j === 1 || j === 2) {
-                            if (
-                                Math.abs(currentGamepadList[i]!.axes[j]) > 0.5
-                            ) {
-                                this._gamepadDidRun = true;
-                                currentGamepad = currentGamepadList[i]!;
+                        if (currentGamepadList[i]!.axes.length >= 4) {
+                        }
+                        for (
+                            let j = 0;
+                            j < currentGamepadList[i]!.axes.length;
+                            j++
+                        ) {
+                            if (j === 1 || j === 2) {
+                                if (
+                                    Math.abs(currentGamepadList[i]!.axes[j]) >
+                                    0.5
+                                ) {
+                                    this._gamepadDidRun = true;
+                                    currentGamepad = currentGamepadList[i]!;
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            if (this._gamepadDidRun === true) {
-                if (currentGamepad!.axes[1] < -0.5) {
-                    this._up = 1;
-                } else if (this._up === 1) {
-                    this._up = 2;
-                }
-                if (currentGamepad!.axes[1] > 0.5) {
-                    this._down = 1;
-                } else if (this._down === 1) {
-                    this._down = 2;
-                }
+                if (this._gamepadDidRun === true) {
+                    if (currentGamepad!.axes[1] < -0.5) {
+                        this._up = 1;
+                    } else if (this._up === 1) {
+                        this._up = 2;
+                    }
+                    if (currentGamepad!.axes[1] > 0.5) {
+                        this._down = 1;
+                    } else if (this._down === 1) {
+                        this._down = 2;
+                    }
 
-                if (currentGamepad!.axes[2] < -0.5) {
-                    this._left = 1;
-                } else if (this._left === 1) {
-                    this._left = 2;
-                }
-                if (currentGamepad!.axes[2] > 0.5) {
-                    this._right = 1;
-                } else if (this._right === 1) {
-                    this._right = 2;
+                    if (currentGamepad!.axes[2] < -0.5) {
+                        this._left = 1;
+                    } else if (this._left === 1) {
+                        this._left = 2;
+                    }
+                    if (currentGamepad!.axes[2] > 0.5) {
+                        this._right = 1;
+                    } else if (this._right === 1) {
+                        this._right = 2;
+                    }
                 }
             }
+        } else {
+            return;
         }
     }
 

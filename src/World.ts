@@ -87,6 +87,7 @@ export default class World {
         console.log = log;
 
         this._scene = new Scene(this._engine);
+        this._scene.detachControl();
     }
 
     initWorld() {
