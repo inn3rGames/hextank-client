@@ -196,7 +196,7 @@ export default class HexTank {
         buttonUp.style.position = "fixed";
         buttonUp.style.width = "72px";
         buttonUp.style.height = "80px";
-        buttonUp.style.left = "20px";
+        buttonUp.style.left = "7.5vw";
         buttonUp.style.bottom = "108px";
         buttonUp.style.backgroundColor = "rgba(255, 255, 255, 0.25)";
         buttonUp.style.borderRadius = "80px 80px 12px 12px";
@@ -242,7 +242,7 @@ export default class HexTank {
         buttonDown.style.position = "fixed";
         buttonDown.style.width = "72px";
         buttonDown.style.height = "80px";
-        buttonDown.style.left = "20px";
+        buttonDown.style.left = "7.5vw";
         buttonDown.style.bottom = "20px";
         buttonDown.style.backgroundColor = "rgba(255, 255, 255, 0.25)";
         buttonDown.style.borderRadius = "12px 12px 80px 80px";
@@ -288,7 +288,7 @@ export default class HexTank {
         buttonLeft.style.position = "fixed";
         buttonLeft.style.width = "80px";
         buttonLeft.style.height = "72px";
-        buttonLeft.style.right = "108px";
+        buttonLeft.style.right = "calc(7.5vw + 80px + 8px)";
         buttonLeft.style.bottom = "68px";
         buttonLeft.style.backgroundColor = "rgba(255, 255, 255, 0.25)";
         buttonLeft.style.borderRadius = "80px 12px 12px 80px";
@@ -334,7 +334,7 @@ export default class HexTank {
         buttonRight.style.position = "fixed";
         buttonRight.style.width = "80px";
         buttonRight.style.height = "72px";
-        buttonRight.style.right = "20px";
+        buttonRight.style.right = "7.5vw";
         buttonRight.style.bottom = "68px";
         buttonRight.style.backgroundColor = "rgba(255, 255, 255, 0.25)";
         buttonRight.style.borderRadius = "12px 80px 80px 12px";
