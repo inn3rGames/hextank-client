@@ -32,6 +32,7 @@ export default class HexTank {
     private _defaultControls: boolean = true;
     private _gamepadDidRun: boolean = false;
     private _touchDidRun: boolean = false;
+    private _windowActive: boolean = true;
 
     private _debug: boolean;
 
@@ -395,6 +396,14 @@ export default class HexTank {
                 console.log("Gamepad disconnected.");
             }
         });
+
+        window.addEventListener("focus", () => {
+            this._windowActive = true;
+        });
+
+        window.addEventListener("blur", () => {
+            this._windowActive = false;
+        });
     }
 
     private _resetGamepadButtons() {
@@ -434,7 +443,10 @@ export default class HexTank {
     }
 
     private _gamepadInput() {
-        if (typeof navigator.getGamepads === "function") {
+        if (
+            typeof navigator.getGamepads === "function" &&
+            this._windowActive === true
+        ) {
             if (this._defaultControls === true) {
                 return;
             }
