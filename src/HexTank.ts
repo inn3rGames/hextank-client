@@ -8,8 +8,9 @@ import isMobile from "./Utilities";
 import HexTankModel from "./assets/models/hextankFinalTest3.glb";
 
 export default class HexTank {
-    x: number;
-    z: number;
+    private _x: number;
+    private _z: number;
+    private _angle: number;
     id: string;
     private _room: Room;
     private _currentScene: Scene;
@@ -35,18 +36,17 @@ export default class HexTank {
     private _debug: boolean;
 
     constructor(
-        x: number,
-        z: number,
-        id: string,
+        serverHexTank : any,
         room: Room,
         scene: Scene,
         camera: ArcRotateCamera,
         shadowGenerator: ShadowGenerator,
         debug: boolean
     ) {
-        this.x = x;
-        this.z = z;
-        this.id = id;
+        this._x = serverHexTank.x;
+        this._z = serverHexTank.z;
+        this._angle = serverHexTank.angle;
+        this.id = serverHexTank.id;
         this._room = room;
         this._currentScene = scene;
         this._camera = camera;
@@ -62,12 +62,24 @@ export default class HexTank {
             this._currentScene
         );
         this.mesh = result.meshes[0];
-        this.mesh.position.x = this.x;
-        this.mesh.position.z = this.z;
+        this.mesh.position.x = this._x;
+        this.mesh.position.z = this._z;
         this.mesh.rotationQuaternion!.toEulerAnglesToRef(this.mesh.rotation);
         this.mesh.rotationQuaternion = null;
         this.mesh.rotation.setAll(0);
         this._currentShadowGenerator.addShadowCaster(this.mesh, true);
+    }
+
+    deleteMesh() {
+        if (typeof this.mesh !== "undefined") {
+            this.mesh.dispose();
+        }
+    }
+
+    setPosition(serverHexTank: any) {
+        this._x = serverHexTank.x;
+        this._z = serverHexTank.z;
+        this._angle = serverHexTank.angle;
     }
 
     private _linearInterpolation(
@@ -605,30 +617,40 @@ export default class HexTank {
     }
 
     private _updateCamera() {
-        this._camera.alpha = -this.mesh.rotation.y;
-        this._camera.target.x = this.mesh.position.x;
-        this._camera.target.z = this.mesh.position.z;
+        this._camera.alpha = -this._angle;
+        this._camera.target.x = this._x;
+        this._camera.target.z = this._z;
+    }
+
+    private _updateMesh() {
+        if (typeof this.mesh !== "undefined") {
+            this.mesh.position.x = this._x;
+            this.mesh.position.z = this._z;
+            this.mesh.rotation.y = this._angle;
+        }
     }
 
     syncWithServer(serverHexTank: any) {
-        this.mesh.position.x = this._linearInterpolation(
-            this.mesh.position.x,
+        this._x = this._linearInterpolation(
+            this._x,
             serverHexTank.x,
             this._linearInperpolationPercent
         );
-        this.mesh.position.z = this._linearInterpolation(
-            this.mesh.position.z,
+        this._z = this._linearInterpolation(
+            this._z,
             serverHexTank.z,
             this._linearInperpolationPercent
         );
 
-        this.mesh.rotation.y = this._positiveAngle(
+        this._angle = this._positiveAngle(
             this._angleInterpolation(
-                this.mesh.rotation.y,
+                this._angle,
                 serverHexTank.angle,
                 this._linearInperpolationPercent
             )
         );
+
+        this._updateMesh();
     }
 
     update(serverHexTank: any) {

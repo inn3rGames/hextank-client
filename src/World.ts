@@ -239,17 +239,18 @@ export default class World {
 
         this._room.state.hexTanks.onAdd = async (serverHexTank: any) => {
             let clientHexTank = new HexTank(
-                serverHexTank.x,
-                serverHexTank.z,
-                serverHexTank.id,
+                serverHexTank,
                 this._room,
                 this._scene,
                 this._camera,
                 this._shadowGenerator,
                 this._debug
             );
+
             this._hexTanks[serverHexTank.id] = clientHexTank;
             await clientHexTank.loadModel();
+            clientHexTank.setPosition(serverHexTank);
+
             if (this._room.sessionId === clientHexTank.id) {
                 clientHexTank.enableInput();
             }
@@ -269,13 +270,8 @@ export default class World {
 
             if (typeof serverHexTank !== "undefined") {
                 if (typeof this._hexTanks[serverHexTank.id] !== "undefined") {
-                    if (
-                        typeof this._hexTanks[serverHexTank.id].mesh !==
-                        "undefined"
-                    ) {
-                        this._hexTanks[serverHexTank.id].mesh.dispose();
-                        delete this._hexTanks[serverHexTank.id];
-                    }
+                    this._hexTanks[serverHexTank.id].deleteMesh();
+                    delete this._hexTanks[serverHexTank.id];
                 }
             }
         };
@@ -283,34 +279,6 @@ export default class World {
         window.addEventListener("focus", () => {
             this._focusRegained();
         });
-    }
-
-    private _updateHexTanks() {
-        for (let index in this._hexTanks) {
-            let clientHexTank = this._hexTanks[index];
-            let serverHexTank = this._room.state.hexTanks[index];
-
-            if (typeof clientHexTank !== "undefined") {
-                if (
-                    typeof clientHexTank.mesh !== "undefined" &&
-                    typeof serverHexTank !== "undefined"
-                ) {
-                    if (this._room.sessionId !== index) {
-                        clientHexTank.syncWithServer(serverHexTank);
-                    } else {
-                        clientHexTank.update(serverHexTank);
-                    }
-                }
-            }
-        }
-    }
-
-    private _fixedUpdate() {
-        this._torus.rotation.x += 0.01;
-        this._torus.rotation.z += 0.02;
-
-        this._updateHexTanks();
-        this._scene.render();
     }
 
     private _focusRegained() {
@@ -322,17 +290,39 @@ export default class World {
             let clientHexTank = this._hexTanks[index];
             let serverHexTank = this._room.state.hexTanks[index];
 
-            if (typeof clientHexTank !== "undefined") {
-                if (
-                    typeof clientHexTank.mesh !== "undefined" &&
-                    typeof serverHexTank !== "undefined"
-                ) {
-                    clientHexTank.mesh.position.x = serverHexTank.x;
-                    clientHexTank.mesh.position.z = serverHexTank.z;
-                    clientHexTank.mesh.rotation.y = serverHexTank.angle;
+            if (
+                typeof clientHexTank !== "undefined" &&
+                typeof serverHexTank !== "undefined"
+            ) {
+                clientHexTank.setPosition(serverHexTank);
+            }
+        }
+    }
+
+    private _updateHexTanks() {
+        for (let index in this._hexTanks) {
+            let clientHexTank = this._hexTanks[index];
+            let serverHexTank = this._room.state.hexTanks[index];
+
+            if (
+                typeof clientHexTank !== "undefined" &&
+                typeof serverHexTank !== "undefined"
+            ) {
+                if (this._room.sessionId !== index) {
+                    clientHexTank.syncWithServer(serverHexTank);
+                } else {
+                    clientHexTank.update(serverHexTank);
                 }
             }
         }
+    }
+
+    private _fixedUpdate() {
+        this._torus.rotation.x += 0.01;
+        this._torus.rotation.z += 0.02;
+
+        this._updateHexTanks();
+        this._scene.render();
     }
 
     updateWorld(): void {
