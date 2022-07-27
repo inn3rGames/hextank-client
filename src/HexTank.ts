@@ -5,8 +5,7 @@ import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
 import { AbstractMesh } from "@babylonjs/core/Meshes/abstractMesh";
 import { ShadowGenerator } from "@babylonjs/core/Lights/Shadows/shadowGenerator";
 import isMobile from "./Utilities";
-import base from "./assets/models/hexTankFinalBase.glb";
-import turret from "./assets/models/hexTankFinalTurret.glb";
+import HexTankModel from "./assets/models/hexTankFinalFlame.glb";
 
 export default class HexTank {
     private _x: number;
@@ -17,8 +16,7 @@ export default class HexTank {
     private _currentScene: Scene;
     private _camera: ArcRotateCamera;
     private _currentShadowGenerator: ShadowGenerator;
-    base!: AbstractMesh;
-    turret!: AbstractMesh;
+    mesh!: AbstractMesh;
 
     private _linearInperpolationPercent: number = 0.2;
 
@@ -58,40 +56,27 @@ export default class HexTank {
     }
 
     async loadMesh() {
-        let result1 = await SceneLoader.ImportMeshAsync(
+        let result = await SceneLoader.ImportMeshAsync(
             null,
             "",
-            base,
+            HexTankModel,
             this._currentScene
         );
-        this.base = result1.meshes[0];
-        this.base.position.x = this._x;
-        this.base.position.z = this._z;
-        this.base.rotationQuaternion!.toEulerAnglesToRef(this.base.rotation);
-        this.base.rotationQuaternion = null;
-        this.base.rotation.setAll(0);
-        this._currentShadowGenerator.addShadowCaster(this.base, true);
-
-        let result2 = await SceneLoader.ImportMeshAsync(
-            null,
-            "",
-            turret,
-            this._currentScene
-        );
-        this.turret = result2.meshes[0];
-        this.turret.position.x = this._x;
-        this.turret.position.z = this._z;
-        this.turret.rotationQuaternion!.toEulerAnglesToRef(
-            this.turret.rotation
-        );
-        this.turret.rotationQuaternion = null;
-        this.turret.rotation.setAll(0);
-        this._currentShadowGenerator.addShadowCaster(this.turret, true);
+        for (let i = 0; i < result.meshes.length; i++){
+            console.log(result.meshes[i].name);
+        }
+        this.mesh = result.meshes[0];
+        this.mesh.position.x = this._x;
+        this.mesh.position.z = this._z;
+        this.mesh.rotationQuaternion!.toEulerAnglesToRef(this.mesh.rotation);
+        this.mesh.rotationQuaternion = null;
+        this.mesh.rotation.setAll(0);
+        this._currentShadowGenerator.addShadowCaster(this.mesh, true);
     }
 
     deleteMesh() {
-        if (typeof this.base !== "undefined") {
-            this.base.dispose();
+        if (typeof this.mesh !== "undefined") {
+            this.mesh.dispose();
         }
     }
 
@@ -570,24 +555,10 @@ export default class HexTank {
         ) {
             if (currentCommand === "upKeyDown") {
                 this._room.send("command", "upKeyDown");
-                this.base.rotation.y = this._positiveAngle(
-                    this._angleInterpolation(
-                        this.base.rotation.y,
-                        this.turret.rotation.y,
-                        0.2
-                    )
-                );
             }
 
             if (currentCommand === "downKeyDown") {
                 this._room.send("command", "downKeyDown");
-                this.base.rotation.y = this._positiveAngle(
-                    this._angleInterpolation(
-                        this.base.rotation.y,
-                        this.turret.rotation.y,
-                        0.2
-                    )
-                );
             }
 
             if (currentCommand === "leftKeyDown") {
@@ -661,24 +632,11 @@ export default class HexTank {
     }
 
     private _updateMesh() {
-        if (typeof this.base !== "undefined") {
-            this.base.position.x = this._x;
-            this.base.position.z = this._z;
-            //this.base.rotation.y = this._angle;
+        if (typeof this.mesh !== "undefined") {
+            this.mesh.position.x = this._x;
+            this.mesh.position.z = this._z;
+            this.mesh.rotation.y = this._angle;
         }
-        if (typeof this.turret !== "undefined") {
-            this.turret.position.x = this._x;
-            this.turret.position.z = this._z;
-            this.turret.rotation.y = this._angle;
-        }
-
-        /* this.base.rotation.y = this._positiveAngle(
-            this._angleInterpolation(
-                this.base.rotation.y,
-                this.turret.rotation.y,
-                0.04
-            )
-        ); */
     }
 
     syncWithServer(serverHexTank: any) {
