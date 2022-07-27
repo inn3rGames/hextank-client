@@ -112,7 +112,7 @@ export default class World {
 
         this._directionalLight = new DirectionalLight(
             "directionalLight",
-            new Vector3(1, -1, 0),
+            new Vector3(0, -1, 0),
             this._scene
         );
         this._directionalLight.position = new Vector3(0, 100, 0);
