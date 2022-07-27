@@ -36,7 +36,7 @@ export default class HexTank {
     private _debug: boolean;
 
     constructor(
-        serverHexTank : any,
+        serverHexTank: any,
         room: Room,
         scene: Scene,
         camera: ArcRotateCamera,
@@ -54,7 +54,7 @@ export default class HexTank {
         this._debug = debug;
     }
 
-    async loadModel() {
+    async loadMesh() {
         let result = await SceneLoader.ImportMeshAsync(
             null,
             "",
@@ -80,50 +80,6 @@ export default class HexTank {
         this._x = serverHexTank.x;
         this._z = serverHexTank.z;
         this._angle = serverHexTank.angle;
-    }
-
-    private _linearInterpolation(
-        start: number,
-        end: number,
-        percent: number
-    ): number {
-        let difference = Math.round(Math.abs(end - start) * 1000) / 1000;
-
-        if (difference === 0) {
-            return end;
-        } else {
-            return start + (end - start) * percent;
-        }
-    }
-
-    private _angleInterpolation(
-        startAngle: number,
-        endAngle: number,
-        percent: number
-    ) {
-        let currentAngle = startAngle;
-        let targetAngle = endAngle;
-        let differenceBetweenAngles = targetAngle - currentAngle;
-
-        while (differenceBetweenAngles < -Math.PI) {
-            targetAngle += 2 * Math.PI;
-            differenceBetweenAngles = targetAngle - currentAngle;
-        }
-        while (differenceBetweenAngles > Math.PI) {
-            targetAngle -= 2 * Math.PI;
-            differenceBetweenAngles = targetAngle - currentAngle;
-        }
-
-        return this._linearInterpolation(currentAngle, targetAngle, percent);
-    }
-
-    private _positiveAngle(angle: number): number {
-        let computeAngle = angle;
-        computeAngle = computeAngle % (2 * Math.PI);
-        if (computeAngle < 0) {
-            computeAngle += 2 * Math.PI;
-        }
-        return computeAngle;
     }
 
     enableInput() {
@@ -616,10 +572,48 @@ export default class HexTank {
         }
     }
 
-    private _updateCamera() {
-        this._camera.alpha = -this._angle;
-        this._camera.target.x = this._x;
-        this._camera.target.z = this._z;
+    private _linearInterpolation(
+        start: number,
+        end: number,
+        percent: number
+    ): number {
+        let difference = Math.round(Math.abs(end - start) * 1000) / 1000;
+
+        if (difference === 0) {
+            return end;
+        } else {
+            return start + (end - start) * percent;
+        }
+    }
+
+    private _angleInterpolation(
+        startAngle: number,
+        endAngle: number,
+        percent: number
+    ) {
+        let currentAngle = startAngle;
+        let targetAngle = endAngle;
+        let differenceBetweenAngles = targetAngle - currentAngle;
+
+        while (differenceBetweenAngles < -Math.PI) {
+            targetAngle += 2 * Math.PI;
+            differenceBetweenAngles = targetAngle - currentAngle;
+        }
+        while (differenceBetweenAngles > Math.PI) {
+            targetAngle -= 2 * Math.PI;
+            differenceBetweenAngles = targetAngle - currentAngle;
+        }
+
+        return this._linearInterpolation(currentAngle, targetAngle, percent);
+    }
+
+    private _positiveAngle(angle: number): number {
+        let computeAngle = angle;
+        computeAngle = computeAngle % (2 * Math.PI);
+        if (computeAngle < 0) {
+            computeAngle += 2 * Math.PI;
+        }
+        return computeAngle;
     }
 
     private _updateMesh() {
@@ -653,11 +647,18 @@ export default class HexTank {
         this._updateMesh();
     }
 
+    private _updateCamera() {
+        this._camera.alpha = -this._angle;
+        this._camera.target.x = this._x;
+        this._camera.target.z = this._z;
+    }
+
     update(serverHexTank: any) {
-        this.syncWithServer(serverHexTank);
         this._gamepadInput();
         this._addCommands();
         this._processCommands();
+
+        this.syncWithServer(serverHexTank);
         this._updateCamera();
     }
 }

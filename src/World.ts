@@ -246,10 +246,9 @@ export default class World {
                 this._shadowGenerator,
                 this._debug
             );
+            await clientHexTank.loadMesh();
 
             this._hexTanks[serverHexTank.id] = clientHexTank;
-            await clientHexTank.loadModel();
-            clientHexTank.setPosition(serverHexTank);
 
             if (this._room.sessionId === clientHexTank.id) {
                 clientHexTank.enableInput();
