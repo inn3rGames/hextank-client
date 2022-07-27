@@ -50,7 +50,7 @@ export default class World {
     private _groundMaterial!: PBRMetallicRoughnessMaterial;
     private _sandTexture!: Texture;
     private _ground!: Mesh;
-    private _worldSize: number = 200;
+    private _worldSize: number = 500;
 
     private _torus!: Mesh;
 
@@ -131,7 +131,7 @@ export default class World {
         this._skybox = MeshBuilder.CreateBox(
             "skyBox",
             {
-                size: 1000,
+                size: 2500,
             },
             this._scene
         );
@@ -155,8 +155,8 @@ export default class World {
             this._scene
         );
         this._sandTexture = new Texture(sand, this._scene);
-        this._sandTexture.uScale = 10;
-        this._sandTexture.vScale = 10;
+        this._sandTexture.uScale = 10 * (this._worldSize / 200);
+        this._sandTexture.vScale = 10 * (this._worldSize / 200);
         this._groundMaterial.baseTexture = this._sandTexture;
         this._groundMaterial.metallic = 0;
         this._groundMaterial.roughness = 0;
