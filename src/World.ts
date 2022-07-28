@@ -5,9 +5,7 @@ import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
 import { HemisphericLight } from "@babylonjs/core/Lights/hemisphericLight";
 import { ShadowGenerator } from "@babylonjs/core/Lights/Shadows/shadowGenerator";
 import { DirectionalLight } from "@babylonjs/core/Lights/directionalLight";
-import { GlowLayer } from "@babylonjs/core/Layers/glowLayer";
 import { Mesh } from "@babylonjs/core/Meshes/mesh";
-import { AbstractMesh } from "@babylonjs/core/Meshes/abstractMesh";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 import { Color3 } from "@babylonjs/core/Maths/math.color";
 import { CubeTexture } from "@babylonjs/core/Materials/Textures/cubeTexture";
@@ -43,7 +41,6 @@ export default class World {
 
     private _wordlLight!: HemisphericLight;
     private _directionalLight!: DirectionalLight;
-    private _glow!: GlowLayer;
 
     private _skyboxArray!: Array<string>;
     private _skybox!: Mesh;
@@ -65,8 +62,6 @@ export default class World {
 
     private _client!: Client;
     private _room!: Room;
-
-    private _linearInperpolationPercent: number = 0.2;
 
     private _fpsLimit: number = 60;
     private _lastFrame: number = 0;
@@ -121,10 +116,6 @@ export default class World {
         this._directionalLight.diffuse = Color3.FromHexString("#FFFFFF");
         this._directionalLight.specular = Color3.FromHexString("#FFFFFF");
         this._directionalLight.intensity = 2.5;
-
-        this._glow = new GlowLayer("glow", this._scene);
-        this._glow.intensity = 0.5;
-        //this._glow.disableBoundingBoxesFromEffectLayer = false;
 
         this._skyboxArray = [
             skyboxPx,
@@ -248,7 +239,6 @@ export default class World {
                 serverHexTank,
                 this._room,
                 this._scene,
-                this._glow,
                 this._camera,
                 this._shadowGenerator,
                 this._debug

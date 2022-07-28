@@ -1,6 +1,5 @@
 import { Room } from "colyseus.js";
 import { Scene } from "@babylonjs/core/scene";
-import { GlowLayer } from "@babylonjs/core/Layers/glowLayer";
 import { Color3, Color4 } from "@babylonjs/core/Maths/math.color";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
@@ -24,7 +23,6 @@ export default class HexTank {
     id: string;
     private _room: Room;
     private _currentScene: Scene;
-    private _glow: GlowLayer;
     private _camera: ArcRotateCamera;
     private _currentShadowGenerator: ShadowGenerator;
     bodyMesh!: AbstractMesh;
@@ -58,7 +56,6 @@ export default class HexTank {
         serverHexTank: any,
         room: Room,
         scene: Scene,
-        glow: GlowLayer,
         camera: ArcRotateCamera,
         shadowGenerator: ShadowGenerator,
         debug: boolean
@@ -69,7 +66,6 @@ export default class HexTank {
         this.id = serverHexTank.id;
         this._room = room;
         this._currentScene = scene;
-        this._glow = glow;
         this._camera = camera;
         this._currentShadowGenerator = shadowGenerator;
         this._debug = debug;
@@ -125,23 +121,6 @@ export default class HexTank {
             );
 
             this.bodyMesh.addChild(this._jetFrontLeft);
-
-            this._glow.addIncludedOnlyMesh(this._jetFrontLeft.flame);
-            this._glow.customEmissiveColorSelector = (
-                mesh,
-                subMesh,
-                material,
-                result
-            ) => {
-                let customColor = Color4.FromHexString("#FF3D00");
-                result.set(
-                    customColor.r,
-                    customColor.g,
-                    customColor.b,
-                    customColor.a
-                );
-            };
-
             this._jets.push(this._jetFrontLeft);
         }
 
@@ -157,23 +136,6 @@ export default class HexTank {
             );
 
             this.bodyMesh.addChild(this._jetFrontRight);
-
-            this._glow.addIncludedOnlyMesh(this._jetFrontRight.flame);
-            this._glow.customEmissiveColorSelector = (
-                mesh,
-                subMesh,
-                material,
-                result
-            ) => {
-                let customColor = Color4.FromHexString("#FF3D00");
-                result.set(
-                    customColor.r,
-                    customColor.g,
-                    customColor.b,
-                    customColor.a
-                );
-            };
-
             this._jets.push(this._jetFrontRight);
         }
 
@@ -190,23 +152,6 @@ export default class HexTank {
             );
 
             this.bodyMesh.addChild(this._jetBackLeft);
-
-            this._glow.addIncludedOnlyMesh(this._jetBackLeft.flame);
-            this._glow.customEmissiveColorSelector = (
-                mesh,
-                subMesh,
-                material,
-                result
-            ) => {
-                let customColor = Color4.FromHexString("#FF3D00");
-                result.set(
-                    customColor.r,
-                    customColor.g,
-                    customColor.b,
-                    customColor.a
-                );
-            };
-
             this._jets.push(this._jetBackLeft);
         }
 
@@ -223,25 +168,6 @@ export default class HexTank {
             );
 
             this.bodyMesh.addChild(this._jetBackRight);
-
-            this._glow.addIncludedOnlyMesh(this._jetBackRight.flame);
-            this._glow.customEmissiveColorSelector = (
-                mesh,
-                subMesh,
-                material,
-                result
-            ) => {
-                let customColor = Color4.FromHexString("#FF3D00");
-                result.set(
-                    customColor.r,
-                    customColor.g,
-                    customColor.b,
-                    customColor.a
-                );
-            };
-
-            console.log(this._jetBackRight);
-
             this._jets.push(this._jetBackRight);
         }
     }
