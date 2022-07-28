@@ -25,12 +25,12 @@ export default class HexTank {
     private _currentShadowGenerator: ShadowGenerator;
     bodyMesh!: AbstractMesh;
 
+    private _jets: Array<JetMesh> = [];
+
     private _jetFrontLeft!: JetMesh;
     private _jetFrontRight!: JetMesh;
     private _jetBackLeft!: JetMesh;
     private _jetBackRight!: JetMesh;
-
-    private _jets!: Array<JetMesh>;
 
     private _linearInperpolationPercent: number = 0.2;
 
@@ -67,8 +67,6 @@ export default class HexTank {
         this._camera = camera;
         this._currentShadowGenerator = shadowGenerator;
         this._debug = debug;
-
-        this._jets = [];
     }
 
     async loadMeshes() {
@@ -107,7 +105,7 @@ export default class HexTank {
         );
         result.meshes[0].rotationQuaternion = null;
         result.meshes[0].rotation.setAll(0);
-        result.meshes[0].setPivotPoint(new Vector3(0, 0.5, 0))
+        result.meshes[0].setPivotPoint(new Vector3(0, 0.5, 0));
 
         if (type === "jetFrontLeft") {
             this._jetFrontLeft = result.meshes[0];
@@ -793,6 +791,32 @@ export default class HexTank {
             )
         );
 
+        for (let i = 0; i < this._jets.length; i++) {
+            let currenJet = this._jets[i];
+
+            currenJet.rotation.z = this._positiveAngle(
+                this._angleInterpolation(
+                    currenJet.rotation.z,
+                    serverHexTank.jetsRotationZ,
+                    this._linearInperpolationPercent
+                )
+            );
+
+            currenJet.rotation.x = this._positiveAngle(
+                this._angleInterpolation(
+                    currenJet.rotation.x,
+                    serverHexTank.jetsRotationX,
+                    this._linearInperpolationPercent
+                )
+            );
+
+            currenJet.flame!.scaling.y = this._linearInterpolation(
+                currenJet.flame!.scaling.y,
+                serverHexTank.jetsFlameScale,
+                this._linearInperpolationPercent
+            );
+        }
+
         this._updateMesh();
     }
 
@@ -808,7 +832,6 @@ export default class HexTank {
         this._processCommands();
 
         this.syncWithServer(serverHexTank);
-        this._updateJets();
         this._updateCamera();
     }
 }
