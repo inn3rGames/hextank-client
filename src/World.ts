@@ -246,7 +246,7 @@ export default class World {
                 this._shadowGenerator,
                 this._debug
             );
-            await clientHexTank.loadMesh();
+            await clientHexTank.loadMeshes();
 
             this._hexTanks[serverHexTank.id] = clientHexTank;
 
@@ -269,7 +269,7 @@ export default class World {
 
             if (typeof serverHexTank !== "undefined") {
                 if (typeof this._hexTanks[serverHexTank.id] !== "undefined") {
-                    this._hexTanks[serverHexTank.id].deleteMesh();
+                    this._hexTanks[serverHexTank.id].deleteMeshes();
                     delete this._hexTanks[serverHexTank.id];
                 }
             }

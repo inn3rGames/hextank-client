@@ -1,11 +1,18 @@
 import { Room } from "colyseus.js";
 import { Scene } from "@babylonjs/core/scene";
+import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
 import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
 import { AbstractMesh } from "@babylonjs/core/Meshes/abstractMesh";
 import { ShadowGenerator } from "@babylonjs/core/Lights/Shadows/shadowGenerator";
 import isMobile from "./Utilities";
-import HexTankModel from "./assets/models/hexTankFinalFlame.glb";
+import body from "./assets/models/hexTankBody.glb";
+import jet from "./assets/models/hexTankJet.glb";
+
+interface JetMesh extends AbstractMesh {
+    type?: string;
+    flame?: AbstractMesh;
+}
 
 export default class HexTank {
     private _x: number;
@@ -16,7 +23,14 @@ export default class HexTank {
     private _currentScene: Scene;
     private _camera: ArcRotateCamera;
     private _currentShadowGenerator: ShadowGenerator;
-    mesh!: AbstractMesh;
+    bodyMesh!: AbstractMesh;
+
+    private _jetFrontLeft!: JetMesh;
+    private _jetFrontRight!: JetMesh;
+    private _jetBackLeft!: JetMesh;
+    private _jetBackRight!: JetMesh;
+
+    private _jets!: Array<JetMesh>;
 
     private _linearInperpolationPercent: number = 0.2;
 
@@ -53,30 +67,150 @@ export default class HexTank {
         this._camera = camera;
         this._currentShadowGenerator = shadowGenerator;
         this._debug = debug;
+
+        this._jets = [];
     }
 
-    async loadMesh() {
+    async loadMeshes() {
         let result = await SceneLoader.ImportMeshAsync(
             null,
             "",
-            HexTankModel,
+            body,
             this._currentScene
         );
-        for (let i = 0; i < result.meshes.length; i++){
-            console.log(result.meshes[i].name);
-        }
-        this.mesh = result.meshes[0];
-        this.mesh.position.x = this._x;
-        this.mesh.position.z = this._z;
-        this.mesh.rotationQuaternion!.toEulerAnglesToRef(this.mesh.rotation);
-        this.mesh.rotationQuaternion = null;
-        this.mesh.rotation.setAll(0);
-        this._currentShadowGenerator.addShadowCaster(this.mesh, true);
+        this.bodyMesh = result.meshes[0];
+        this.bodyMesh.position.x = this._x;
+        this.bodyMesh.position.z = this._z;
+        this.bodyMesh.rotationQuaternion!.toEulerAnglesToRef(
+            this.bodyMesh.rotation
+        );
+        this.bodyMesh.rotationQuaternion = null;
+        this.bodyMesh.rotation.setAll(0);
+        this._currentShadowGenerator.addShadowCaster(this.bodyMesh, true);
+
+        await this._loadJet("jetFrontLeft");
+        await this._loadJet("jetFrontRight");
+        await this._loadJet("jetBackLeft");
+        await this._loadJet("jetBackRight");
     }
 
-    deleteMesh() {
-        if (typeof this.mesh !== "undefined") {
-            this.mesh.dispose();
+    private async _loadJet(type: string) {
+        let result = await SceneLoader.ImportMeshAsync(
+            null,
+            "",
+            jet,
+            this._currentScene
+        );
+
+        result.meshes[0].rotationQuaternion!.toEulerAnglesToRef(
+            result.meshes[0].rotation
+        );
+        result.meshes[0].rotationQuaternion = null;
+        result.meshes[0].rotation.setAll(0);
+        result.meshes[0].setPivotPoint(new Vector3(0, 0.5 ,0))
+
+        if (type === "jetFrontLeft") {
+            this._jetFrontLeft = result.meshes[0];
+            this._jetFrontLeft.type = type;
+            this._jetFrontLeft.flame = result.meshes[1];
+            this._jetFrontLeft.position.x = this._x - 0.5;
+            this._jetFrontLeft.position.z = this._z - 0.45;
+            this._currentShadowGenerator.addShadowCaster(
+                this._jetFrontLeft,
+                true
+            );
+
+            this.bodyMesh.addChild(this._jetFrontLeft);
+
+            this._jets.push(this._jetFrontLeft);
+        }
+
+        if (type === "jetFrontRight") {
+            this._jetFrontRight = result.meshes[0];
+            this._jetFrontRight.type = type;
+            this._jetFrontRight.flame = result.meshes[1];
+            this._jetFrontRight.position.x = this._x - 0.5;
+            this._jetFrontRight.position.z = this._z + 0.45;
+            this._currentShadowGenerator.addShadowCaster(
+                this._jetFrontRight,
+                true
+            );
+
+            this.bodyMesh.addChild(this._jetFrontRight);
+
+            this._jets.push(this._jetFrontRight);
+        }
+
+        if (type === "jetBackLeft") {
+            this._jetBackLeft = result.meshes[0];
+            this._jetBackLeft.type = type;
+            this._jetBackLeft.flame = result.meshes[1];
+            this._jetBackLeft.position.x = this._x + 0.5;
+            this._jetBackLeft.position.z = this._z - 0.45;
+
+            this._currentShadowGenerator.addShadowCaster(
+                this._jetBackLeft,
+                true
+            );
+
+            this.bodyMesh.addChild(this._jetBackLeft);
+
+            this._jets.push(this._jetBackLeft);
+        }
+
+        if (type === "jetBackRight") {
+            this._jetBackRight = result.meshes[0];
+            this._jetBackRight.type = type;
+            this._jetBackRight.flame = result.meshes[1];
+            this._jetBackRight.position.x = this._x + 0.5;
+            this._jetBackRight.position.z = this._z + 0.45;
+
+            this._currentShadowGenerator.addShadowCaster(
+                this._jetBackRight,
+                true
+            );
+
+            this.bodyMesh.addChild(this._jetBackRight);
+
+            this._jets.push(this._jetBackRight);
+        }
+    }
+
+    private _updateJets() {
+        let speedAngle = 0;
+        let rotationAngle = 0;
+        let currentAngle = Math.PI / 12;
+        let flameScaleSpeed = 0.055;
+        let flameScaleRotation = 0.055;
+
+        if (this._up === 1) {
+            speedAngle = currentAngle;
+            flameScaleSpeed = 0.11;
+        }
+        if (this._down === 1) {
+            speedAngle = -currentAngle;
+            flameScaleSpeed = 0.11;
+        }
+        if (this._left === 1) {
+            rotationAngle = currentAngle;
+            flameScaleRotation = 0.11;
+        }
+        if (this._right === 1) {
+            rotationAngle = -currentAngle;
+            flameScaleRotation = 0.11;
+        }
+
+        for (let i = 0; i < this._jets.length; i++) {
+            let currenJet = this._jets[i];
+            currenJet.rotation.z = speedAngle;
+            currenJet.rotation.x = rotationAngle;
+            currenJet.flame!.scaling.y = flameScaleSpeed + flameScaleRotation;
+        }
+    }
+
+    deleteMeshes() {
+        if (typeof this.bodyMesh !== "undefined") {
+            this.bodyMesh.dispose();
         }
     }
 
@@ -632,10 +766,10 @@ export default class HexTank {
     }
 
     private _updateMesh() {
-        if (typeof this.mesh !== "undefined") {
-            this.mesh.position.x = this._x;
-            this.mesh.position.z = this._z;
-            this.mesh.rotation.y = this._angle;
+        if (typeof this.bodyMesh !== "undefined") {
+            this.bodyMesh.position.x = this._x;
+            this.bodyMesh.position.z = this._z;
+            this.bodyMesh.rotation.y = this._angle;
         }
     }
 
@@ -674,6 +808,7 @@ export default class HexTank {
         this._processCommands();
 
         this.syncWithServer(serverHexTank);
+        this._updateJets();
         this._updateCamera();
     }
 }
