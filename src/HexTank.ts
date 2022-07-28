@@ -1,8 +1,11 @@
 import { Room } from "colyseus.js";
 import { Scene } from "@babylonjs/core/scene";
+import { GlowLayer } from "@babylonjs/core/Layers/glowLayer";
+import { Color3, Color4 } from "@babylonjs/core/Maths/math.color";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
 import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
+import { Mesh } from "@babylonjs/core/Meshes/mesh";
 import { AbstractMesh } from "@babylonjs/core/Meshes/abstractMesh";
 import { ShadowGenerator } from "@babylonjs/core/Lights/Shadows/shadowGenerator";
 import isMobile from "./Utilities";
@@ -11,7 +14,7 @@ import jet from "./assets/models/hexTankJet.glb";
 
 interface JetMesh extends AbstractMesh {
     type?: string;
-    flame?: AbstractMesh;
+    flame?: Mesh;
 }
 
 export default class HexTank {
@@ -21,6 +24,7 @@ export default class HexTank {
     id: string;
     private _room: Room;
     private _currentScene: Scene;
+    private _glow: GlowLayer;
     private _camera: ArcRotateCamera;
     private _currentShadowGenerator: ShadowGenerator;
     bodyMesh!: AbstractMesh;
@@ -54,6 +58,7 @@ export default class HexTank {
         serverHexTank: any,
         room: Room,
         scene: Scene,
+        glow: GlowLayer,
         camera: ArcRotateCamera,
         shadowGenerator: ShadowGenerator,
         debug: boolean
@@ -64,6 +69,7 @@ export default class HexTank {
         this.id = serverHexTank.id;
         this._room = room;
         this._currentScene = scene;
+        this._glow = glow;
         this._camera = camera;
         this._currentShadowGenerator = shadowGenerator;
         this._debug = debug;
@@ -110,7 +116,7 @@ export default class HexTank {
         if (type === "jetFrontLeft") {
             this._jetFrontLeft = result.meshes[0];
             this._jetFrontLeft.type = type;
-            this._jetFrontLeft.flame = result.meshes[1];
+            this._jetFrontLeft.flame = result.meshes[1] as Mesh;
             this._jetFrontLeft.position.x = this._x - 0.5;
             this._jetFrontLeft.position.z = this._z - 0.45;
             this._currentShadowGenerator.addShadowCaster(
@@ -120,13 +126,29 @@ export default class HexTank {
 
             this.bodyMesh.addChild(this._jetFrontLeft);
 
+            this._glow.addIncludedOnlyMesh(this._jetFrontLeft.flame);
+            this._glow.customEmissiveColorSelector = (
+                mesh,
+                subMesh,
+                material,
+                result
+            ) => {
+                let customColor = Color4.FromHexString("#FF3D00");
+                result.set(
+                    customColor.r,
+                    customColor.g,
+                    customColor.b,
+                    customColor.a
+                );
+            };
+
             this._jets.push(this._jetFrontLeft);
         }
 
         if (type === "jetFrontRight") {
             this._jetFrontRight = result.meshes[0];
             this._jetFrontRight.type = type;
-            this._jetFrontRight.flame = result.meshes[1];
+            this._jetFrontRight.flame = result.meshes[1] as Mesh;
             this._jetFrontRight.position.x = this._x - 0.5;
             this._jetFrontRight.position.z = this._z + 0.45;
             this._currentShadowGenerator.addShadowCaster(
@@ -136,13 +158,29 @@ export default class HexTank {
 
             this.bodyMesh.addChild(this._jetFrontRight);
 
+            this._glow.addIncludedOnlyMesh(this._jetFrontRight.flame);
+            this._glow.customEmissiveColorSelector = (
+                mesh,
+                subMesh,
+                material,
+                result
+            ) => {
+                let customColor = Color4.FromHexString("#FF3D00");
+                result.set(
+                    customColor.r,
+                    customColor.g,
+                    customColor.b,
+                    customColor.a
+                );
+            };
+
             this._jets.push(this._jetFrontRight);
         }
 
         if (type === "jetBackLeft") {
             this._jetBackLeft = result.meshes[0];
             this._jetBackLeft.type = type;
-            this._jetBackLeft.flame = result.meshes[1];
+            this._jetBackLeft.flame = result.meshes[1] as Mesh;
             this._jetBackLeft.position.x = this._x + 0.5;
             this._jetBackLeft.position.z = this._z - 0.45;
 
@@ -153,13 +191,29 @@ export default class HexTank {
 
             this.bodyMesh.addChild(this._jetBackLeft);
 
+            this._glow.addIncludedOnlyMesh(this._jetBackLeft.flame);
+            this._glow.customEmissiveColorSelector = (
+                mesh,
+                subMesh,
+                material,
+                result
+            ) => {
+                let customColor = Color4.FromHexString("#FF3D00");
+                result.set(
+                    customColor.r,
+                    customColor.g,
+                    customColor.b,
+                    customColor.a
+                );
+            };
+
             this._jets.push(this._jetBackLeft);
         }
 
         if (type === "jetBackRight") {
             this._jetBackRight = result.meshes[0];
             this._jetBackRight.type = type;
-            this._jetBackRight.flame = result.meshes[1];
+            this._jetBackRight.flame = result.meshes[1] as Mesh;
             this._jetBackRight.position.x = this._x + 0.5;
             this._jetBackRight.position.z = this._z + 0.45;
 
@@ -170,39 +224,25 @@ export default class HexTank {
 
             this.bodyMesh.addChild(this._jetBackRight);
 
+            this._glow.addIncludedOnlyMesh(this._jetBackRight.flame);
+            this._glow.customEmissiveColorSelector = (
+                mesh,
+                subMesh,
+                material,
+                result
+            ) => {
+                let customColor = Color4.FromHexString("#FF3D00");
+                result.set(
+                    customColor.r,
+                    customColor.g,
+                    customColor.b,
+                    customColor.a
+                );
+            };
+
+            console.log(this._jetBackRight);
+
             this._jets.push(this._jetBackRight);
-        }
-    }
-
-    private _updateJets() {
-        let speedAngle = 0;
-        let rotationAngle = 0;
-        let currentAngle = Math.PI / 12;
-        let flameScaleSpeed = 0.055;
-        let flameScaleRotation = 0.055;
-
-        if (this._up === 1) {
-            speedAngle = currentAngle;
-            flameScaleSpeed = 0.11;
-        }
-        if (this._down === 1) {
-            speedAngle = -currentAngle;
-            flameScaleSpeed = 0.11;
-        }
-        if (this._left === 1) {
-            rotationAngle = currentAngle;
-            flameScaleRotation = 0.11;
-        }
-        if (this._right === 1) {
-            rotationAngle = -currentAngle;
-            flameScaleRotation = 0.11;
-        }
-
-        for (let i = 0; i < this._jets.length; i++) {
-            let currenJet = this._jets[i];
-            currenJet.rotation.z = speedAngle;
-            currenJet.rotation.x = rotationAngle;
-            currenJet.flame!.scaling.y = flameScaleSpeed + flameScaleRotation;
         }
     }
 
