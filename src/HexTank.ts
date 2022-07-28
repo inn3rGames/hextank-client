@@ -107,7 +107,7 @@ export default class HexTank {
         );
         result.meshes[0].rotationQuaternion = null;
         result.meshes[0].rotation.setAll(0);
-        result.meshes[0].setPivotPoint(new Vector3(0, 0.5 ,0))
+        result.meshes[0].setPivotPoint(new Vector3(0, 0.5, 0))
 
         if (type === "jetFrontLeft") {
             this._jetFrontLeft = result.meshes[0];

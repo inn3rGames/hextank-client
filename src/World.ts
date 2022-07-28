@@ -21,12 +21,12 @@ import "@babylonjs/loaders/glTF/2.0/Extensions/KHR_draco_mesh_compression";
 
 import { Client, Room } from "colyseus.js";
 
-import skyboxPx from "./assets/textures/skybox3/skybox_px.png";
-import skyboxPy from "./assets/textures/skybox3/skybox_py.png";
-import skyboxPz from "./assets/textures/skybox3/skybox_pz.png";
-import skyboxNx from "./assets/textures/skybox3/skybox_nx.png";
-import skyboxNy from "./assets/textures/skybox3/skybox_ny.png";
-import skyboxNz from "./assets/textures/skybox3/skybox_nz.png";
+import skyboxPx from "./assets/textures/skybox/skybox_px.png";
+import skyboxPy from "./assets/textures/skybox/skybox_py.png";
+import skyboxPz from "./assets/textures/skybox/skybox_pz.png";
+import skyboxNx from "./assets/textures/skybox/skybox_nx.png";
+import skyboxNy from "./assets/textures/skybox/skybox_ny.png";
+import skyboxNz from "./assets/textures/skybox/skybox_nz.png";
 import sand from "./assets/textures/sand.png";
 
 import HexTank from "./HexTank";
