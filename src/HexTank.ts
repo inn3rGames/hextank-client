@@ -4,7 +4,10 @@ import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
 import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
 import { Mesh } from "@babylonjs/core/Meshes/mesh";
+import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 import { AbstractMesh } from "@babylonjs/core/Meshes/abstractMesh";
+import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
+import { Color3 } from "@babylonjs/core/Maths/math.color";
 import { ShadowGenerator } from "@babylonjs/core/Lights/Shadows/shadowGenerator";
 import isMobile from "./Utilities";
 import body from "./assets/models/hexTankBody.glb";
@@ -24,7 +27,7 @@ export default class HexTank {
     private _currentScene: Scene;
     private _camera: ArcRotateCamera;
     private _currentShadowGenerator: ShadowGenerator;
-    bodyMesh!: AbstractMesh;
+    private _bodyMesh!: AbstractMesh;
 
     private _jets: Array<JetMesh> = [];
 
@@ -50,6 +53,8 @@ export default class HexTank {
     private _windowActive: boolean = true;
 
     private _debug: boolean;
+    private _debugBody?: Mesh;
+    private _debugMaterial?: StandardMaterial;
 
     constructor(
         serverHexTank: any,
@@ -77,20 +82,38 @@ export default class HexTank {
             body,
             this._currentScene
         );
-        this.bodyMesh = result.meshes[0];
-        this.bodyMesh.position.x = this._x;
-        this.bodyMesh.position.z = this._z;
-        this.bodyMesh.rotationQuaternion!.toEulerAnglesToRef(
-            this.bodyMesh.rotation
+        this._bodyMesh = result.meshes[0];
+        this._bodyMesh.position.x = this._x;
+        this._bodyMesh.position.z = this._z;
+        this._bodyMesh.rotationQuaternion!.toEulerAnglesToRef(
+            this._bodyMesh.rotation
         );
-        this.bodyMesh.rotationQuaternion = null;
-        this.bodyMesh.rotation.setAll(0);
-        this._currentShadowGenerator.addShadowCaster(this.bodyMesh, true);
+        this._bodyMesh.rotationQuaternion = null;
+        this._bodyMesh.rotation.setAll(0);
+        this._currentShadowGenerator.addShadowCaster(this._bodyMesh, true);
 
         await this._loadJet("jetFrontLeft");
         await this._loadJet("jetFrontRight");
         await this._loadJet("jetBackLeft");
         await this._loadJet("jetBackRight");
+
+        if (this._debug === true) {
+            this._debugBody = MeshBuilder.CreateCylinder("debugBody", {
+                height: 0.01,
+                diameter: 1.6,
+            });
+            this._debugMaterial = new StandardMaterial(
+                "debugMaterial",
+                this._currentScene
+            );
+            this._debugBody.material = this._debugMaterial;
+            this._debugMaterial.diffuseColor = Color3.FromHexString("#00FF00");
+
+            this._debugBody.position.x = this._x;
+            this._debugBody.position.z = this._z;
+
+            this._bodyMesh.addChild(this._debugBody);
+        }
     }
 
     private async _loadJet(type: string) {
@@ -119,7 +142,7 @@ export default class HexTank {
                 true
             );
 
-            this.bodyMesh.addChild(this._jetFrontLeft);
+            this._bodyMesh.addChild(this._jetFrontLeft);
             this._jets.push(this._jetFrontLeft);
         }
 
@@ -134,7 +157,7 @@ export default class HexTank {
                 true
             );
 
-            this.bodyMesh.addChild(this._jetFrontRight);
+            this._bodyMesh.addChild(this._jetFrontRight);
             this._jets.push(this._jetFrontRight);
         }
 
@@ -150,7 +173,7 @@ export default class HexTank {
                 true
             );
 
-            this.bodyMesh.addChild(this._jetBackLeft);
+            this._bodyMesh.addChild(this._jetBackLeft);
             this._jets.push(this._jetBackLeft);
         }
 
@@ -166,14 +189,14 @@ export default class HexTank {
                 true
             );
 
-            this.bodyMesh.addChild(this._jetBackRight);
+            this._bodyMesh.addChild(this._jetBackRight);
             this._jets.push(this._jetBackRight);
         }
     }
 
     deleteMeshes() {
-        if (typeof this.bodyMesh !== "undefined") {
-            this.bodyMesh.dispose();
+        if (typeof this._bodyMesh !== "undefined") {
+            this._bodyMesh.dispose();
         }
     }
 
@@ -729,10 +752,28 @@ export default class HexTank {
     }
 
     private _updateMesh() {
-        if (typeof this.bodyMesh !== "undefined") {
-            this.bodyMesh.position.x = this._x;
-            this.bodyMesh.position.z = this._z;
-            this.bodyMesh.rotation.y = this._angle;
+        if (typeof this._bodyMesh !== "undefined") {
+            this._bodyMesh.position.x = this._x;
+            this._bodyMesh.position.z = this._z;
+            this._bodyMesh.rotation.y = this._angle;
+        }
+    }
+
+    private _debugBodyCollision(serverHexTank: any) {
+        if (
+            this._debug === true &&
+            typeof this._debugBody !== "undefined" &&
+            this._debugBody !== null &&
+            typeof this._debugMaterial !== "undefined" &&
+            this._debugMaterial !== null
+        ) {
+            if (serverHexTank.collisionBody.collided === true) {
+                this._debugMaterial.diffuseColor =
+                    Color3.FromHexString("#FF0000");
+            } else {
+                this._debugMaterial.diffuseColor =
+                    Color3.FromHexString("#00FF00");
+            }
         }
     }
 
@@ -781,6 +822,8 @@ export default class HexTank {
                 this._linearInperpolationPercent
             );
         }
+
+        this._debugBodyCollision(serverHexTank);
 
         this._updateMesh();
     }
