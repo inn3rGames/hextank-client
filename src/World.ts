@@ -59,8 +59,8 @@ export default class World {
     private _fpsTexture!: AdvancedDynamicTexture;
     private _fpsText!: TextBlock;
 
-    private _hexTanks!: { [tankId: string]: HexTank };
-    private _staticEntities!: { [entityId: string]: StaticEntity };
+    private _hexTanks: Map<string, HexTank> = new Map();
+    private _staticEntities: Map<string, StaticEntity> = new Map();
 
     private _client!: Client;
     private _room!: Room;
@@ -193,9 +193,6 @@ export default class World {
         this._fpsText.outlineWidth = 5;
         this._fpsTexture.addControl(this._fpsText);
 
-        this._hexTanks = {};
-        this._staticEntities = {};
-
         window.addEventListener("resize", () => {
             this._engine.resize();
         });
@@ -248,7 +245,7 @@ export default class World {
             );
             await clientHexTank.loadMeshes();
 
-            this._hexTanks[serverHexTank.id] = clientHexTank;
+            this._hexTanks.set(serverHexTank.id, clientHexTank);
 
             if (this._room.sessionId === clientHexTank.id) {
                 clientHexTank.enableInput();
@@ -268,36 +265,36 @@ export default class World {
             }
 
             if (typeof serverHexTank !== "undefined") {
-                if (typeof this._hexTanks[serverHexTank.id] !== "undefined") {
-                    this._hexTanks[serverHexTank.id].deleteMeshes();
-                    delete this._hexTanks[serverHexTank.id];
+                if (
+                    typeof this._hexTanks.get(serverHexTank.id) !== "undefined"
+                ) {
+                    this._hexTanks.get(serverHexTank.id)!.deleteMeshes();
+                    this._hexTanks.delete(serverHexTank.id);
                 }
             }
         };
 
-        this._room.state.staticEntities.onAdd = async (
-            serverStaticEntity: any
-        ) => {
+        this._room.state.staticEntities.onAdd = (serverStaticEntity: any) => {
             let clientStaticEntity = new StaticEntity(
                 serverStaticEntity,
                 this._scene
             );
             clientStaticEntity.drawEntity();
-            console.log(serverStaticEntity.id);
-            this._staticEntities[serverStaticEntity.id] = clientStaticEntity;
+            this._staticEntities.set(serverStaticEntity.id, clientStaticEntity);
         };
 
-        this._room.state.staticEntities.onRemove = async (
+        this._room.state.staticEntities.onRemove = (
             serverStaticEntity: any
         ) => {
-            console.log(serverStaticEntity.id);
             if (typeof serverStaticEntity !== "undefined") {
                 if (
-                    typeof this._staticEntities[serverStaticEntity.id] !==
+                    typeof this._staticEntities.get(serverStaticEntity.id) !==
                     "undefined"
                 ) {
-                    this._staticEntities[serverStaticEntity.id].deleteMeshes();
-                    delete this._staticEntities[serverStaticEntity.id];
+                    this._staticEntities
+                        .get(serverStaticEntity.id)!
+                        .deleteMeshes();
+                    this._staticEntities.delete(serverStaticEntity.id);
                 }
             }
         };
@@ -312,35 +309,33 @@ export default class World {
 
         this._lastFrame = performance.now();
 
-        for (let index in this._hexTanks) {
-            let clientHexTank = this._hexTanks[index];
-            let serverHexTank = this._room.state.hexTanks[index];
-
+        this._hexTanks.forEach((value, key) => {
+            let clientHexTank = value;
+            let serverHexTank = this._room.state.hexTanks.get(key);
             if (
                 typeof clientHexTank !== "undefined" &&
                 typeof serverHexTank !== "undefined"
             ) {
                 clientHexTank.setPosition(serverHexTank);
             }
-        }
+        });
     }
 
     private _updateHexTanks() {
-        for (let index in this._hexTanks) {
-            let clientHexTank = this._hexTanks[index];
-            let serverHexTank = this._room.state.hexTanks[index];
-
+        this._hexTanks.forEach((value, key) => {
+            let clientHexTank = value;
+            let serverHexTank = this._room.state.hexTanks.get(key);
             if (
                 typeof clientHexTank !== "undefined" &&
                 typeof serverHexTank !== "undefined"
             ) {
-                if (this._room.sessionId !== index) {
+                if (this._room.sessionId !== key) {
                     clientHexTank.syncWithServer(serverHexTank);
                 } else {
                     clientHexTank.update(serverHexTank);
                 }
             }
-        }
+        });
     }
 
     private _fixedUpdate() {
