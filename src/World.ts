@@ -29,6 +29,7 @@ import skyboxNz from "./assets/textures/skybox/skybox_nz.png";
 import sand from "./assets/textures/sand.png";
 
 import HexTank from "./HexTank";
+import StaticEntity from "./StaticEntity";
 
 export default class World {
     private _canvas: HTMLCanvasElement;
@@ -59,6 +60,7 @@ export default class World {
     private _fpsText!: TextBlock;
 
     private _hexTanks!: { [tankId: string]: HexTank };
+    private _staticEntities!: { [entityId: string]: StaticEntity };
 
     private _client!: Client;
     private _room!: Room;
@@ -192,6 +194,7 @@ export default class World {
         this._fpsTexture.addControl(this._fpsText);
 
         this._hexTanks = {};
+        this._staticEntities = {};
 
         window.addEventListener("resize", () => {
             this._engine.resize();
@@ -268,6 +271,33 @@ export default class World {
                 if (typeof this._hexTanks[serverHexTank.id] !== "undefined") {
                     this._hexTanks[serverHexTank.id].deleteMeshes();
                     delete this._hexTanks[serverHexTank.id];
+                }
+            }
+        };
+
+        this._room.state.staticEntities.onAdd = async (
+            serverStaticEntity: any
+        ) => {
+            let clientStaticEntity = new StaticEntity(
+                serverStaticEntity,
+                this._scene
+            );
+            clientStaticEntity.drawEntity();
+            console.log(serverStaticEntity.id);
+            this._staticEntities[serverStaticEntity.id] = clientStaticEntity;
+        };
+
+        this._room.state.staticEntities.onRemove = async (
+            serverStaticEntity: any
+        ) => {
+            console.log(serverStaticEntity.id);
+            if (typeof serverStaticEntity !== "undefined") {
+                if (
+                    typeof this._staticEntities[serverStaticEntity.id] !==
+                    "undefined"
+                ) {
+                    this._staticEntities[serverStaticEntity.id].deleteMeshes();
+                    delete this._staticEntities[serverStaticEntity.id];
                 }
             }
         };
