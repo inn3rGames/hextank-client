@@ -29,7 +29,8 @@ import skyboxNz from "./assets/textures/skybox/skybox_nz.png";
 import sand from "./assets/textures/sand.png";
 
 import HexTank from "./HexTank";
-import StaticEntity from "./StaticEntity";
+import StaticCircleEntity from "./StaticCircleEntity";
+import StaticRectangleEntity from "./StaticRectangleEntity";
 
 export default class World {
     private _canvas: HTMLCanvasElement;
@@ -60,7 +61,9 @@ export default class World {
     private _fpsText!: TextBlock;
 
     private _hexTanks: Map<string, HexTank> = new Map();
-    private _staticEntities: Map<string, StaticEntity> = new Map();
+    private _staticCircleEntities: Map<string, StaticCircleEntity> = new Map();
+    private _staticRectangleEntities: Map<string, StaticRectangleEntity> =
+        new Map();
 
     private _client!: Client;
     private _room!: Room;
@@ -274,27 +277,68 @@ export default class World {
             }
         };
 
-        this._room.state.staticEntities.onAdd = (serverStaticEntity: any) => {
-            let clientStaticEntity = new StaticEntity(
-                serverStaticEntity,
+        this._room.state.staticCircleEntities.onAdd = (
+            serverStaticCircleEntity: any
+        ) => {
+            let clientStaticEntity = new StaticCircleEntity(
+                serverStaticCircleEntity,
                 this._scene
             );
             clientStaticEntity.drawEntity();
-            this._staticEntities.set(serverStaticEntity.id, clientStaticEntity);
+            this._staticCircleEntities.set(
+                serverStaticCircleEntity.id,
+                clientStaticEntity
+            );
         };
 
-        this._room.state.staticEntities.onRemove = (
-            serverStaticEntity: any
+        this._room.state.staticCircleEntities.onRemove = (
+            serverStaticCircleEntity: any
         ) => {
-            if (typeof serverStaticEntity !== "undefined") {
+            if (typeof serverStaticCircleEntity !== "undefined") {
                 if (
-                    typeof this._staticEntities.get(serverStaticEntity.id) !==
-                    "undefined"
+                    typeof this._staticCircleEntities.get(
+                        serverStaticCircleEntity.id
+                    ) !== "undefined"
                 ) {
-                    this._staticEntities
-                        .get(serverStaticEntity.id)!
+                    this._staticCircleEntities
+                        .get(serverStaticCircleEntity.id)!
                         .deleteMeshes();
-                    this._staticEntities.delete(serverStaticEntity.id);
+                    this._staticCircleEntities.delete(
+                        serverStaticCircleEntity.id
+                    );
+                }
+            }
+        };
+
+        this._room.state.staticRectangleEntities.onAdd = (
+            serverStaticRectangleEntity: any
+        ) => {
+            let clientStaticEntity = new StaticRectangleEntity(
+                serverStaticRectangleEntity,
+                this._scene
+            );
+            clientStaticEntity.drawEntity();
+            this._staticRectangleEntities.set(
+                serverStaticRectangleEntity.id,
+                clientStaticEntity
+            );
+        };
+
+        this._room.state.staticRectangleEntities.onRemove = (
+            serverStaticRectangleEntity: any
+        ) => {
+            if (typeof serverStaticRectangleEntity !== "undefined") {
+                if (
+                    typeof this._staticRectangleEntities.get(
+                        serverStaticRectangleEntity.id
+                    ) !== "undefined"
+                ) {
+                    this._staticRectangleEntities
+                        .get(serverStaticRectangleEntity.id)!
+                        .deleteMeshes();
+                    this._staticRectangleEntities.delete(
+                        serverStaticRectangleEntity.id
+                    );
                 }
             }
         };
