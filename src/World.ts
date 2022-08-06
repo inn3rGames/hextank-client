@@ -230,13 +230,7 @@ export default class World {
         }
     }
 
-    async createWorld() {
-        await this.connect();
-
-        if (this._debug === true) {
-            console.log(this._client);
-        }
-
+    private _setHexTanksCallbacks() {
         this._room.state.hexTanks.onAdd = async (serverHexTank: any) => {
             let clientHexTank = new HexTank(
                 serverHexTank,
@@ -276,7 +270,9 @@ export default class World {
                 }
             }
         };
+    }
 
+    private _setStaticCirclesCallbacks() {
         this._room.state.staticCircleEntities.onAdd = (
             serverStaticCircleEntity: any
         ) => {
@@ -309,7 +305,9 @@ export default class World {
                 }
             }
         };
+    }
 
+    private _setStaticRetanglesCallbacks() {
         this._room.state.staticRectangleEntities.onAdd = (
             serverStaticRectangleEntity: any
         ) => {
@@ -342,10 +340,6 @@ export default class World {
                 }
             }
         };
-
-        window.addEventListener("focus", () => {
-            this._focusRegained();
-        });
     }
 
     private _focusRegained() {
@@ -362,6 +356,22 @@ export default class World {
             ) {
                 clientHexTank.setPosition(serverHexTank);
             }
+        });
+    }
+
+    async createWorld() {
+        await this.connect();
+
+        if (this._debug === true) {
+            console.log(this._client);
+        }
+
+        this._setHexTanksCallbacks();
+        this._setStaticCirclesCallbacks();
+        this._setStaticRetanglesCallbacks();
+
+        window.addEventListener("focus", () => {
+            this._focusRegained();
         });
     }
 
