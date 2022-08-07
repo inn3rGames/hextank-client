@@ -3,6 +3,7 @@ import { Mesh } from "@babylonjs/core/Meshes/mesh";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
 import { Color3 } from "@babylonjs/core/Maths/math.color";
+import { ShadowGenerator } from "@babylonjs/core/Lights/Shadows/shadowGenerator";
 
 export default class StaticRectangleEntity {
     private _x: number;
@@ -12,17 +13,23 @@ export default class StaticRectangleEntity {
     private _height: number;
 
     private _currentScene: Scene;
+    private _currentShadowGenerator: ShadowGenerator;
 
     private _staticRectangleBody?: Mesh;
     private _staticRectangleMaterial?: StandardMaterial;
 
-    constructor(serverStaticRectangleEntity: any, scene: Scene) {
+    constructor(
+        serverStaticRectangleEntity: any,
+        scene: Scene,
+        shadowGenerator: ShadowGenerator
+    ) {
         this._x = serverStaticRectangleEntity.x;
         this._z = serverStaticRectangleEntity.z;
         this.id = serverStaticRectangleEntity.id;
         this._width = serverStaticRectangleEntity.collisionBody.width;
         this._height = serverStaticRectangleEntity.collisionBody.height;
         this._currentScene = scene;
+        this._currentShadowGenerator = shadowGenerator;
     }
 
     drawEntity() {
@@ -30,7 +37,7 @@ export default class StaticRectangleEntity {
             "staticBody",
             {
                 width: this._width,
-                height: 0.1,
+                height: this._height,
                 depth: this._height,
             },
             this._currentScene
@@ -44,7 +51,14 @@ export default class StaticRectangleEntity {
             Color3.FromHexString("#FFFF00");
 
         this._staticRectangleBody.position.x = this._x;
+        this._staticRectangleBody.position.y = this._height * 0.5;
         this._staticRectangleBody.position.z = this._z;
+        
+
+        this._currentShadowGenerator.addShadowCaster(
+            this._staticRectangleBody,
+            true
+        );
     }
 
     deleteMeshes() {

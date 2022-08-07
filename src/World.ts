@@ -278,7 +278,8 @@ export default class World {
         ) => {
             let clientStaticEntity = new StaticCircleEntity(
                 serverStaticCircleEntity,
-                this._scene
+                this._scene,
+                this._shadowGenerator
             );
             clientStaticEntity.drawEntity();
             this._staticCircleEntities.set(
@@ -313,7 +314,8 @@ export default class World {
         ) => {
             let clientStaticEntity = new StaticRectangleEntity(
                 serverStaticRectangleEntity,
-                this._scene
+                this._scene,
+                this._shadowGenerator
             );
             clientStaticEntity.drawEntity();
             this._staticRectangleEntities.set(
