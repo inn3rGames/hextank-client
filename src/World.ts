@@ -197,11 +197,11 @@ export default class World {
         this._fpsTexture.addControl(this._fpsText);
 
         window.addEventListener("resize", () => {
-            this._engine.resize();
+            this._engine.resize(true);
         });
 
         window.addEventListener("orientationchange", () => {
-            this._engine.resize();
+            this._engine.resize(true);
         });
 
         this._canvas.addEventListener("mousemove", (e) => {
