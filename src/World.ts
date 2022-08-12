@@ -200,6 +200,10 @@ export default class World {
             this._engine.resize();
         });
 
+        window.addEventListener("orientationchange", () => {
+            this._engine.resize();
+        });
+
         this._canvas.addEventListener("mousemove", (e) => {
             e.preventDefault();
         });
