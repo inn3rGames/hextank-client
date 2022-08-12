@@ -196,14 +196,6 @@ export default class World {
         this._fpsText.outlineWidth = 5;
         this._fpsTexture.addControl(this._fpsText);
 
-        window.addEventListener("resize", () => {
-            this._engine.resize(true);
-        });
-
-        window.addEventListener("orientationchange", () => {
-            this._engine.resize(true);
-        });
-
         this._canvas.addEventListener("mousemove", (e) => {
             e.preventDefault();
         });
@@ -437,6 +429,7 @@ export default class World {
         }
 
         window.requestAnimationFrame(() => {
+            this._engine.resize(true);
             this.updateWorld();
         });
     }
