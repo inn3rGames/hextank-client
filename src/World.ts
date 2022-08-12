@@ -85,7 +85,7 @@ export default class World {
 
         let log = console.log;
         console.log = () => {};
-        this._engine = new Engine(this._canvas, true, undefined, true);
+        this._engine = new Engine(this._canvas, true);
         console.log = log;
 
         this._scene = new Scene(this._engine);
