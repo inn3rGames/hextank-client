@@ -76,6 +76,11 @@ export default class World {
     private _elapsedTime: number = Math.round(this._fixedFrameDuration);
     private _resetElapsedTime: boolean = true;
 
+    private _lastWindowWidth = window.innerWidth;
+    private _currentWindowWidth = window.innerWidth;
+    private _lastWindowHeight = window.innerHeight;
+    private _currentWindowHeight = window.innerHeight;
+
     private _debug: boolean = false;
 
     constructor() {
@@ -398,6 +403,29 @@ export default class World {
         this._scene.render();
     }
 
+    private _handleResize() {
+        this._currentWindowWidth = window.innerWidth;
+        this._currentWindowHeight = window.innerHeight;
+
+        if (this._currentWindowWidth !== this._lastWindowWidth) {
+            this._engine.resize(true);
+
+            this._lastWindowWidth = this._currentWindowWidth;
+            this._lastWindowHeight = this._currentWindowHeight;
+
+            console.log("runs");
+        }
+
+        if (this._currentWindowHeight !== this._lastWindowHeight) {
+            this._engine.resize(true);
+
+            this._lastWindowWidth = this._currentWindowWidth;
+            this._lastWindowHeight = this._currentWindowHeight;
+
+            console.log("runs");
+        }
+    }
+
     updateWorld(): void {
         this._fpsText.text = `Simulated: ${+this._engine
             .getFps()
@@ -429,7 +457,7 @@ export default class World {
         }
 
         window.requestAnimationFrame(() => {
-            this._engine.resize(true);
+            this._handleResize();
             this.updateWorld();
         });
     }
