@@ -412,8 +412,6 @@ export default class World {
 
             this._lastWindowWidth = this._currentWindowWidth;
             this._lastWindowHeight = this._currentWindowHeight;
-
-            console.log("runs");
         }
 
         if (this._currentWindowHeight !== this._lastWindowHeight) {
@@ -421,8 +419,6 @@ export default class World {
 
             this._lastWindowWidth = this._currentWindowWidth;
             this._lastWindowHeight = this._currentWindowHeight;
-
-            console.log("runs");
         }
     }
 
