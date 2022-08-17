@@ -221,7 +221,7 @@ export default class World {
         this._torus.position.x = 0;
 
         this._shadowGenerator = new ShadowGenerator(
-            8192,
+            1024,
             this._directionalLight
         );
         this._shadowGenerator.useExponentialShadowMap = true;
