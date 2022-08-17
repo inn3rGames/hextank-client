@@ -504,6 +504,19 @@ export default class HexTank {
 
         window.addEventListener("blur", () => {
             this._windowActive = false;
+
+            if (this._up === 1) {
+                this._up = 2;
+            }
+            if (this._down === 1) {
+                this._down = 2;
+            }
+            if (this._left === 1) {
+                this._left = 2;
+            }
+            if (this._right === 1) {
+                this._right = 2;
+            }
         });
     }
 
