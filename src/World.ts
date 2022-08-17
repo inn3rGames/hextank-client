@@ -155,10 +155,14 @@ export default class World {
 
         this._directionalLight = new DirectionalLight(
             "directionalLight",
-            new Vector3(0, -1, 0),
+            new Vector3(1, -1, 1),
             this._scene
         );
-        this._directionalLight.position = new Vector3(0, 100, 0);
+        this._directionalLight.position = new Vector3(
+            -this._worldSize * 0.5,
+            100,
+            -this._worldSize * 0.5
+        );
         this._directionalLight.diffuse = Color3.FromHexString("#FFFFFF");
         this._directionalLight.specular = Color3.FromHexString("#FFFFFF");
         this._directionalLight.intensity = 2.5;
@@ -217,7 +221,7 @@ export default class World {
         this._torus.position.x = 0;
 
         this._shadowGenerator = new ShadowGenerator(
-            1024,
+            8192,
             this._directionalLight
         );
         this._shadowGenerator.useExponentialShadowMap = true;

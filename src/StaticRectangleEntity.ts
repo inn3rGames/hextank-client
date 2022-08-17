@@ -48,6 +48,10 @@ export default class StaticRectangleEntity {
         );
         this._staticRectangleBody.material = this._staticRectangleMaterial;
         this._staticRectangleMaterial.diffuseColor =
+            Color3.FromHexString("#000000");
+        this._staticRectangleMaterial.specularColor =
+            Color3.FromHexString("#FFFFFF");
+        this._staticRectangleMaterial.emissiveColor =
             Color3.FromHexString("#FFFF00");
 
         this._staticRectangleBody.position.x = this._x;

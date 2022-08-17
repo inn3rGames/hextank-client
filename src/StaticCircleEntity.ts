@@ -46,6 +46,10 @@ export default class StaticCircleEntity {
         );
         this._staticCircleBody.material = this._staticCircleMaterial;
         this._staticCircleMaterial.diffuseColor =
+            Color3.FromHexString("#000000");
+        this._staticCircleMaterial.specularColor =
+            Color3.FromHexString("#FFFFFF");
+        this._staticCircleMaterial.emissiveColor =
             Color3.FromHexString("#FF0000");
 
         this._staticCircleBody.position.x = this._x;

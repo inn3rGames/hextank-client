@@ -138,6 +138,10 @@ export default class HexTank {
             this._jetFrontLeft.flame = children[0] as Mesh;
             this._jetFrontLeft.position.x = this._x - 0.5;
             this._jetFrontLeft.position.z = this._z - 0.45;
+             this._currentShadowGenerator.addShadowCaster(
+                 this._jetFrontLeft,
+                 true
+             );
 
             this._bodyClone.addChild(this._jetFrontLeft);
             this._jets.push(this._jetFrontLeft);
@@ -149,6 +153,10 @@ export default class HexTank {
             this._jetFrontRight.flame = children[0] as Mesh;
             this._jetFrontRight.position.x = this._x - 0.5;
             this._jetFrontRight.position.z = this._z + 0.45;
+            this._currentShadowGenerator.addShadowCaster(
+                this._jetFrontRight,
+                true
+            );
 
             this._bodyClone.addChild(this._jetFrontRight);
             this._jets.push(this._jetFrontRight);
@@ -160,6 +168,10 @@ export default class HexTank {
             this._jetBackLeft.flame = children[0] as Mesh;
             this._jetBackLeft.position.x = this._x + 0.5;
             this._jetBackLeft.position.z = this._z - 0.45;
+            this._currentShadowGenerator.addShadowCaster(
+                this._jetBackLeft,
+                true
+            );
 
             this._bodyClone.addChild(this._jetBackLeft);
             this._jets.push(this._jetBackLeft);
@@ -171,6 +183,10 @@ export default class HexTank {
             this._jetBackRight.flame = children[0] as Mesh;
             this._jetBackRight.position.x = this._x + 0.5;
             this._jetBackRight.position.z = this._z + 0.45;
+            this._currentShadowGenerator.addShadowCaster(
+                this._jetBackRight,
+                true
+            );
 
             this._bodyClone.addChild(this._jetBackRight);
             this._jets.push(this._jetBackRight);
