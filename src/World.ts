@@ -1,11 +1,13 @@
 import { Engine } from "@babylonjs/core/Engines/engine";
 import { Scene } from "@babylonjs/core/scene";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
+import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
 import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
 import { HemisphericLight } from "@babylonjs/core/Lights/hemisphericLight";
 import { ShadowGenerator } from "@babylonjs/core/Lights/Shadows/shadowGenerator";
 import { DirectionalLight } from "@babylonjs/core/Lights/directionalLight";
 import { Mesh } from "@babylonjs/core/Meshes/mesh";
+import { AbstractMesh } from "@babylonjs/core/Meshes/abstractMesh";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 import { Color3 } from "@babylonjs/core/Maths/math.color";
 import { CubeTexture } from "@babylonjs/core/Materials/Textures/cubeTexture";
@@ -27,6 +29,9 @@ import skyboxNx from "./assets/textures/skybox/skybox_nx.png";
 import skyboxNy from "./assets/textures/skybox/skybox_ny.png";
 import skyboxNz from "./assets/textures/skybox/skybox_nz.png";
 import sand from "./assets/textures/sand.png";
+
+import body from "./assets/models/hexTankBody.glb";
+import jet from "./assets/models/hexTankJet.glb";
 
 import HexTank from "./HexTank";
 import StaticCircleEntity from "./StaticCircleEntity";
@@ -95,9 +100,47 @@ export default class World {
 
         this._scene = new Scene(this._engine);
         this._scene.detachControl();
+
+        /* this._scene.autoClear = false;
+        this._scene.autoClearDepthAndStencil = false;
+        this._scene.blockMaterialDirtyMechanism = true;
+        this._scene.skipPointerMovePicking = true; */
+    }
+
+    private _bodyMesh!: AbstractMesh;
+    private _jetMesh!: AbstractMesh;
+
+    private async _loadAssets() {
+        SceneLoader.ImportMesh(null, "", body, this._scene, (currentMeshes) => {
+            this._bodyMesh = currentMeshes[0];
+            //this._bodyMesh.isVisible = false;
+
+            for (let i = 0; i < currentMeshes.length; i++){
+                console.log(currentMeshes[i]);
+            }
+            this._bodyMesh.setEnabled(false);
+
+            let testMesh = currentMeshes[1] as Mesh;
+            testMesh.createInstance("baubau");
+            testMesh.position.x = 5;
+            testMesh.setParent(this._bodyMesh);
+            testMesh.setEnabled(true);
+
+            let testMesh2 = currentMeshes[1] as Mesh;
+            testMesh2.createInstance("baubau");
+            testMesh2.position.x = -5;
+            testMesh2.setParent(this._bodyMesh);
+            testMesh2.setEnabled(true);
+        });
+        SceneLoader.ImportMesh(null, "", jet, this._scene, (currentMeshes) => {
+            this._jetMesh = currentMeshes[0];
+            this._jetMesh.isVisible = false;
+        });
     }
 
     initWorld() {
+        this._loadAssets();
+
         this._camera = new ArcRotateCamera(
             "Camera",
             0,
@@ -239,6 +282,8 @@ export default class World {
                 this._scene,
                 this._camera,
                 this._shadowGenerator,
+                this._bodyMesh,
+                this._jetMesh,
                 this._debug
             );
             await clientHexTank.loadMeshes();

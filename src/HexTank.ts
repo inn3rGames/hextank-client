@@ -1,8 +1,8 @@
 import { Room } from "colyseus.js";
 import { Scene } from "@babylonjs/core/scene";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
-import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
 import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
+import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
 import { Mesh } from "@babylonjs/core/Meshes/mesh";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 import { AbstractMesh } from "@babylonjs/core/Meshes/abstractMesh";
@@ -27,7 +27,12 @@ export default class HexTank {
     private _currentScene: Scene;
     private _camera: ArcRotateCamera;
     private _currentShadowGenerator: ShadowGenerator;
+
     private _bodyMesh!: AbstractMesh;
+    private _jetMesh!: AbstractMesh;
+
+    private _bodyClone!: AbstractMesh;
+    private _jetClone!: AbstractMesh;
 
     private _jets: Array<JetMesh> = [];
 
@@ -62,6 +67,8 @@ export default class HexTank {
         scene: Scene,
         camera: ArcRotateCamera,
         shadowGenerator: ShadowGenerator,
+        bodyMesh: AbstractMesh,
+        jetMesh: AbstractMesh,
         debug: boolean
     ) {
         this._x = serverHexTank.x;
@@ -72,25 +79,23 @@ export default class HexTank {
         this._currentScene = scene;
         this._camera = camera;
         this._currentShadowGenerator = shadowGenerator;
+        this._bodyMesh = bodyMesh;
+        this._jetMesh = jetMesh;
         this._debug = debug;
     }
 
     async loadMeshes() {
-        let result = await SceneLoader.ImportMeshAsync(
-            null,
-            "",
-            body,
-            this._currentScene
+        
+        this._bodyClone = this._bodyMesh.clone("body", null)!;
+        this._bodyClone.position.x = this._x;
+        this._bodyClone.position.z = this._z;
+        this._bodyClone.rotationQuaternion!.toEulerAnglesToRef(
+            this._bodyClone.rotation
         );
-        this._bodyMesh = result.meshes[0];
-        this._bodyMesh.position.x = this._x;
-        this._bodyMesh.position.z = this._z;
-        this._bodyMesh.rotationQuaternion!.toEulerAnglesToRef(
-            this._bodyMesh.rotation
-        );
-        this._bodyMesh.rotationQuaternion = null;
-        this._bodyMesh.rotation.setAll(0);
-        this._currentShadowGenerator.addShadowCaster(this._bodyMesh, true);
+        this._bodyClone.rotationQuaternion = null;
+        this._bodyClone.rotation.setAll(0);
+        this._bodyClone.setEnabled(true);
+        this._currentShadowGenerator.addShadowCaster(this._bodyClone, true);
 
         await this._loadJet("jetFrontLeft");
         await this._loadJet("jetFrontRight");
@@ -112,7 +117,7 @@ export default class HexTank {
             this._debugBody.position.x = this._x;
             this._debugBody.position.z = this._z;
 
-            this._bodyMesh.addChild(this._debugBody);
+            this._bodyClone.addChild(this._debugBody);
         }
     }
 
@@ -137,12 +142,8 @@ export default class HexTank {
             this._jetFrontLeft.flame = result.meshes[1] as Mesh;
             this._jetFrontLeft.position.x = this._x - 0.5;
             this._jetFrontLeft.position.z = this._z - 0.45;
-            this._currentShadowGenerator.addShadowCaster(
-                this._jetFrontLeft,
-                true
-            );
 
-            this._bodyMesh.addChild(this._jetFrontLeft);
+            this._bodyClone.addChild(this._jetFrontLeft);
             this._jets.push(this._jetFrontLeft);
         }
 
@@ -152,12 +153,8 @@ export default class HexTank {
             this._jetFrontRight.flame = result.meshes[1] as Mesh;
             this._jetFrontRight.position.x = this._x - 0.5;
             this._jetFrontRight.position.z = this._z + 0.45;
-            this._currentShadowGenerator.addShadowCaster(
-                this._jetFrontRight,
-                true
-            );
 
-            this._bodyMesh.addChild(this._jetFrontRight);
+            this._bodyClone.addChild(this._jetFrontRight);
             this._jets.push(this._jetFrontRight);
         }
 
@@ -168,12 +165,7 @@ export default class HexTank {
             this._jetBackLeft.position.x = this._x + 0.5;
             this._jetBackLeft.position.z = this._z - 0.45;
 
-            this._currentShadowGenerator.addShadowCaster(
-                this._jetBackLeft,
-                true
-            );
-
-            this._bodyMesh.addChild(this._jetBackLeft);
+            this._bodyClone.addChild(this._jetBackLeft);
             this._jets.push(this._jetBackLeft);
         }
 
@@ -184,19 +176,14 @@ export default class HexTank {
             this._jetBackRight.position.x = this._x + 0.5;
             this._jetBackRight.position.z = this._z + 0.45;
 
-            this._currentShadowGenerator.addShadowCaster(
-                this._jetBackRight,
-                true
-            );
-
-            this._bodyMesh.addChild(this._jetBackRight);
+            this._bodyClone.addChild(this._jetBackRight);
             this._jets.push(this._jetBackRight);
         }
     }
 
     deleteMeshes() {
-        if (typeof this._bodyMesh !== "undefined") {
-            this._bodyMesh.dispose();
+        if (typeof this._bodyClone !== "undefined") {
+            this._bodyClone.dispose();
         }
     }
 
@@ -752,10 +739,10 @@ export default class HexTank {
     }
 
     private _updateMesh() {
-        if (typeof this._bodyMesh !== "undefined") {
-            this._bodyMesh.position.x = this._x;
-            this._bodyMesh.position.z = this._z;
-            this._bodyMesh.rotation.y = this._angle;
+        if (typeof this._bodyClone !== "undefined") {
+            this._bodyClone.position.x = this._x;
+            this._bodyClone.position.z = this._z;
+            this._bodyClone.rotation.y = this._angle;
         }
     }
 
