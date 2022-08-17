@@ -53,7 +53,10 @@ export default class StaticRectangleEntity {
         this._staticRectangleBody.position.x = this._x;
         this._staticRectangleBody.position.y = this._height * 0.5;
         this._staticRectangleBody.position.z = this._z;
-        
+
+        this._staticRectangleBody.freezeWorldMatrix();
+        this._staticRectangleBody.material.freeze();
+        this._staticRectangleBody.doNotSyncBoundingInfo = true;
 
         this._currentShadowGenerator.addShadowCaster(
             this._staticRectangleBody,

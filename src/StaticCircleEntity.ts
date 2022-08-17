@@ -52,6 +52,10 @@ export default class StaticCircleEntity {
         this._staticCircleBody.position.y = 5;
         this._staticCircleBody.position.z = this._z;
 
+        this._staticCircleBody.freezeWorldMatrix();
+        this._staticCircleBody.material.freeze();
+        this._staticCircleBody.doNotSyncBoundingInfo = true;
+
         this._currentShadowGenerator.addShadowCaster(
             this._staticCircleBody,
             true

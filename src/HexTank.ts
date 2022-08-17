@@ -82,6 +82,10 @@ export default class HexTank {
 
     loadMeshes() {
         this._bodyClone = this._bodyMesh.clone("body", null)!;
+        this._bodyClone.setEnabled(true);
+        this._bodyClone.material?.freeze();
+        this._bodyClone.doNotSyncBoundingInfo = true;
+
         this._bodyClone.position.x = this._x;
         this._bodyClone.position.z = this._z;
         this._bodyClone.rotationQuaternion!.toEulerAnglesToRef(
@@ -89,7 +93,6 @@ export default class HexTank {
         );
         this._bodyClone.rotationQuaternion = null;
         this._bodyClone.rotation.setAll(0);
-        this._bodyClone.setEnabled(true);
         this._currentShadowGenerator.addShadowCaster(this._bodyClone, true);
 
         this._loadJet("jetFrontLeft");
@@ -119,6 +122,8 @@ export default class HexTank {
     private _loadJet(type: string) {
         let jetClone = this._jetMesh.clone("jet", null)!;
         jetClone.setEnabled(true);
+        jetClone.material?.freeze();
+        jetClone.doNotSyncBoundingInfo = true;
 
         jetClone.rotationQuaternion!.toEulerAnglesToRef(jetClone.rotation);
         jetClone.rotationQuaternion = null;
