@@ -38,6 +38,9 @@ import StaticCircleEntity from "./StaticCircleEntity";
 import StaticRectangleEntity from "./StaticRectangleEntity";
 
 export default class World {
+    private _bodyMesh!: AbstractMesh;
+    private _jetMesh!: AbstractMesh;
+
     private _canvas: HTMLCanvasElement;
 
     private _engine: Engine;
@@ -101,45 +104,34 @@ export default class World {
         this._scene = new Scene(this._engine);
         this._scene.detachControl();
 
-        /* this._scene.autoClear = false;
+        this._scene.autoClear = false;
         this._scene.autoClearDepthAndStencil = false;
         this._scene.blockMaterialDirtyMechanism = true;
-        this._scene.skipPointerMovePicking = true; */
+        this._scene.skipPointerMovePicking = true;
     }
 
-    private _bodyMesh!: AbstractMesh;
-    private _jetMesh!: AbstractMesh;
+    private async _loadMeshes() {
+        let loadedBody = await SceneLoader.ImportMeshAsync(
+            null,
+            "",
+            body,
+            this._scene
+        );
+        this._bodyMesh = loadedBody.meshes[0];
+        this._bodyMesh.setEnabled(false);
 
-    private async _loadAssets() {
-        SceneLoader.ImportMesh(null, "", body, this._scene, (currentMeshes) => {
-            this._bodyMesh = currentMeshes[0];
-            //this._bodyMesh.isVisible = false;
-
-            for (let i = 0; i < currentMeshes.length; i++){
-                console.log(currentMeshes[i]);
-            }
-            this._bodyMesh.setEnabled(false);
-
-            let testMesh = currentMeshes[1] as Mesh;
-            testMesh.createInstance("baubau");
-            testMesh.position.x = 5;
-            testMesh.setParent(this._bodyMesh);
-            testMesh.setEnabled(true);
-
-            let testMesh2 = currentMeshes[1] as Mesh;
-            testMesh2.createInstance("baubau");
-            testMesh2.position.x = -5;
-            testMesh2.setParent(this._bodyMesh);
-            testMesh2.setEnabled(true);
-        });
-        SceneLoader.ImportMesh(null, "", jet, this._scene, (currentMeshes) => {
-            this._jetMesh = currentMeshes[0];
-            this._jetMesh.isVisible = false;
-        });
+        let loadedJet = await SceneLoader.ImportMeshAsync(
+            null,
+            "",
+            jet,
+            this._scene
+        );
+        this._jetMesh = loadedJet.meshes[0];
+        this._jetMesh.setEnabled(false);
     }
 
-    initWorld() {
-        this._loadAssets();
+    async initWorld() {
+        await this._loadMeshes();
 
         this._camera = new ArcRotateCamera(
             "Camera",
@@ -275,7 +267,7 @@ export default class World {
     }
 
     private _setHexTanksCallbacks() {
-        this._room.state.hexTanks.onAdd = async (serverHexTank: any) => {
+        this._room.state.hexTanks.onAdd = (serverHexTank: any) => {
             let clientHexTank = new HexTank(
                 serverHexTank,
                 this._room,
@@ -286,7 +278,7 @@ export default class World {
                 this._jetMesh,
                 this._debug
             );
-            await clientHexTank.loadMeshes();
+            clientHexTank.loadMeshes();
 
             this._hexTanks.set(serverHexTank.id, clientHexTank);
 

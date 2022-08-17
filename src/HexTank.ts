@@ -1,7 +1,6 @@
 import { Room } from "colyseus.js";
 import { Scene } from "@babylonjs/core/scene";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
-import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
 import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
 import { Mesh } from "@babylonjs/core/Meshes/mesh";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
@@ -10,8 +9,6 @@ import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
 import { Color3 } from "@babylonjs/core/Maths/math.color";
 import { ShadowGenerator } from "@babylonjs/core/Lights/Shadows/shadowGenerator";
 import isMobile from "./Utilities";
-import body from "./assets/models/hexTankBody.glb";
-import jet from "./assets/models/hexTankJet.glb";
 
 interface JetMesh extends AbstractMesh {
     type?: string;
@@ -28,11 +25,10 @@ export default class HexTank {
     private _camera: ArcRotateCamera;
     private _currentShadowGenerator: ShadowGenerator;
 
-    private _bodyMesh!: AbstractMesh;
-    private _jetMesh!: AbstractMesh;
+    private _bodyMesh: AbstractMesh;
+    private _jetMesh: AbstractMesh;
 
     private _bodyClone!: AbstractMesh;
-    private _jetClone!: AbstractMesh;
 
     private _jets: Array<JetMesh> = [];
 
@@ -84,8 +80,7 @@ export default class HexTank {
         this._debug = debug;
     }
 
-    async loadMeshes() {
-        
+    loadMeshes() {
         this._bodyClone = this._bodyMesh.clone("body", null)!;
         this._bodyClone.position.x = this._x;
         this._bodyClone.position.z = this._z;
@@ -97,10 +92,10 @@ export default class HexTank {
         this._bodyClone.setEnabled(true);
         this._currentShadowGenerator.addShadowCaster(this._bodyClone, true);
 
-        await this._loadJet("jetFrontLeft");
-        await this._loadJet("jetFrontRight");
-        await this._loadJet("jetBackLeft");
-        await this._loadJet("jetBackRight");
+        this._loadJet("jetFrontLeft");
+        this._loadJet("jetFrontRight");
+        this._loadJet("jetBackLeft");
+        this._loadJet("jetBackRight");
 
         if (this._debug === true) {
             this._debugBody = MeshBuilder.CreateCylinder("debugBody", {
@@ -121,25 +116,21 @@ export default class HexTank {
         }
     }
 
-    private async _loadJet(type: string) {
-        let result = await SceneLoader.ImportMeshAsync(
-            null,
-            "",
-            jet,
-            this._currentScene
-        );
+    private _loadJet(type: string) {
+        let jetClone = this._jetMesh.clone("jet", null)!;
+        jetClone.setEnabled(true);
 
-        result.meshes[0].rotationQuaternion!.toEulerAnglesToRef(
-            result.meshes[0].rotation
-        );
-        result.meshes[0].rotationQuaternion = null;
-        result.meshes[0].rotation.setAll(0);
-        result.meshes[0].setPivotPoint(new Vector3(0, 0.5, 0));
+        jetClone.rotationQuaternion!.toEulerAnglesToRef(jetClone.rotation);
+        jetClone.rotationQuaternion = null;
+        jetClone.rotation.setAll(0);
+        jetClone.setPivotPoint(new Vector3(0, 0.5, 0));
+
+        let children = jetClone.getChildMeshes();
 
         if (type === "jetFrontLeft") {
-            this._jetFrontLeft = result.meshes[0];
+            this._jetFrontLeft = jetClone;
             this._jetFrontLeft.type = type;
-            this._jetFrontLeft.flame = result.meshes[1] as Mesh;
+            this._jetFrontLeft.flame = children[0] as Mesh;
             this._jetFrontLeft.position.x = this._x - 0.5;
             this._jetFrontLeft.position.z = this._z - 0.45;
 
@@ -148,9 +139,9 @@ export default class HexTank {
         }
 
         if (type === "jetFrontRight") {
-            this._jetFrontRight = result.meshes[0];
+            this._jetFrontRight = jetClone;
             this._jetFrontRight.type = type;
-            this._jetFrontRight.flame = result.meshes[1] as Mesh;
+            this._jetFrontRight.flame = children[0] as Mesh;
             this._jetFrontRight.position.x = this._x - 0.5;
             this._jetFrontRight.position.z = this._z + 0.45;
 
@@ -159,9 +150,9 @@ export default class HexTank {
         }
 
         if (type === "jetBackLeft") {
-            this._jetBackLeft = result.meshes[0];
+            this._jetBackLeft = jetClone;
             this._jetBackLeft.type = type;
-            this._jetBackLeft.flame = result.meshes[1] as Mesh;
+            this._jetBackLeft.flame = children[0] as Mesh;
             this._jetBackLeft.position.x = this._x + 0.5;
             this._jetBackLeft.position.z = this._z - 0.45;
 
@@ -170,9 +161,9 @@ export default class HexTank {
         }
 
         if (type === "jetBackRight") {
-            this._jetBackRight = result.meshes[0];
+            this._jetBackRight = jetClone;
             this._jetBackRight.type = type;
-            this._jetBackRight.flame = result.meshes[1] as Mesh;
+            this._jetBackRight.flame = children[0] as Mesh;
             this._jetBackRight.position.x = this._x + 0.5;
             this._jetBackRight.position.z = this._z + 0.45;
 
