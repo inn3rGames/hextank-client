@@ -443,7 +443,6 @@ export default class World {
 
         this._meshesWithShadow.forEach((value) => {
             let curentMesh = value;
-            curentMesh.setEnabled(false);
 
             let dX = this._camera.target.x - curentMesh.position.x;
             let dZ = this._camera.target.z - curentMesh.position.z;
