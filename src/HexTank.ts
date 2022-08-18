@@ -7,7 +7,6 @@ import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 import { AbstractMesh } from "@babylonjs/core/Meshes/abstractMesh";
 import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
 import { Color3 } from "@babylonjs/core/Maths/math.color";
-import { ShadowGenerator } from "@babylonjs/core/Lights/Shadows/shadowGenerator";
 import isMobile from "./Utilities";
 
 interface JetMesh extends AbstractMesh {
@@ -21,9 +20,9 @@ export default class HexTank {
     private _angle: number;
     id: string;
     private _room: Room;
-    private _currentScene: Scene;
+    private _scene: Scene;
     private _camera: ArcRotateCamera;
-    private _currentShadowGenerator: ShadowGenerator;
+    private _meshesWithShadow: Map<string, AbstractMesh | Mesh>;
 
     private _bodyMesh: AbstractMesh;
     private _jetMesh: AbstractMesh;
@@ -62,7 +61,7 @@ export default class HexTank {
         room: Room,
         scene: Scene,
         camera: ArcRotateCamera,
-        shadowGenerator: ShadowGenerator,
+        meshesWithShadow: Map<string, AbstractMesh | Mesh>,
         bodyMesh: AbstractMesh,
         jetMesh: AbstractMesh,
         debug: boolean
@@ -72,9 +71,9 @@ export default class HexTank {
         this._angle = serverHexTank.angle;
         this.id = serverHexTank.id;
         this._room = room;
-        this._currentScene = scene;
+        this._scene = scene;
         this._camera = camera;
-        this._currentShadowGenerator = shadowGenerator;
+        this._meshesWithShadow = meshesWithShadow;
         this._bodyMesh = bodyMesh;
         this._jetMesh = jetMesh;
         this._debug = debug;
@@ -93,7 +92,7 @@ export default class HexTank {
         );
         this._bodyClone.rotationQuaternion = null;
         this._bodyClone.rotation.setAll(0);
-        this._currentShadowGenerator.addShadowCaster(this._bodyClone, true);
+        this._meshesWithShadow.set(this.id, this._bodyClone);
 
         this._loadJet("jetFrontLeft");
         this._loadJet("jetFrontRight");
@@ -107,7 +106,7 @@ export default class HexTank {
             });
             this._debugMaterial = new StandardMaterial(
                 "debugMaterial",
-                this._currentScene
+                this._scene
             );
             this._debugBody.material = this._debugMaterial;
             this._debugMaterial.diffuseColor = Color3.FromHexString("#00FF00");
@@ -138,10 +137,6 @@ export default class HexTank {
             this._jetFrontLeft.flame = children[0] as Mesh;
             this._jetFrontLeft.position.x = this._x - 0.5;
             this._jetFrontLeft.position.z = this._z - 0.45;
-             this._currentShadowGenerator.addShadowCaster(
-                 this._jetFrontLeft,
-                 true
-             );
 
             this._bodyClone.addChild(this._jetFrontLeft);
             this._jets.push(this._jetFrontLeft);
@@ -153,10 +148,6 @@ export default class HexTank {
             this._jetFrontRight.flame = children[0] as Mesh;
             this._jetFrontRight.position.x = this._x - 0.5;
             this._jetFrontRight.position.z = this._z + 0.45;
-            this._currentShadowGenerator.addShadowCaster(
-                this._jetFrontRight,
-                true
-            );
 
             this._bodyClone.addChild(this._jetFrontRight);
             this._jets.push(this._jetFrontRight);
@@ -168,10 +159,6 @@ export default class HexTank {
             this._jetBackLeft.flame = children[0] as Mesh;
             this._jetBackLeft.position.x = this._x + 0.5;
             this._jetBackLeft.position.z = this._z - 0.45;
-            this._currentShadowGenerator.addShadowCaster(
-                this._jetBackLeft,
-                true
-            );
 
             this._bodyClone.addChild(this._jetBackLeft);
             this._jets.push(this._jetBackLeft);
@@ -183,10 +170,6 @@ export default class HexTank {
             this._jetBackRight.flame = children[0] as Mesh;
             this._jetBackRight.position.x = this._x + 0.5;
             this._jetBackRight.position.z = this._z + 0.45;
-            this._currentShadowGenerator.addShadowCaster(
-                this._jetBackRight,
-                true
-            );
 
             this._bodyClone.addChild(this._jetBackRight);
             this._jets.push(this._jetBackRight);
@@ -196,6 +179,7 @@ export default class HexTank {
     deleteMeshes() {
         if (typeof this._bodyClone !== "undefined") {
             this._bodyClone.dispose();
+            this._meshesWithShadow.delete(this.id);
         }
     }
 

@@ -1,9 +1,9 @@
 import { Scene } from "@babylonjs/core/scene";
 import { Mesh } from "@babylonjs/core/Meshes/mesh";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
+import { AbstractMesh } from "@babylonjs/core/Meshes/abstractMesh";
 import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
 import { Color3 } from "@babylonjs/core/Maths/math.color";
-import { ShadowGenerator } from "@babylonjs/core/Lights/Shadows/shadowGenerator";
 
 export default class StaticCircleEntity {
     private _x: number;
@@ -11,8 +11,8 @@ export default class StaticCircleEntity {
     id: string;
     private _radius: number;
 
-    private _currentScene: Scene;
-    private _currentShadowGenerator: ShadowGenerator;
+    private _scene: Scene;
+    private _meshesWithShadow: Map<string, AbstractMesh | Mesh>;
 
     private _staticCircleBody?: Mesh;
     private _staticCircleMaterial?: StandardMaterial;
@@ -20,14 +20,14 @@ export default class StaticCircleEntity {
     constructor(
         serverStaticCircleEntity: any,
         scene: Scene,
-        shadowGenerator: ShadowGenerator
+        meshesWithShadow: Map<string, AbstractMesh | Mesh>
     ) {
         this._x = serverStaticCircleEntity.x;
         this._z = serverStaticCircleEntity.z;
         this.id = serverStaticCircleEntity.id;
         this._radius = serverStaticCircleEntity.collisionBody.radius;
-        this._currentScene = scene;
-        this._currentShadowGenerator = shadowGenerator;
+        this._scene = scene;
+        this._meshesWithShadow = meshesWithShadow;
     }
 
     drawEntity() {
@@ -38,11 +38,11 @@ export default class StaticCircleEntity {
                 diameterBottom: 2 * this._radius,
                 diameterTop: 0,
             },
-            this._currentScene
+            this._scene
         );
         this._staticCircleMaterial = new StandardMaterial(
             "staticMaterial",
-            this._currentScene
+            this._scene
         );
         this._staticCircleBody.material = this._staticCircleMaterial;
         this._staticCircleMaterial.diffuseColor =
@@ -60,15 +60,13 @@ export default class StaticCircleEntity {
         this._staticCircleBody.material.freeze();
         this._staticCircleBody.doNotSyncBoundingInfo = true;
 
-        this._currentShadowGenerator.addShadowCaster(
-            this._staticCircleBody,
-            true
-        );
+        this._meshesWithShadow.set(this.id, this._staticCircleBody);
     }
 
     deleteMeshes() {
         if (typeof this._staticCircleBody !== "undefined") {
             this._staticCircleBody.dispose();
+            this._meshesWithShadow.delete(this.id);
         }
     }
 }

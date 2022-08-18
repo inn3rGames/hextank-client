@@ -1,9 +1,9 @@
 import { Scene } from "@babylonjs/core/scene";
 import { Mesh } from "@babylonjs/core/Meshes/mesh";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
+import { AbstractMesh } from "@babylonjs/core/Meshes/abstractMesh";
 import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
 import { Color3 } from "@babylonjs/core/Maths/math.color";
-import { ShadowGenerator } from "@babylonjs/core/Lights/Shadows/shadowGenerator";
 
 export default class StaticRectangleEntity {
     private _x: number;
@@ -12,8 +12,8 @@ export default class StaticRectangleEntity {
     private _width: number;
     private _height: number;
 
-    private _currentScene: Scene;
-    private _currentShadowGenerator: ShadowGenerator;
+    private _scene: Scene;
+    private _meshesWithShadow: Map<string, AbstractMesh | Mesh>;
 
     private _staticRectangleBody?: Mesh;
     private _staticRectangleMaterial?: StandardMaterial;
@@ -21,15 +21,15 @@ export default class StaticRectangleEntity {
     constructor(
         serverStaticRectangleEntity: any,
         scene: Scene,
-        shadowGenerator: ShadowGenerator
+        meshesWithShadow: Map<string, AbstractMesh | Mesh>
     ) {
         this._x = serverStaticRectangleEntity.x;
         this._z = serverStaticRectangleEntity.z;
         this.id = serverStaticRectangleEntity.id;
         this._width = serverStaticRectangleEntity.collisionBody.width;
         this._height = serverStaticRectangleEntity.collisionBody.height;
-        this._currentScene = scene;
-        this._currentShadowGenerator = shadowGenerator;
+        this._scene = scene;
+        this._meshesWithShadow = meshesWithShadow;
     }
 
     drawEntity() {
@@ -40,11 +40,11 @@ export default class StaticRectangleEntity {
                 height: this._height,
                 depth: this._height,
             },
-            this._currentScene
+            this._scene
         );
         this._staticRectangleMaterial = new StandardMaterial(
             "staticMaterial",
-            this._currentScene
+            this._scene
         );
         this._staticRectangleBody.material = this._staticRectangleMaterial;
         this._staticRectangleMaterial.diffuseColor =
@@ -62,15 +62,13 @@ export default class StaticRectangleEntity {
         this._staticRectangleBody.material.freeze();
         this._staticRectangleBody.doNotSyncBoundingInfo = true;
 
-        this._currentShadowGenerator.addShadowCaster(
-            this._staticRectangleBody,
-            true
-        );
+        this._meshesWithShadow.set(this.id, this._staticRectangleBody);
     }
 
     deleteMeshes() {
         if (typeof this._staticRectangleBody !== "undefined") {
             this._staticRectangleBody.dispose();
+            this._meshesWithShadow.delete(this.id);
         }
     }
 }

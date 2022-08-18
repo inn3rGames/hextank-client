@@ -64,6 +64,7 @@ export default class World {
     private _torus!: Mesh;
 
     private _shadowGenerator!: ShadowGenerator;
+    private _meshesWithShadow: Map<string, AbstractMesh | Mesh> = new Map();
 
     private _fpsTexture!: AdvancedDynamicTexture;
     private _fpsText!: TextBlock;
@@ -219,6 +220,7 @@ export default class World {
         this._torus = MeshBuilder.CreateTorus("torus");
         this._torus.position.y = 5;
         this._torus.position.x = 0;
+        this._meshesWithShadow.set("torus", this._torus);
 
         this._shadowGenerator = new ShadowGenerator(
             1024,
@@ -226,7 +228,6 @@ export default class World {
         );
         this._shadowGenerator.useExponentialShadowMap = true;
         this._shadowGenerator.usePoissonSampling = false;
-        this._shadowGenerator.addShadowCaster(this._torus);
 
         this._fpsTexture = AdvancedDynamicTexture.CreateFullscreenUI("FPS");
         this._fpsText = new TextBlock();
@@ -278,7 +279,7 @@ export default class World {
                 this._room,
                 this._scene,
                 this._camera,
-                this._shadowGenerator,
+                this._meshesWithShadow,
                 this._bodyMesh,
                 this._jetMesh,
                 this._debug
@@ -322,7 +323,7 @@ export default class World {
             let clientStaticEntity = new StaticCircleEntity(
                 serverStaticCircleEntity,
                 this._scene,
-                this._shadowGenerator
+                this._meshesWithShadow
             );
             clientStaticEntity.drawEntity();
             this._staticCircleEntities.set(
@@ -358,7 +359,7 @@ export default class World {
             let clientStaticEntity = new StaticRectangleEntity(
                 serverStaticRectangleEntity,
                 this._scene,
-                this._shadowGenerator
+                this._meshesWithShadow
             );
             clientStaticEntity.drawEntity();
             this._staticRectangleEntities.set(
@@ -437,11 +438,40 @@ export default class World {
         });
     }
 
+    private _updateShadows() {
+        this._shadowGenerator.getShadowMap()!.renderList!.length = 0;
+
+        this._meshesWithShadow.forEach((value) => {
+            let curentMesh = value;
+
+            let dX = this._camera.target.x - curentMesh.position.x;
+            let dZ = this._camera.target.z - curentMesh.position.z;
+
+            let distance = Math.sqrt(dX * dX + dZ * dZ);
+
+            if (distance <= 100) {
+                this._shadowGenerator
+                    .getShadowMap()!
+                    .renderList!.push(curentMesh);
+
+                if (curentMesh.name === "body") {
+                    let children = curentMesh.getChildMeshes();
+                    for (let j = 0; j < children.length; j++) {
+                        this._shadowGenerator
+                            .getShadowMap()!
+                            .renderList!.push(children[j]);
+                    }
+                }
+            }
+        });
+    }
+
     private _fixedUpdate() {
         this._torus.rotation.x += 0.01;
         this._torus.rotation.z += 0.02;
 
         this._updateHexTanks();
+        this._updateShadows();
         this._scene.render();
     }
 
