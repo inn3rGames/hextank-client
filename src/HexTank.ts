@@ -119,7 +119,7 @@ export default class HexTank {
     }
 
     private _loadJet(type: string) {
-        let jetClone = this._jetMesh.clone("jet", null)!;
+        const jetClone = this._jetMesh.clone("jet", null)!;
         jetClone.setEnabled(true);
         jetClone.material?.freeze();
         jetClone.doNotSyncBoundingInfo = true;
@@ -129,7 +129,7 @@ export default class HexTank {
         jetClone.rotation.setAll(0);
         jetClone.setPivotPoint(new Vector3(0, 0.5, 0));
 
-        let children = jetClone.getChildMeshes();
+        const children = jetClone.getChildMeshes();
 
         if (type === "jetFrontLeft") {
             this._jetFrontLeft = jetClone;
@@ -266,20 +266,20 @@ export default class HexTank {
         interface CustomWindow extends Window {
             opera?: string;
         }
-        let customWindow: CustomWindow = window;
-        let currentDeviceIsMobile = isMobile(
+        const customWindow: CustomWindow = window;
+        const currentDeviceIsMobile = isMobile(
             navigator.userAgent || navigator.vendor || customWindow.opera
         );
 
         if (currentDeviceIsMobile === true) {
-            let container = document.getElementById(
+            const container = document.getElementById(
                 "buttons-container"
             ) as HTMLElement;
 
-            let upColor = "rgba(255, 255, 255, 0.25)";
-            let downColor = "rgba(0, 0, 0, 0.25)";
+            const upColor = "rgba(255, 255, 255, 0.25)";
+            const downColor = "rgba(0, 0, 0, 0.25)";
 
-            let buttonUp = document.createElement("div");
+            const buttonUp = document.createElement("div");
             container.appendChild(buttonUp);
             buttonUp.style.position = "fixed";
             buttonUp.style.width = "72px";
@@ -331,7 +331,7 @@ export default class HexTank {
                 buttonUp.style.backgroundColor = upColor;
             });
 
-            let buttonDown = document.createElement("div");
+            const buttonDown = document.createElement("div");
             container.appendChild(buttonDown);
             buttonDown.style.position = "fixed";
             buttonDown.style.width = "72px";
@@ -383,7 +383,7 @@ export default class HexTank {
                 buttonDown.style.backgroundColor = upColor;
             });
 
-            let buttonLeft = document.createElement("div");
+            const buttonLeft = document.createElement("div");
             container.appendChild(buttonLeft);
             buttonLeft.style.position = "fixed";
             buttonLeft.style.width = "80px";
@@ -435,7 +435,7 @@ export default class HexTank {
                 buttonLeft.style.backgroundColor = upColor;
             });
 
-            let buttonRight = document.createElement("div");
+            const buttonRight = document.createElement("div");
             container.appendChild(buttonRight);
             buttonRight.style.position = "fixed";
             buttonRight.style.width = "80px";
@@ -572,7 +572,7 @@ export default class HexTank {
 
             this._resetGamepadButtons();
 
-            let currentGamepadList = navigator.getGamepads();
+            const currentGamepadList = navigator.getGamepads();
             let currentGamepad: Gamepad;
 
             if (
@@ -708,7 +708,7 @@ export default class HexTank {
         end: number,
         percent: number
     ): number {
-        let difference = Math.round(Math.abs(end - start) * 1000) / 1000;
+        const difference = Math.round(Math.abs(end - start) * 1000) / 1000;
 
         if (difference === 0) {
             return end;
@@ -722,7 +722,7 @@ export default class HexTank {
         endAngle: number,
         percent: number
     ) {
-        let currentAngle = startAngle;
+        const currentAngle = startAngle;
         let targetAngle = endAngle;
         let differenceBetweenAngles = targetAngle - currentAngle;
 
@@ -794,7 +794,7 @@ export default class HexTank {
         );
 
         for (let i = 0; i < this._jets.length; i++) {
-            let currenJet = this._jets[i];
+            const currenJet = this._jets[i];
 
             currenJet.rotation.z = this._positiveAngle(
                 this._angleInterpolation(

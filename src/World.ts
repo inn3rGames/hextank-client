@@ -97,7 +97,7 @@ export default class World {
             "hextankgame"
         ) as HTMLCanvasElement;
 
-        let log = console.log;
+        const log = console.log;
         console.log = () => {};
         this._engine = new Engine(this._canvas, true);
         console.log = log;
@@ -113,7 +113,7 @@ export default class World {
     }
 
     private async _loadMeshes() {
-        let loadedBody = await SceneLoader.ImportMeshAsync(
+        const loadedBody = await SceneLoader.ImportMeshAsync(
             null,
             "",
             body,
@@ -122,7 +122,7 @@ export default class World {
         this._bodyMesh = loadedBody.meshes[0];
         this._bodyMesh.setEnabled(false);
 
-        let loadedJet = await SceneLoader.ImportMeshAsync(
+        const loadedJet = await SceneLoader.ImportMeshAsync(
             null,
             "",
             jet,
@@ -274,7 +274,7 @@ export default class World {
 
     private _setHexTanksCallbacks() {
         this._room.state.hexTanks.onAdd = (serverHexTank: any) => {
-            let clientHexTank = new HexTank(
+            const clientHexTank = new HexTank(
                 serverHexTank,
                 this._room,
                 this._scene,
@@ -320,7 +320,7 @@ export default class World {
         this._room.state.staticCircleEntities.onAdd = (
             serverStaticCircleEntity: any
         ) => {
-            let clientStaticEntity = new StaticCircleEntity(
+            const clientStaticEntity = new StaticCircleEntity(
                 serverStaticCircleEntity,
                 this._scene,
                 this._meshesWithShadow
@@ -356,7 +356,7 @@ export default class World {
         this._room.state.staticRectangleEntities.onAdd = (
             serverStaticRectangleEntity: any
         ) => {
-            let clientStaticEntity = new StaticRectangleEntity(
+            const clientStaticEntity = new StaticRectangleEntity(
                 serverStaticRectangleEntity,
                 this._scene,
                 this._meshesWithShadow
@@ -394,8 +394,8 @@ export default class World {
         this._lastFrame = performance.now();
 
         this._hexTanks.forEach((value, key) => {
-            let clientHexTank = value;
-            let serverHexTank = this._room.state.hexTanks.get(key);
+            const clientHexTank = value;
+            const serverHexTank = this._room.state.hexTanks.get(key);
             if (
                 typeof clientHexTank !== "undefined" &&
                 typeof serverHexTank !== "undefined"
@@ -423,8 +423,8 @@ export default class World {
 
     private _updateHexTanks() {
         this._hexTanks.forEach((value, key) => {
-            let clientHexTank = value;
-            let serverHexTank = this._room.state.hexTanks.get(key);
+            const clientHexTank = value;
+            const serverHexTank = this._room.state.hexTanks.get(key);
             if (
                 typeof clientHexTank !== "undefined" &&
                 typeof serverHexTank !== "undefined"
@@ -442,12 +442,12 @@ export default class World {
         this._shadowGenerator.getShadowMap()!.renderList!.length = 0;
 
         this._meshesWithShadow.forEach((value) => {
-            let curentMesh = value;
+            const curentMesh = value;
 
-            let dX = this._camera.target.x - curentMesh.position.x;
-            let dZ = this._camera.target.z - curentMesh.position.z;
+            const dX = this._camera.target.x - curentMesh.position.x;
+            const dZ = this._camera.target.z - curentMesh.position.z;
 
-            let distance = Math.sqrt(dX * dX + dZ * dZ);
+            const distance = Math.sqrt(dX * dX + dZ * dZ);
 
             if (distance <= 100) {
                 this._shadowGenerator
@@ -455,7 +455,7 @@ export default class World {
                     .renderList!.push(curentMesh);
 
                 if (curentMesh.name === "body") {
-                    let children = curentMesh.getChildMeshes();
+                    const children = curentMesh.getChildMeshes();
                     for (let j = 0; j < children.length; j++) {
                         this._shadowGenerator
                             .getShadowMap()!
