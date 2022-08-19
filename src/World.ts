@@ -9,7 +9,7 @@ import { DirectionalLight } from "@babylonjs/core/Lights/directionalLight";
 import { Mesh } from "@babylonjs/core/Meshes/mesh";
 import { AbstractMesh } from "@babylonjs/core/Meshes/abstractMesh";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
-import { Color3 } from "@babylonjs/core/Maths/math.color";
+import { Color3, Color4 } from "@babylonjs/core/Maths/math.color";
 import { CubeTexture } from "@babylonjs/core/Materials/Textures/cubeTexture";
 import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
 import { PBRMetallicRoughnessMaterial } from "@babylonjs/core/Materials/PBR/pbrMetallicRoughnessMaterial";
@@ -105,8 +105,9 @@ export default class World {
         this._scene = new Scene(this._engine);
         this._scene.detachControl();
 
+        this._scene.clearColor = Color4.FromHexString("#000000");
         this._scene.autoClear = false;
-        this._scene.autoClearDepthAndStencil = false;
+        //this._scene.autoClearDepthAndStencil = false;
         this._scene.blockMaterialDirtyMechanism = true;
         this._scene.skipPointerMovePicking = true;
         this._scene.freezeActiveMeshes(true);
