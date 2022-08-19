@@ -108,8 +108,8 @@ export default class World {
         this._scene.clearColor = Color4.FromHexString("#000000");
         //this._scene.autoClear = false;
         //this._scene.autoClearDepthAndStencil = false;
-        this._scene.blockMaterialDirtyMechanism = true;
-        this._scene.skipPointerMovePicking = true;
+        //this._scene.blockMaterialDirtyMechanism = true;
+        //this._scene.skipPointerMovePicking = true;
         //this._scene.freezeActiveMeshes(true);
     }
 
