@@ -18,7 +18,7 @@ import { AdvancedDynamicTexture } from "@babylonjs/gui/2D/advancedDynamicTexture
 import { TextBlock } from "@babylonjs/gui/2D/controls/textBlock";
 import "@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent";
 import "@babylonjs/core/Culling/ray";
-import "@babylonjs/loaders/glTF/2.0/Extensions/KHR_draco_mesh_compression";
+import "@babylonjs/loaders/glTF/2.0/";
 
 import { Client, Room } from "colyseus.js";
 
@@ -370,7 +370,6 @@ export default class World {
         ) => {
             const clientStaticEntity = new StaticRectangleEntity(
                 serverStaticRectangleEntity,
-                this._scene,
                 this._meshesWithShadow,
                 this._wallMesh
             );

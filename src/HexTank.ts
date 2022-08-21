@@ -80,7 +80,7 @@ export default class HexTank {
     }
 
     loadMeshes() {
-        this._bodyClone = this._bodyMesh.clone("body", null)!;
+        this._bodyClone = this._bodyMesh.clone("body" + this.id, null)!;
         this._bodyClone.setEnabled(true);
         this._bodyClone.material?.freeze();
         this._bodyClone.doNotSyncBoundingInfo = true;
@@ -119,7 +119,7 @@ export default class HexTank {
     }
 
     private _loadJet(type: string) {
-        const jetClone = this._jetMesh.clone("jet", null)!;
+        const jetClone = this._jetMesh.clone("jet" + this.id, null)!;
         jetClone.setEnabled(true);
         jetClone.material?.freeze();
         jetClone.doNotSyncBoundingInfo = true;
