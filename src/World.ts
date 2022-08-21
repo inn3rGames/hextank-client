@@ -465,8 +465,10 @@ export default class World {
                 this._shadowGenerator
                     .getShadowMap()!
                     .renderList!.push(curentMesh);
-
-                if (curentMesh.name === "body") {
+                if (
+                    curentMesh.name.includes("body") === true ||
+                    curentMesh.name.includes("wall") === true
+                ) {
                     const children = curentMesh.getChildMeshes();
                     for (let j = 0; j < children.length; j++) {
                         this._shadowGenerator
