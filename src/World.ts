@@ -32,6 +32,7 @@ import sand from "./assets/textures/sand.png";
 
 import body from "./assets/models/hexTankBody.glb";
 import jet from "./assets/models/hexTankJet.glb";
+import wall from "./assets/models/wall.glb";
 
 import HexTank from "./HexTank";
 import StaticCircleEntity from "./StaticCircleEntity";
@@ -40,6 +41,7 @@ import StaticRectangleEntity from "./StaticRectangleEntity";
 export default class World {
     private _bodyMesh!: AbstractMesh;
     private _jetMesh!: AbstractMesh;
+    private _wallMesh!: AbstractMesh;
 
     private _canvas: HTMLCanvasElement;
 
@@ -131,6 +133,15 @@ export default class World {
         );
         this._jetMesh = loadedJet.meshes[0];
         this._jetMesh.setEnabled(false);
+
+        const loadedWall = await SceneLoader.ImportMeshAsync(
+            null,
+            "",
+            wall,
+            this._scene
+        );
+        this._wallMesh = loadedWall.meshes[0];
+        this._wallMesh.setEnabled(false);
     }
 
     async initWorld() {
@@ -360,9 +371,10 @@ export default class World {
             const clientStaticEntity = new StaticRectangleEntity(
                 serverStaticRectangleEntity,
                 this._scene,
-                this._meshesWithShadow
+                this._meshesWithShadow,
+                this._wallMesh
             );
-            clientStaticEntity.drawEntity();
+            clientStaticEntity.loadMesh();
             this._staticRectangleEntities.set(
                 serverStaticRectangleEntity.id,
                 clientStaticEntity

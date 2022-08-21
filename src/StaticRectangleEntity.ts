@@ -15,13 +15,15 @@ export default class StaticRectangleEntity {
     private _scene: Scene;
     private _meshesWithShadow: Map<string, AbstractMesh | Mesh>;
 
-    private _staticRectangleBody?: Mesh;
-    private _staticRectangleMaterial?: StandardMaterial;
+    private _mesh: AbstractMesh;
+
+    private _meshClone!: AbstractMesh;
 
     constructor(
         serverStaticRectangleEntity: any,
         scene: Scene,
-        meshesWithShadow: Map<string, AbstractMesh | Mesh>
+        meshesWithShadow: Map<string, AbstractMesh | Mesh>,
+        mesh: AbstractMesh
     ) {
         this._x = serverStaticRectangleEntity.x;
         this._z = serverStaticRectangleEntity.z;
@@ -30,14 +32,15 @@ export default class StaticRectangleEntity {
         this._height = serverStaticRectangleEntity.collisionBody.height;
         this._scene = scene;
         this._meshesWithShadow = meshesWithShadow;
+        this._mesh = mesh;
     }
 
-    drawEntity() {
-        this._staticRectangleBody = MeshBuilder.CreateBox(
+    loadMesh() {
+        /*  this._staticRectangleBody = MeshBuilder.CreateBox(
             "staticBody",
             {
                 width: this._width,
-                height: this._height,
+                height: Math.min(this._width, this._height),
                 depth: this._height,
             },
             this._scene
@@ -55,19 +58,39 @@ export default class StaticRectangleEntity {
             Color3.FromHexString("#FFFF00");
 
         this._staticRectangleBody.position.x = this._x;
-        this._staticRectangleBody.position.y = this._height * 0.5;
+        this._staticRectangleBody.position.y =
+            Math.min(this._width, this._height) * 0.5;
         this._staticRectangleBody.position.z = this._z;
 
         this._staticRectangleBody.freezeWorldMatrix();
         this._staticRectangleBody.material.freeze();
         this._staticRectangleBody.doNotSyncBoundingInfo = true;
 
-        this._meshesWithShadow.set(this.id, this._staticRectangleBody);
+        this._meshesWithShadow.set(this.id, this._staticRectangleBody); */
+
+        this._meshClone = this._mesh.clone("mesh", null)!;
+        this._meshClone.setEnabled(true);
+        this._meshClone.material?.freeze();
+        this._meshClone.doNotSyncBoundingInfo = true;
+
+        this._meshClone.position.x = this._x;
+        this._meshClone.position.z = this._z;
+        this._meshClone.rotationQuaternion!.toEulerAnglesToRef(
+            this._meshClone.rotation
+        );
+        this._meshClone.rotationQuaternion = null;
+        this._meshClone.rotation.setAll(0);
+
+        if (this._height > this._width) {
+            this._meshClone.rotation.y = Math.PI / 2;
+        }
+
+        this._meshesWithShadow.set(this.id, this._meshClone);
     }
 
     deleteMeshes() {
-        if (typeof this._staticRectangleBody !== "undefined") {
-            this._staticRectangleBody.dispose();
+        if (typeof this._meshClone !== "undefined") {
+            this._meshClone.dispose();
             this._meshesWithShadow.delete(this.id);
         }
     }
