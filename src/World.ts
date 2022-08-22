@@ -16,6 +16,7 @@ import { PBRMetallicRoughnessMaterial } from "@babylonjs/core/Materials/PBR/pbrM
 import { Texture } from "@babylonjs/core/Materials/Textures/texture";
 import { AdvancedDynamicTexture } from "@babylonjs/gui/2D/advancedDynamicTexture";
 import { TextBlock } from "@babylonjs/gui/2D/controls/textBlock";
+import { Logger } from "@babylonjs/core/Misc/logger";
 import "@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent";
 import "@babylonjs/core/Culling/ray";
 import "@babylonjs/loaders/glTF/2.0/";
@@ -116,6 +117,8 @@ export default class World {
     }
 
     private async _loadMeshes() {
+        Logger.LogLevels = Logger.NoneLogLevel;
+
         const loadedBody = await SceneLoader.ImportMeshAsync(
             null,
             "",
