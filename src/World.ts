@@ -39,7 +39,7 @@ import StaticCircleEntity from "./StaticCircleEntity";
 import StaticRectangleEntity from "./StaticRectangleEntity";
 
 export default class World {
-    private _bodyMesh!: Mesh;
+    private _bodyMesh!: AbstractMesh;
     private _jetMesh!: AbstractMesh;
     private _wallMesh!: Mesh;
 
@@ -122,7 +122,7 @@ export default class World {
             body,
             this._scene
         );
-        this._bodyMesh = loadedBody.meshes[0] as Mesh;
+        this._bodyMesh = loadedBody.meshes[0];
         this._bodyMesh.setEnabled(false);
 
         const loadedJet = await SceneLoader.ImportMeshAsync(
