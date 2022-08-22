@@ -1,5 +1,6 @@
 import { Mesh } from "@babylonjs/core/Meshes/mesh";
 import { AbstractMesh } from "@babylonjs/core/Meshes/abstractMesh";
+import { InstancedMesh } from "@babylonjs/core/Meshes/instancedMesh";
 
 export default class StaticRectangleEntity {
     private _x: number;
@@ -10,14 +11,14 @@ export default class StaticRectangleEntity {
 
     private _meshesWithShadow: Map<string, AbstractMesh | Mesh>;
 
-    private _mesh: AbstractMesh;
+    private _mesh: Mesh;
 
-    private _meshClone!: AbstractMesh;
+    private _meshInstance!: InstancedMesh;
 
     constructor(
         serverStaticRectangleEntity: any,
         meshesWithShadow: Map<string, AbstractMesh | Mesh>,
-        mesh: AbstractMesh
+        mesh: Mesh
     ) {
         this._x = serverStaticRectangleEntity.x;
         this._z = serverStaticRectangleEntity.z;
@@ -29,29 +30,27 @@ export default class StaticRectangleEntity {
     }
 
     loadMesh() {
-        this._meshClone = this._mesh.clone("mesh" + this.id, null)!;
-        this._meshClone.setEnabled(true);
-        this._meshClone.material?.freeze();
-        this._meshClone.doNotSyncBoundingInfo = true;
+        this._meshInstance = this._mesh.createInstance("mesh" + this.id);
+        this._meshInstance.material?.freeze();
 
-        this._meshClone.position.x = this._x;
-        this._meshClone.position.z = this._z;
-        this._meshClone.rotationQuaternion!.toEulerAnglesToRef(
-            this._meshClone.rotation
+        this._meshInstance.position.x = this._x;
+        this._meshInstance.position.z = this._z;
+        this._meshInstance.rotationQuaternion!.toEulerAnglesToRef(
+            this._meshInstance.rotation
         );
-        this._meshClone.rotationQuaternion = null;
-        this._meshClone.rotation.setAll(0);
+        this._meshInstance.rotationQuaternion = null;
+        this._meshInstance.rotation.setAll(0);
 
         if (this._height > this._width) {
-            this._meshClone.rotation.y = Math.PI / 2;
+            this._meshInstance.rotation.y = Math.PI / 2;
         }
 
-        this._meshesWithShadow.set(this.id, this._meshClone);
+        this._meshesWithShadow.set(this.id, this._meshInstance);
     }
 
     deleteMeshes() {
-        if (typeof this._meshClone !== "undefined") {
-            this._meshClone.dispose();
+        if (typeof this._meshInstance !== "undefined") {
+            this._meshInstance.dispose();
             this._meshesWithShadow.delete(this.id);
         }
     }
