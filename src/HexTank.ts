@@ -1,17 +1,17 @@
 import { Room } from "colyseus.js";
 import { Scene } from "@babylonjs/core/scene";
-import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
 import { Mesh } from "@babylonjs/core/Meshes/mesh";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 import { AbstractMesh } from "@babylonjs/core/Meshes/abstractMesh";
+import { InstancedMesh } from "@babylonjs/core/Meshes/instancedMesh";
+import { TransformNode } from "@babylonjs/core/Meshes/transformNode";
 import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
 import { Color3 } from "@babylonjs/core/Maths/math.color";
 import isMobile from "./Utilities";
 
-interface JetMesh extends AbstractMesh {
-    type?: string;
-    flame?: Mesh;
+interface JetNode extends TransformNode {
+    flame?: InstancedMesh;
 }
 
 export default class HexTank {
@@ -22,19 +22,13 @@ export default class HexTank {
     private _room: Room;
     private _scene: Scene;
     private _camera: ArcRotateCamera;
-    private _meshesWithShadow: Map<string, AbstractMesh | Mesh>;
+    private _meshesWithShadow: Map<string, AbstractMesh | Mesh | TransformNode>;
 
-    private _bodyMesh: AbstractMesh;
-    private _jetMesh: AbstractMesh;
+    private _bodyMesh: Array<Mesh>;
+    private _jetMesh: Array<Mesh>;
 
-    private _bodyClone!: AbstractMesh;
-
-    private _jets: Array<JetMesh> = [];
-
-    private _jetFrontLeft!: JetMesh;
-    private _jetFrontRight!: JetMesh;
-    private _jetBackLeft!: JetMesh;
-    private _jetBackRight!: JetMesh;
+    private _bodyNode!: TransformNode;
+    private _jetNodes: Array<JetNode> = [];
 
     private _linearInperpolationPercent: number = 0.2;
 
@@ -61,9 +55,9 @@ export default class HexTank {
         room: Room,
         scene: Scene,
         camera: ArcRotateCamera,
-        meshesWithShadow: Map<string, AbstractMesh | Mesh>,
-        bodyMesh: AbstractMesh,
-        jetMesh: AbstractMesh,
+        meshesWithShadow: Map<string, AbstractMesh | Mesh | TransformNode>,
+        bodyMesh: Array<Mesh>,
+        jetMesh: Array<Mesh>,
         debug: boolean
     ) {
         this._x = serverHexTank.x;
@@ -80,26 +74,37 @@ export default class HexTank {
     }
 
     loadMeshes() {
-        this._bodyClone = this._bodyMesh.clone("body" + this.id, null)!;
-        this._bodyClone.setEnabled(true);
-        this._bodyClone.material?.freeze();
-        this._bodyClone.doNotSyncBoundingInfo = true;
+        this._bodyNode = new TransformNode("body"+ this.id, this._scene);
+        this._bodyNode.rotationQuaternion = null;
+        this._bodyNode.rotation.setAll(0);
+        this._meshesWithShadow.set(this._bodyNode.id, this._bodyNode);
 
-        this._bodyClone.position.x = this._x;
-        this._bodyClone.position.z = this._z;
-        this._bodyClone.rotationQuaternion!.toEulerAnglesToRef(
-            this._bodyClone.rotation
-        );
-        this._bodyClone.rotationQuaternion = null;
-        this._bodyClone.rotation.setAll(0);
-        this._meshesWithShadow.set(this.id, this._bodyClone);
+        this._bodyMesh.forEach((item, index) => {
+            if (index > 0) {
+                const meshInstance = item.createInstance(
+                    "body" + this.id + index
+                );
+                meshInstance.material?.freeze();
+
+                meshInstance.position.x = item.absolutePosition.x;
+                meshInstance.position.y = item.absolutePosition.y;
+                meshInstance.position.z = item.absolutePosition.z;
+
+                meshInstance.rotation =
+                    item.absoluteRotationQuaternion.toEulerAngles();
+
+                meshInstance.scaling = item.absoluteScaling;
+
+                meshInstance.setParent(this._bodyNode);
+            }
+        });
 
         this._loadJet("jetFrontLeft");
         this._loadJet("jetFrontRight");
         this._loadJet("jetBackLeft");
         this._loadJet("jetBackRight");
 
-        if (this._debug === true) {
+        /* if (this._debug === true) {
             this._debugBody = MeshBuilder.CreateCylinder("debugBody", {
                 height: 0.01,
                 diameter: 1.6,
@@ -111,76 +116,64 @@ export default class HexTank {
             this._debugBody.material = this._debugMaterial;
             this._debugMaterial.diffuseColor = Color3.FromHexString("#00FF00");
 
-            this._debugBody.position.x = this._x;
-            this._debugBody.position.z = this._z;
-
-            this._bodyClone.addChild(this._debugBody);
-        }
+            this._debugBody.setParent(this._bodyNode);
+        } */
     }
 
     private _loadJet(type: string) {
-        const jetClone = this._jetMesh.clone("jet" + this.id, null)!;
-        jetClone.setEnabled(true);
-        jetClone.material?.freeze();
-        jetClone.doNotSyncBoundingInfo = true;
+        const jetRootNode = new TransformNode("node", this._scene) as JetNode;
 
-        jetClone.rotationQuaternion!.toEulerAnglesToRef(jetClone.rotation);
-        jetClone.rotationQuaternion = null;
-        jetClone.rotation.setAll(0);
-        jetClone.setPivotPoint(new Vector3(0, 0.5, 0));
+        jetRootNode.rotationQuaternion = null;
+        jetRootNode.rotation.setAll(0);
+        jetRootNode.position.y = 0.5;
 
-        const children = jetClone.getChildMeshes();
+        this._jetMesh.forEach((item, index) => {
+            if (index > 0) {
+                const meshInstance = item.createInstance(
+                    "jet" + this.id + index
+                );
+                meshInstance.material?.freeze();
+
+                meshInstance.position.x = item.absolutePosition.x;
+                meshInstance.position.y = item.absolutePosition.y;
+                meshInstance.position.z = item.absolutePosition.z;
+
+                meshInstance.rotation =
+                    item.absoluteRotationQuaternion.toEulerAngles();
+
+                meshInstance.scaling = item.absoluteScaling;
+
+                if (index === 1) {
+                    jetRootNode.flame = meshInstance;
+                }
+
+                meshInstance.setParent(jetRootNode);
+            }
+        });
 
         if (type === "jetFrontLeft") {
-            this._jetFrontLeft = jetClone;
-            this._jetFrontLeft.type = type;
-            this._jetFrontLeft.flame = children[0] as Mesh;
-            this._jetFrontLeft.position.x = this._x - 0.5;
-            this._jetFrontLeft.position.z = this._z - 0.45;
-
-            this._bodyClone.addChild(this._jetFrontLeft);
-            this._jets.push(this._jetFrontLeft);
+            jetRootNode.position.x = -0.5;
+            jetRootNode.position.z = -0.45;
         }
-
         if (type === "jetFrontRight") {
-            this._jetFrontRight = jetClone;
-            this._jetFrontRight.type = type;
-            this._jetFrontRight.flame = children[0] as Mesh;
-            this._jetFrontRight.position.x = this._x - 0.5;
-            this._jetFrontRight.position.z = this._z + 0.45;
-
-            this._bodyClone.addChild(this._jetFrontRight);
-            this._jets.push(this._jetFrontRight);
+            jetRootNode.position.x = -0.5;
+            jetRootNode.position.z = +0.45;
         }
-
         if (type === "jetBackLeft") {
-            this._jetBackLeft = jetClone;
-            this._jetBackLeft.type = type;
-            this._jetBackLeft.flame = children[0] as Mesh;
-            this._jetBackLeft.position.x = this._x + 0.5;
-            this._jetBackLeft.position.z = this._z - 0.45;
-
-            this._bodyClone.addChild(this._jetBackLeft);
-            this._jets.push(this._jetBackLeft);
+            jetRootNode.position.x = +0.5;
+            jetRootNode.position.z = -0.45;
         }
-
         if (type === "jetBackRight") {
-            this._jetBackRight = jetClone;
-            this._jetBackRight.type = type;
-            this._jetBackRight.flame = children[0] as Mesh;
-            this._jetBackRight.position.x = this._x + 0.5;
-            this._jetBackRight.position.z = this._z + 0.45;
-
-            this._bodyClone.addChild(this._jetBackRight);
-            this._jets.push(this._jetBackRight);
+            jetRootNode.position.x = +0.5;
+            jetRootNode.position.z = +0.45;
         }
+
+        jetRootNode.setParent(this._bodyNode);
+        this._jetNodes.push(jetRootNode);
     }
 
     deleteMeshes() {
-        if (typeof this._bodyClone !== "undefined") {
-            this._bodyClone.dispose();
-            this._meshesWithShadow.delete(this.id);
-        }
+        this._bodyNode.dispose();
     }
 
     setPosition(serverHexTank: any) {
@@ -748,11 +741,9 @@ export default class HexTank {
     }
 
     private _updateMesh() {
-        if (typeof this._bodyClone !== "undefined") {
-            this._bodyClone.position.x = this._x;
-            this._bodyClone.position.z = this._z;
-            this._bodyClone.rotation.y = this._angle;
-        }
+        this._bodyNode.position.x = this._x;
+        this._bodyNode.position.z = this._z;
+        this._bodyNode.rotation.y = this._angle;
     }
 
     private _debugBodyCollision(serverHexTank: any) {
@@ -793,27 +784,27 @@ export default class HexTank {
             )
         );
 
-        for (let i = 0; i < this._jets.length; i++) {
-            const currenJet = this._jets[i];
+        for (let i = 0; i < this._jetNodes.length; i++) {
+            const currenJetNode = this._jetNodes[i];
 
-            currenJet.rotation.z = this._positiveAngle(
+            currenJetNode.rotation.z = this._positiveAngle(
                 this._angleInterpolation(
-                    currenJet.rotation.z,
+                    currenJetNode.rotation.z,
                     serverHexTank.jetsRotationZ,
                     this._linearInperpolationPercent
                 )
             );
 
-            currenJet.rotation.x = this._positiveAngle(
+            currenJetNode.rotation.x = this._positiveAngle(
                 this._angleInterpolation(
-                    currenJet.rotation.x,
+                    currenJetNode.rotation.x,
                     serverHexTank.jetsRotationX,
                     this._linearInperpolationPercent
                 )
             );
 
-            currenJet.flame!.scaling.y = this._linearInterpolation(
-                currenJet.flame!.scaling.y,
+            currenJetNode.flame!.scaling.y = this._linearInterpolation(
+                currenJetNode.flame!.scaling.y,
                 serverHexTank.jetsFlameScale,
                 this._linearInperpolationPercent
             );

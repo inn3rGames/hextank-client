@@ -40,8 +40,8 @@ import StaticCircleEntity from "./StaticCircleEntity";
 import StaticRectangleEntity from "./StaticRectangleEntity";
 
 export default class World {
-    private _bodyMesh!: AbstractMesh;
-    private _jetMesh!: AbstractMesh;
+    private _bodyMesh!: Array<Mesh>;
+    private _jetMesh!: Array<Mesh>;
     private _wallMesh!: Mesh;
 
     private _canvas: HTMLCanvasElement;
@@ -125,8 +125,8 @@ export default class World {
             body,
             this._scene
         );
-        this._bodyMesh = loadedBody.meshes[0];
-        this._bodyMesh.setEnabled(false);
+        this._bodyMesh = loadedBody.meshes as Array<Mesh>;
+        this._bodyMesh.forEach((item) => item.setEnabled(false));
 
         const loadedJet = await SceneLoader.ImportMeshAsync(
             null,
@@ -134,8 +134,8 @@ export default class World {
             jet,
             this._scene
         );
-        this._jetMesh = loadedJet.meshes[0];
-        this._jetMesh.setEnabled(false);
+        this._jetMesh = loadedJet.meshes as Array<Mesh>;
+        this._jetMesh.forEach((item) => item.setEnabled(false));
 
         const loadedWall = await SceneLoader.ImportMeshAsync(
             null,
@@ -431,6 +431,26 @@ export default class World {
         this._setStaticCirclesCallbacks();
         this._setStaticRetanglesCallbacks();
 
+        for (let i = 0; i < 0; i++) {
+            const serverHexTank = {
+                x: Math.random() * 500,
+                z: Math.random() * 500,
+                angle: Math.random() * 500,
+                id: Math.random() * 500,
+            };
+            const clientHexTank = new HexTank(
+                serverHexTank,
+                this._room,
+                this._scene,
+                this._camera,
+                this._meshesWithShadow,
+                this._bodyMesh,
+                this._jetMesh,
+                this._debug
+            );
+            clientHexTank.loadMeshes();
+        }
+
         window.addEventListener("focus", () => {
             this._focusRegained();
         });
@@ -465,9 +485,9 @@ export default class World {
             const distance = Math.sqrt(dX * dX + dZ * dZ);
 
             if (distance <= 100) {
-                this._shadowGenerator
+                /* this._shadowGenerator
                     .getShadowMap()!
-                    .renderList!.push(curentMesh);
+                    .renderList!.push(curentMesh); */
                 if (
                     curentMesh.name.includes("body") === true ||
                     curentMesh.name.includes("wall") === true
