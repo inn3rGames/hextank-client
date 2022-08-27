@@ -10,10 +10,6 @@ import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
 import { Color3 } from "@babylonjs/core/Maths/math.color";
 import isMobile from "./Utilities";
 
-interface JetNode extends TransformNode {
-    flame?: InstancedMesh;
-}
-
 export default class HexTank {
     private _x: number;
     private _z: number;
@@ -28,7 +24,7 @@ export default class HexTank {
     private _jetMesh: Array<Mesh>;
 
     private _bodyNode!: TransformNode;
-    private _jetNodes: Array<JetNode> = [];
+    private _jetNodes: Array<TransformNode> = [];
 
     private _linearInperpolationPercent: number = 0.2;
 
@@ -74,7 +70,7 @@ export default class HexTank {
     }
 
     loadMeshes() {
-        this._bodyNode = new TransformNode("body"+ this.id, this._scene);
+        this._bodyNode = new TransformNode("body" + this.id, this._scene);
         this._bodyNode.rotationQuaternion = null;
         this._bodyNode.rotation.setAll(0);
         this._meshesWithShadow.set(this._bodyNode.id, this._bodyNode);
@@ -90,10 +86,15 @@ export default class HexTank {
                 meshInstance.position.y = item.absolutePosition.y;
                 meshInstance.position.z = item.absolutePosition.z;
 
-                meshInstance.rotation =
+                const itemRotation =
                     item.absoluteRotationQuaternion.toEulerAngles();
+                meshInstance.rotation.x = itemRotation.x;
+                meshInstance.rotation.y = itemRotation.y;
+                meshInstance.rotation.z = itemRotation.z;
 
-                meshInstance.scaling = item.absoluteScaling;
+                meshInstance.scaling.x = item.absoluteScaling.x;
+                meshInstance.scaling.y = item.absoluteScaling.y;
+                meshInstance.scaling.z = item.absoluteScaling.z;
 
                 meshInstance.setParent(this._bodyNode);
             }
@@ -104,7 +105,7 @@ export default class HexTank {
         this._loadJet("jetBackLeft");
         this._loadJet("jetBackRight");
 
-        /* if (this._debug === true) {
+        if (this._debug === true) {
             this._debugBody = MeshBuilder.CreateCylinder("debugBody", {
                 height: 0.01,
                 diameter: 1.6,
@@ -117,11 +118,14 @@ export default class HexTank {
             this._debugMaterial.diffuseColor = Color3.FromHexString("#00FF00");
 
             this._debugBody.setParent(this._bodyNode);
-        } */
+        }
     }
 
     private _loadJet(type: string) {
-        const jetRootNode = new TransformNode("node", this._scene) as JetNode;
+        let jetRootNode = new TransformNode(
+            "node" + this.id + type,
+            this._scene
+        );
 
         jetRootNode.rotationQuaternion = null;
         jetRootNode.rotation.setAll(0);
@@ -138,14 +142,15 @@ export default class HexTank {
                 meshInstance.position.y = item.absolutePosition.y;
                 meshInstance.position.z = item.absolutePosition.z;
 
-                meshInstance.rotation =
+                const itemRotation =
                     item.absoluteRotationQuaternion.toEulerAngles();
+                meshInstance.rotation.x = itemRotation.x;
+                meshInstance.rotation.y = itemRotation.y;
+                meshInstance.rotation.z = itemRotation.z;
 
-                meshInstance.scaling = item.absoluteScaling;
-
-                if (index === 1) {
-                    jetRootNode.flame = meshInstance;
-                }
+                meshInstance.scaling.x = item.absoluteScaling.x;
+                meshInstance.scaling.y = item.absoluteScaling.y;
+                meshInstance.scaling.z = item.absoluteScaling.z;
 
                 meshInstance.setParent(jetRootNode);
             }
@@ -787,6 +792,8 @@ export default class HexTank {
         for (let i = 0; i < this._jetNodes.length; i++) {
             const currenJetNode = this._jetNodes[i];
 
+            const flame = currenJetNode.getChildren()[0] as InstancedMesh;
+
             currenJetNode.rotation.z = this._positiveAngle(
                 this._angleInterpolation(
                     currenJetNode.rotation.z,
@@ -803,8 +810,8 @@ export default class HexTank {
                 )
             );
 
-            currenJetNode.flame!.scaling.y = this._linearInterpolation(
-                currenJetNode.flame!.scaling.y,
+            flame.scaling.y = this._linearInterpolation(
+                flame.scaling.y,
                 serverHexTank.jetsFlameScale,
                 this._linearInperpolationPercent
             );

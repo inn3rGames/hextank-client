@@ -431,26 +431,6 @@ export default class World {
         this._setStaticCirclesCallbacks();
         this._setStaticRetanglesCallbacks();
 
-        for (let i = 0; i < 0; i++) {
-            const serverHexTank = {
-                x: Math.random() * 500,
-                z: Math.random() * 500,
-                angle: Math.random() * 500,
-                id: Math.random() * 500,
-            };
-            const clientHexTank = new HexTank(
-                serverHexTank,
-                this._room,
-                this._scene,
-                this._camera,
-                this._meshesWithShadow,
-                this._bodyMesh,
-                this._jetMesh,
-                this._debug
-            );
-            clientHexTank.loadMeshes();
-        }
-
         window.addEventListener("focus", () => {
             this._focusRegained();
         });
