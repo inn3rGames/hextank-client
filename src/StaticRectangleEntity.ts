@@ -1,57 +1,78 @@
+import { Scene } from "@babylonjs/core/scene";
 import { Mesh } from "@babylonjs/core/Meshes/mesh";
-import { AbstractMesh } from "@babylonjs/core/Meshes/abstractMesh";
-import { InstancedMesh } from "@babylonjs/core/Meshes/instancedMesh";
+import { TransformNode } from "@babylonjs/core/Meshes/transformNode";
 
 export default class StaticRectangleEntity {
     private _x: number;
     private _z: number;
     id: string;
+    private _scene: Scene;
     private _width: number;
     private _height: number;
+    private _nodesWithShadow: Map<string, TransformNode>;
 
-    private _meshesWithShadow: Map<string, AbstractMesh | Mesh>;
+    private _mesh: Array<Mesh>;
 
-    private _mesh: Mesh;
-
-    private _meshInstance!: InstancedMesh;
+    private _node!: TransformNode;
 
     constructor(
         serverStaticRectangleEntity: any,
-        meshesWithShadow: Map<string, AbstractMesh | Mesh>,
-        mesh: Mesh
+        scene: Scene,
+        nodesWithShadow: Map<string, TransformNode>,
+        mesh: Array<Mesh>
     ) {
         this._x = serverStaticRectangleEntity.x;
         this._z = serverStaticRectangleEntity.z;
         this.id = serverStaticRectangleEntity.id;
         this._width = serverStaticRectangleEntity.collisionBody.width;
         this._height = serverStaticRectangleEntity.collisionBody.height;
-        this._meshesWithShadow = meshesWithShadow;
+        this._scene = scene;
+        this._nodesWithShadow = nodesWithShadow;
         this._mesh = mesh;
     }
 
-    loadMesh() {
-        this._meshInstance = this._mesh.createInstance("mesh" + this.id);
-        this._meshInstance.material?.freeze();
+    loadMeshes() {
+        this._node = new TransformNode("body" + this.id, this._scene);
+        this._node.rotationQuaternion = null;
+        this._node.rotation.setAll(0);
+        this._nodesWithShadow.set(this._node.id, this._node);
 
-        this._meshInstance.position.x = this._x;
-        this._meshInstance.position.z = this._z;
-        this._meshInstance.rotationQuaternion!.toEulerAnglesToRef(
-            this._meshInstance.rotation
-        );
-        this._meshInstance.rotationQuaternion = null;
-        this._meshInstance.rotation.setAll(0);
+        this._mesh.forEach((item, index) => {
+            if (index > 0) {
+                const meshInstance = item.createInstance(
+                    "body" + this.id + index
+                );
+                meshInstance.material?.freeze();
+
+                meshInstance.position.x = item.absolutePosition.x;
+                meshInstance.position.y = item.absolutePosition.y;
+                meshInstance.position.z = item.absolutePosition.z;
+
+                const itemRotation =
+                    item.absoluteRotationQuaternion.toEulerAngles();
+                meshInstance.rotation.x = itemRotation.x;
+                meshInstance.rotation.y = itemRotation.y;
+                meshInstance.rotation.z = itemRotation.z;
+
+                meshInstance.scaling.x = item.absoluteScaling.x;
+                meshInstance.scaling.y = item.absoluteScaling.y;
+                meshInstance.scaling.z = item.absoluteScaling.z;
+
+                meshInstance.setParent(this._node);
+            }
+        });
+
+        this._node.position.x = this._x;
+        this._node.position.z = this._z;
+        this._node.scaling.y = -1;
 
         if (this._height > this._width) {
-            this._meshInstance.rotation.y = Math.PI / 2;
+            this._node.rotation.y = Math.PI / 2;
         }
-
-        this._meshesWithShadow.set(this.id, this._meshInstance);
     }
 
     deleteMeshes() {
-        if (typeof this._meshInstance !== "undefined") {
-            this._meshInstance.dispose();
-            this._meshesWithShadow.delete(this.id);
-        }
+        this._node.dispose();
+        this._nodesWithShadow.delete(this._node.id);
     }
 }

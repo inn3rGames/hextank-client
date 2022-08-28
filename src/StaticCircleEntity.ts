@@ -12,7 +12,7 @@ export default class StaticCircleEntity {
     private _radius: number;
 
     private _scene: Scene;
-    private _meshesWithShadow: Map<string, AbstractMesh | Mesh>;
+    private _nodesWithShadow: Map<string, AbstractMesh | Mesh>;
 
     private _staticCircleBody?: Mesh;
     private _staticCircleMaterial?: StandardMaterial;
@@ -20,14 +20,14 @@ export default class StaticCircleEntity {
     constructor(
         serverStaticCircleEntity: any,
         scene: Scene,
-        meshesWithShadow: Map<string, AbstractMesh | Mesh>
+        nodesWithShadow: Map<string, AbstractMesh | Mesh>
     ) {
         this._x = serverStaticCircleEntity.x;
         this._z = serverStaticCircleEntity.z;
         this.id = serverStaticCircleEntity.id;
         this._radius = serverStaticCircleEntity.collisionBody.radius;
         this._scene = scene;
-        this._meshesWithShadow = meshesWithShadow;
+        this._nodesWithShadow = nodesWithShadow;
     }
 
     drawEntity() {
@@ -60,13 +60,13 @@ export default class StaticCircleEntity {
         this._staticCircleBody.material.freeze();
         this._staticCircleBody.doNotSyncBoundingInfo = true;
 
-        this._meshesWithShadow.set(this.id, this._staticCircleBody);
+        this._nodesWithShadow.set(this.id, this._staticCircleBody);
     }
 
     deleteMeshes() {
         if (typeof this._staticCircleBody !== "undefined") {
             this._staticCircleBody.dispose();
-            this._meshesWithShadow.delete(this.id);
+            this._nodesWithShadow.delete(this.id);
         }
     }
 }

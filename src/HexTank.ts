@@ -3,7 +3,6 @@ import { Scene } from "@babylonjs/core/scene";
 import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
 import { Mesh } from "@babylonjs/core/Meshes/mesh";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
-import { AbstractMesh } from "@babylonjs/core/Meshes/abstractMesh";
 import { InstancedMesh } from "@babylonjs/core/Meshes/instancedMesh";
 import { TransformNode } from "@babylonjs/core/Meshes/transformNode";
 import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
@@ -18,7 +17,7 @@ export default class HexTank {
     private _room: Room;
     private _scene: Scene;
     private _camera: ArcRotateCamera;
-    private _meshesWithShadow: Map<string, AbstractMesh | Mesh | TransformNode>;
+    private _nodesWithShadow: Map<string, TransformNode>;
 
     private _bodyMesh: Array<Mesh>;
     private _jetMesh: Array<Mesh>;
@@ -51,7 +50,7 @@ export default class HexTank {
         room: Room,
         scene: Scene,
         camera: ArcRotateCamera,
-        meshesWithShadow: Map<string, AbstractMesh | Mesh | TransformNode>,
+        nodesWithShadow: Map<string, TransformNode>,
         bodyMesh: Array<Mesh>,
         jetMesh: Array<Mesh>,
         debug: boolean
@@ -63,7 +62,7 @@ export default class HexTank {
         this._room = room;
         this._scene = scene;
         this._camera = camera;
-        this._meshesWithShadow = meshesWithShadow;
+        this._nodesWithShadow = nodesWithShadow;
         this._bodyMesh = bodyMesh;
         this._jetMesh = jetMesh;
         this._debug = debug;
@@ -73,7 +72,7 @@ export default class HexTank {
         this._bodyNode = new TransformNode("body" + this.id, this._scene);
         this._bodyNode.rotationQuaternion = null;
         this._bodyNode.rotation.setAll(0);
-        this._meshesWithShadow.set(this._bodyNode.id, this._bodyNode);
+        this._nodesWithShadow.set(this._bodyNode.id, this._bodyNode);
 
         this._bodyMesh.forEach((item, index) => {
             if (index > 0) {
@@ -179,6 +178,7 @@ export default class HexTank {
 
     deleteMeshes() {
         this._bodyNode.dispose();
+        this._nodesWithShadow.delete(this._bodyNode.id);
     }
 
     setPosition(serverHexTank: any) {

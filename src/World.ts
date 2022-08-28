@@ -42,7 +42,7 @@ import StaticRectangleEntity from "./StaticRectangleEntity";
 export default class World {
     private _bodyMesh!: Array<Mesh>;
     private _jetMesh!: Array<Mesh>;
-    private _wallMesh!: Mesh;
+    private _wallMesh!: Array<Mesh>;
 
     private _canvas: HTMLCanvasElement;
 
@@ -67,7 +67,7 @@ export default class World {
     private _torus!: Mesh;
 
     private _shadowGenerator!: ShadowGenerator;
-    private _meshesWithShadow: Map<string, AbstractMesh | Mesh> = new Map();
+    private _nodesWithShadow: Map<string, AbstractMesh | Mesh> = new Map();
 
     private _fpsTexture!: AdvancedDynamicTexture;
     private _fpsText!: TextBlock;
@@ -143,8 +143,8 @@ export default class World {
             wall,
             this._scene
         );
-        this._wallMesh = loadedWall.meshes[1] as Mesh;
-        this._wallMesh.setEnabled(false);
+        this._wallMesh = loadedWall.meshes as Array<Mesh>;
+        this._wallMesh.forEach((item) => item.setEnabled(false));
     }
 
     async initWorld() {
@@ -235,7 +235,7 @@ export default class World {
         this._torus = MeshBuilder.CreateTorus("torus");
         this._torus.position.y = 5;
         this._torus.position.x = 0;
-        this._meshesWithShadow.set("torus", this._torus);
+        this._nodesWithShadow.set("torus", this._torus);
 
         this._shadowGenerator = new ShadowGenerator(
             1024,
@@ -294,7 +294,7 @@ export default class World {
                 this._room,
                 this._scene,
                 this._camera,
-                this._meshesWithShadow,
+                this._nodesWithShadow,
                 this._bodyMesh,
                 this._jetMesh,
                 this._debug
@@ -338,7 +338,7 @@ export default class World {
             const clientStaticEntity = new StaticCircleEntity(
                 serverStaticCircleEntity,
                 this._scene,
-                this._meshesWithShadow
+                this._nodesWithShadow
             );
             clientStaticEntity.drawEntity();
             this._staticCircleEntities.set(
@@ -373,10 +373,11 @@ export default class World {
         ) => {
             const clientStaticEntity = new StaticRectangleEntity(
                 serverStaticRectangleEntity,
-                this._meshesWithShadow,
+                this._scene,
+                this._nodesWithShadow,
                 this._wallMesh
             );
-            clientStaticEntity.loadMesh();
+            clientStaticEntity.loadMeshes();
             this._staticRectangleEntities.set(
                 serverStaticRectangleEntity.id,
                 clientStaticEntity
@@ -456,7 +457,7 @@ export default class World {
     private _updateShadows() {
         this._shadowGenerator.getShadowMap()!.renderList!.length = 0;
 
-        this._meshesWithShadow.forEach((value) => {
+        this._nodesWithShadow.forEach((value) => {
             const curentMesh = value;
 
             const dX = this._camera.target.x - curentMesh.position.x;
@@ -465,19 +466,11 @@ export default class World {
             const distance = Math.sqrt(dX * dX + dZ * dZ);
 
             if (distance <= 100) {
-                /* this._shadowGenerator
-                    .getShadowMap()!
-                    .renderList!.push(curentMesh); */
-                if (
-                    curentMesh.name.includes("body") === true ||
-                    curentMesh.name.includes("wall") === true
-                ) {
-                    const children = curentMesh.getChildMeshes();
-                    for (let j = 0; j < children.length; j++) {
-                        this._shadowGenerator
-                            .getShadowMap()!
-                            .renderList!.push(children[j]);
-                    }
+                const children = curentMesh.getChildMeshes();
+                for (let j = 0; j < children.length; j++) {
+                    this._shadowGenerator
+                        .getShadowMap()!
+                        .renderList!.push(children[j]);
                 }
             }
         });
