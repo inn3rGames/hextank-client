@@ -457,6 +457,8 @@ export default class World {
     private _updateShadows() {
         this._shadowGenerator.getShadowMap()!.renderList!.length = 0;
 
+        this._shadowGenerator.getShadowMap()!.renderList!.push(this._torus);
+
         this._nodesWithShadow.forEach((value) => {
             const curentMesh = value;
 
