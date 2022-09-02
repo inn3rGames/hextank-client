@@ -107,7 +107,7 @@ export default class HexTank {
         if (this._debug === true) {
             this._debugBody = MeshBuilder.CreateCylinder("debugBody", {
                 height: 0.01,
-                diameter: 1.6,
+                diameter: 1.4,
             });
             this._debugMaterial = new StandardMaterial(
                 "debugMaterial",
