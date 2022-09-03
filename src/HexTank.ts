@@ -301,7 +301,7 @@ export default class HexTank {
                 this._up = 2;
                 buttonUp.style.backgroundColor = upColor;
             });
-            buttonUp.addEventListener("cancel", (event) => {
+            buttonUp.addEventListener("touchcancel", (event) => {
                 event.preventDefault();
                 this._defaultControls = false;
                 this._up = 2;
@@ -520,6 +520,30 @@ export default class HexTank {
             if (this._right === 1) {
                 this._right = 2;
             }
+        });
+
+        window.addEventListener("touchstart", (event) => {
+            event.preventDefault();
+        });
+        window.addEventListener("touchend", (event) => {
+            event.preventDefault();
+        });
+        window.addEventListener("touchcancel", (event) => {
+            event.preventDefault();
+        });
+
+        window.addEventListener("mousedown", (event) => {
+            event.preventDefault();
+        });
+        window.addEventListener("mouseup", (event) => {
+            event.preventDefault();
+        });
+        window.addEventListener("mouseleave", (event) => {
+            event.preventDefault();
+        });
+
+        window.addEventListener("contextmenu", (event) => {
+            event.preventDefault();
         });
     }
 
