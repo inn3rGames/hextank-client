@@ -522,6 +522,26 @@ export default class HexTank {
             }
         });
 
+        window.addEventListener("touchstart", (event) => {
+            event.preventDefault();
+        });
+        window.addEventListener("touchend", (event) => {
+            event.preventDefault();
+        });
+        window.addEventListener("touchcancel", (event) => {
+            event.preventDefault();
+        });
+
+        window.addEventListener("mousedown", (event) => {
+            event.preventDefault();
+        });
+        window.addEventListener("mouseup", (event) => {
+            event.preventDefault();
+        });
+        window.addEventListener("mouseleave", (event) => {
+            event.preventDefault();
+        });
+
         window.addEventListener("contextmenu", (event) => {
             event.preventDefault();
         });
