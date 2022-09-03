@@ -490,8 +490,8 @@ export default class World {
     }
 
     private _handleResize() {
-        this._currentWindowWidth = window.innerWidth;
-        this._currentWindowHeight = window.innerHeight;
+        this._currentWindowWidth = document.documentElement.clientWidth;
+        this._currentWindowHeight = document.documentElement.clientHeight;
 
         if (this._currentWindowWidth !== this._lastWindowWidth) {
             this._engine.resize(true);
