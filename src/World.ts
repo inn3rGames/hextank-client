@@ -3,6 +3,7 @@ import { Scene } from "@babylonjs/core/scene";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
 import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
+import { DefaultRenderingPipeline } from "@babylonjs/core/PostProcesses/RenderPipeline/Pipelines/defaultRenderingPipeline";
 import { HemisphericLight } from "@babylonjs/core/Lights/hemisphericLight";
 import { ShadowGenerator } from "@babylonjs/core/Lights/Shadows/shadowGenerator";
 import { DirectionalLight } from "@babylonjs/core/Lights/directionalLight";
@@ -50,6 +51,8 @@ export default class World {
     private _scene: Scene;
 
     private _camera!: ArcRotateCamera;
+
+    private _pipeline!: DefaultRenderingPipeline;
 
     private _wordlLight!: HemisphericLight;
     private _directionalLight!: DirectionalLight;
@@ -101,7 +104,7 @@ export default class World {
 
         const log = console.log;
         console.log = () => {};
-        this._engine = new Engine(this._canvas, true);
+        this._engine = new Engine(this._canvas, true, undefined, true);
         console.log = log;
 
         this._scene = new Scene(this._engine);
@@ -147,6 +150,16 @@ export default class World {
             new Vector3(0, 2, 0),
             this._scene
         );
+
+        this._pipeline = new DefaultRenderingPipeline(
+            "pipeline",
+            false,
+            this._scene,
+            [this._camera]
+        );
+
+        this._pipeline.samples = 1;
+        this._pipeline.fxaaEnabled = true;
 
         this._wordlLight = new HemisphericLight(
             "wordlLight",
