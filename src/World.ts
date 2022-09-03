@@ -34,15 +34,14 @@ import sand from "./assets/textures/sand.png";
 import body from "./assets/models/hexTankBody.glb";
 import jet from "./assets/models/hexTankJet.glb";
 import wall from "./assets/models/wall.glb";
+import pyramid from "./assets/models/pyramid.glb";
 
 import HexTank from "./HexTank";
 import StaticCircleEntity from "./StaticCircleEntity";
 import StaticRectangleEntity from "./StaticRectangleEntity";
 
 export default class World {
-    private _bodyMesh!: Array<Mesh>;
-    private _jetMesh!: Array<Mesh>;
-    private _wallMesh!: Array<Mesh>;
+    private _modelsMeshes: Map<string, Array<Mesh>> = new Map();
 
     private _canvas: HTMLCanvasElement;
 
@@ -116,35 +115,25 @@ export default class World {
         this._scene.freezeActiveMeshes(true);
     }
 
+    private async _loadMesh(model: string, name: string) {
+        const loadedModel = await SceneLoader.ImportMeshAsync(
+            null,
+            "",
+            model,
+            this._scene
+        );
+        const meshesArray = loadedModel.meshes as Array<Mesh>;
+        meshesArray.forEach((item) => item.setEnabled(false));
+        this._modelsMeshes.set(name, meshesArray);
+    }
+
     private async _loadMeshes() {
         Logger.LogLevels = Logger.NoneLogLevel;
 
-        const loadedBody = await SceneLoader.ImportMeshAsync(
-            null,
-            "",
-            body,
-            this._scene
-        );
-        this._bodyMesh = loadedBody.meshes as Array<Mesh>;
-        this._bodyMesh.forEach((item) => item.setEnabled(false));
-
-        const loadedJet = await SceneLoader.ImportMeshAsync(
-            null,
-            "",
-            jet,
-            this._scene
-        );
-        this._jetMesh = loadedJet.meshes as Array<Mesh>;
-        this._jetMesh.forEach((item) => item.setEnabled(false));
-
-        const loadedWall = await SceneLoader.ImportMeshAsync(
-            null,
-            "",
-            wall,
-            this._scene
-        );
-        this._wallMesh = loadedWall.meshes as Array<Mesh>;
-        this._wallMesh.forEach((item) => item.setEnabled(false));
+        await this._loadMesh(body, "body");
+        await this._loadMesh(jet, "jet");
+        await this._loadMesh(wall, "wall");
+        await this._loadMesh(pyramid, "pyramid");
     }
 
     async initWorld() {
@@ -295,8 +284,8 @@ export default class World {
                 this._scene,
                 this._camera,
                 this._nodesWithShadow,
-                this._bodyMesh,
-                this._jetMesh,
+                this._modelsMeshes.get("body")!,
+                this._modelsMeshes.get("jet")!,
                 this._debug
             );
             clientHexTank.loadMeshes();
@@ -375,7 +364,7 @@ export default class World {
                 serverStaticRectangleEntity,
                 this._scene,
                 this._nodesWithShadow,
-                this._wallMesh
+                this._modelsMeshes.get(serverStaticRectangleEntity.modelType)!
             );
             clientStaticEntity.loadMeshes();
             this._staticRectangleEntities.set(
