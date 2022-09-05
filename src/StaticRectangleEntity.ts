@@ -64,7 +64,6 @@ export default class StaticRectangleEntity {
 
         this._node.position.x = this._x;
         this._node.position.z = this._z;
-        this._node.scaling.y = -1;
 
         if (this._height > this._width) {
             this._node.rotation.y = Math.PI / 2;

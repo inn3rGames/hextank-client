@@ -36,6 +36,7 @@ import body from "./assets/models/hexTankBody.glb";
 import jet from "./assets/models/hexTankJet.glb";
 import wall from "./assets/models/wall.glb";
 import pyramid from "./assets/models/pyramid.glb";
+import oasis from "./assets/models/oasis.glb";
 
 import HexTank from "./HexTank";
 import StaticCircleEntity from "./StaticCircleEntity";
@@ -126,7 +127,10 @@ export default class World {
             this._scene
         );
         const meshesArray = loadedModel.meshes as Array<Mesh>;
-        meshesArray.forEach((item) => item.setEnabled(false));
+        meshesArray.forEach((item) => {
+            item.setEnabled(false);
+            item.setParent(null);
+        });
         this._modelsMeshes.set(name, meshesArray);
     }
 
@@ -137,6 +141,7 @@ export default class World {
         await this._loadMesh(jet, "jet");
         await this._loadMesh(wall, "wall");
         await this._loadMesh(pyramid, "pyramid");
+        await this._loadMesh(oasis, "oasis");
     }
 
     async initWorld() {
@@ -209,6 +214,9 @@ export default class World {
             undefined,
             this._skyboxArray
         );
+
+        this._scene.environmentTexture = this._skyboxMaterial.reflectionTexture;
+
         this._skyboxMaterial.reflectionTexture.coordinatesMode =
             Texture.SKYBOX_MODE;
         this._skyboxMaterial.diffuseColor = Color3.FromHexString("#000000");
@@ -223,8 +231,8 @@ export default class World {
         this._sandTexture.uScale = 10 * (this._worldSize / 200);
         this._sandTexture.vScale = 10 * (this._worldSize / 200);
         this._groundMaterial.baseTexture = this._sandTexture;
-        this._groundMaterial.metallic = 0;
-        this._groundMaterial.roughness = 0;
+        this._groundMaterial.metallic = 0.0;
+        this._groundMaterial.roughness = 1.0;
         this._groundMaterial.baseColor = Color3.FromHexString("#D18212");
         this._ground = MeshBuilder.CreateGround("ground", {
             height: this._worldSize,
@@ -340,9 +348,10 @@ export default class World {
             const clientStaticEntity = new StaticCircleEntity(
                 serverStaticCircleEntity,
                 this._scene,
-                this._nodesWithShadow
+                this._nodesWithShadow,
+                this._modelsMeshes.get(serverStaticCircleEntity.modelType)!
             );
-            clientStaticEntity.drawEntity();
+            clientStaticEntity.loadMeshes();
             this._staticCircleEntities.set(
                 serverStaticCircleEntity.id,
                 clientStaticEntity

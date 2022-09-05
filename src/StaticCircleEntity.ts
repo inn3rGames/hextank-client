@@ -1,72 +1,71 @@
 import { Scene } from "@babylonjs/core/scene";
 import { Mesh } from "@babylonjs/core/Meshes/mesh";
-import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
-import { AbstractMesh } from "@babylonjs/core/Meshes/abstractMesh";
-import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
-import { Color3 } from "@babylonjs/core/Maths/math.color";
+import { TransformNode } from "@babylonjs/core/Meshes/transformNode";
 
 export default class StaticCircleEntity {
     private _x: number;
     private _z: number;
     id: string;
-    private _radius: number;
-
     private _scene: Scene;
-    private _nodesWithShadow: Map<string, AbstractMesh | Mesh>;
+    private _radius: number;
+    private _nodesWithShadow: Map<string, TransformNode>;
 
-    private _staticCircleBody?: Mesh;
-    private _staticCircleMaterial?: StandardMaterial;
+    private _mesh: Array<Mesh>;
+
+    private _node!: TransformNode;
 
     constructor(
         serverStaticCircleEntity: any,
         scene: Scene,
-        nodesWithShadow: Map<string, AbstractMesh | Mesh>
+        nodesWithShadow: Map<string, TransformNode>,
+        mesh: Array<Mesh>
     ) {
         this._x = serverStaticCircleEntity.x;
         this._z = serverStaticCircleEntity.z;
         this.id = serverStaticCircleEntity.id;
-        this._radius = serverStaticCircleEntity.collisionBody.radius;
+        this._radius = serverStaticCircleEntity.radius;
         this._scene = scene;
         this._nodesWithShadow = nodesWithShadow;
+        this._mesh = mesh;
     }
 
-    drawEntity() {
-        this._staticCircleBody = MeshBuilder.CreateCylinder(
-            "staticBody",
-            {
-                height: 10,
-                diameterBottom: 2 * this._radius,
-                diameterTop: 0,
-            },
-            this._scene
-        );
-        this._staticCircleMaterial = new StandardMaterial(
-            "staticMaterial",
-            this._scene
-        );
-        this._staticCircleBody.material = this._staticCircleMaterial;
-        this._staticCircleMaterial.diffuseColor =
-            Color3.FromHexString("#000000");
-        this._staticCircleMaterial.specularColor =
-            Color3.FromHexString("#FFFFFF");
-        this._staticCircleMaterial.emissiveColor =
-            Color3.FromHexString("#FF0000");
+    loadMeshes() {
+        this._node = new TransformNode("body" + this.id, this._scene);
+        this._node.rotationQuaternion = null;
+        this._node.rotation.setAll(0);
+        this._nodesWithShadow.set(this._node.id, this._node);
 
-        this._staticCircleBody.position.x = this._x;
-        this._staticCircleBody.position.y = 5;
-        this._staticCircleBody.position.z = this._z;
+        this._mesh.forEach((item, index) => {
+            if (index > 0) {
+                const meshInstance = item.createInstance(
+                    "body" + this.id + index
+                );
+                meshInstance.material?.freeze();
 
-        this._staticCircleBody.freezeWorldMatrix();
-        this._staticCircleBody.material.freeze();
-        this._staticCircleBody.doNotSyncBoundingInfo = true;
+                meshInstance.position.x = item.absolutePosition.x;
+                meshInstance.position.y = item.absolutePosition.y;
+                meshInstance.position.z = item.absolutePosition.z;
 
-        this._nodesWithShadow.set(this.id, this._staticCircleBody);
+                const itemRotation =
+                    item.absoluteRotationQuaternion.toEulerAngles();
+                meshInstance.rotation.x = itemRotation.x;
+                meshInstance.rotation.y = itemRotation.y;
+                meshInstance.rotation.z = itemRotation.z;
+
+                meshInstance.scaling.x = item.absoluteScaling.x;
+                meshInstance.scaling.y = item.absoluteScaling.y;
+                meshInstance.scaling.z = item.absoluteScaling.z;
+
+                meshInstance.setParent(this._node);
+            }
+        });
+
+        this._node.position.x = this._x;
+        this._node.position.z = this._z;
     }
 
     deleteMeshes() {
-        if (typeof this._staticCircleBody !== "undefined") {
-            this._staticCircleBody.dispose();
-            this._nodesWithShadow.delete(this.id);
-        }
+        this._node.dispose();
+        this._nodesWithShadow.delete(this._node.id);
     }
 }
