@@ -21,6 +21,7 @@ import { Logger } from "@babylonjs/core/Misc/logger";
 import "@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent";
 import "@babylonjs/core/Culling/ray";
 import "@babylonjs/loaders/glTF/2.0/";
+import "@babylonjs/core";
 
 import { Client, Room } from "colyseus.js";
 
@@ -37,6 +38,7 @@ import jet from "./assets/models/hexTankJet.glb";
 import wall from "./assets/models/wall.glb";
 import pyramid from "./assets/models/pyramid.glb";
 import oasis from "./assets/models/oasis.glb";
+import building1 from "./assets/models/building1.glb";
 
 import HexTank from "./HexTank";
 import StaticCircleEntity from "./StaticCircleEntity";
@@ -142,6 +144,7 @@ export default class World {
         await this._loadMesh(wall, "wall");
         await this._loadMesh(pyramid, "pyramid");
         await this._loadMesh(oasis, "oasis");
+        await this._loadMesh(building1, "building1");
     }
 
     async initWorld() {

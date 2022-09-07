@@ -32,7 +32,7 @@ export default class StaticRectangleEntity {
     }
 
     loadMeshes() {
-        this._node = new TransformNode("body" + this.id, this._scene);
+        this._node = new TransformNode("staticRectangleNode" + this.id, this._scene);
         this._node.rotationQuaternion = null;
         this._node.rotation.setAll(0);
         this._nodesWithShadow.set(this._node.id, this._node);
@@ -40,7 +40,7 @@ export default class StaticRectangleEntity {
         this._mesh.forEach((item, index) => {
             if (index > 0) {
                 const meshInstance = item.createInstance(
-                    "body" + this.id + index
+                    "staticRectangleMesh" + this.id + index
                 );
                 meshInstance.material?.freeze();
 

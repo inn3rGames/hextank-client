@@ -30,7 +30,7 @@ export default class StaticCircleEntity {
     }
 
     loadMeshes() {
-        this._node = new TransformNode("body" + this.id, this._scene);
+        this._node = new TransformNode("staticCircleNode" + this.id, this._scene);
         this._node.rotationQuaternion = null;
         this._node.rotation.setAll(0);
         this._nodesWithShadow.set(this._node.id, this._node);
@@ -38,7 +38,7 @@ export default class StaticCircleEntity {
         this._mesh.forEach((item, index) => {
             if (index > 0) {
                 const meshInstance = item.createInstance(
-                    "body" + this.id + index
+                    "staticCircleMesh" + this.id + index
                 );
                 meshInstance.material?.freeze();
 
