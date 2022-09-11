@@ -39,6 +39,7 @@ import wall from "./assets/models/wall.glb";
 import pyramid from "./assets/models/pyramid.glb";
 import oasis from "./assets/models/oasis.glb";
 import building1 from "./assets/models/building1.glb";
+import building2 from "./assets/models/building2.glb";
 
 import HexTank from "./HexTank";
 import StaticCircleEntity from "./StaticCircleEntity";
@@ -145,6 +146,7 @@ export default class World {
         await this._loadMesh(pyramid, "pyramid");
         await this._loadMesh(oasis, "oasis");
         await this._loadMesh(building1, "building1");
+        await this._loadMesh(building2, "building2");
     }
 
     async initWorld() {
