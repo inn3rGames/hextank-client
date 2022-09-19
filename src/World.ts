@@ -134,8 +134,8 @@ export default class World {
         this._scene.skipFrustumClipping = true;
 
         const options = SceneOptimizerOptions.HighDegradationAllowed();
-        options.targetFrameRate = 60;
-        options.trackerDuration = 500;
+        options.targetFrameRate = 120;
+        options.trackerDuration = 50;
 
         console.log(options);
 
