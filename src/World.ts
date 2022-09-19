@@ -126,6 +126,7 @@ export default class World {
         this._scene.freezeActiveMeshes(true);
 
         this._scene.performancePriority = ScenePerformancePriority.Intermediate;
+        this._scene.skipFrustumClipping = true;
     }
 
     private async _loadMesh(model: string, name: string) {
