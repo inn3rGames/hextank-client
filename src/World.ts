@@ -3,7 +3,6 @@ import { Scene } from "@babylonjs/core/scene";
 import { ScenePerformancePriority } from "@babylonjs/core/scene";
 import { SceneOptimizer } from "@babylonjs/core/Misc/sceneOptimizer";
 import { SceneOptimizerOptions } from "@babylonjs/core/Misc/sceneOptimizer";
-import { HardwareScalingOptimization } from "@babylonjs/core/Misc/sceneOptimizer";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
 import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
@@ -140,7 +139,10 @@ export default class World {
         this._options.trackerDuration = 250;
 
         this._optimizer = new SceneOptimizer(this._scene, this._options);
-        this._optimizer.start();
+
+        this._optimizer.onSuccessObservable.add(() => {
+           console.log("succes");
+        })
     }
 
     private async _loadMesh(model: string, name: string) {
@@ -564,6 +566,7 @@ export default class World {
         ) {
             this._resetElapsedTime = false;
             this._elapsedTime = Math.round(this._fixedFrameDuration);
+            this._optimizer.start();
         }
 
         while (this._elapsedTime >= this._fixedFrameDuration) {
