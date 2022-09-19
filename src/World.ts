@@ -137,7 +137,7 @@ export default class World {
 
         this._options = SceneOptimizerOptions.HighDegradationAllowed();
         this._options.targetFrameRate = 60;
-        this._options.trackerDuration = 50;
+        this._options.trackerDuration = 2000;
 
         this._optimizer = new SceneOptimizer(this._scene, this._options);
         this._optimizer.start();
