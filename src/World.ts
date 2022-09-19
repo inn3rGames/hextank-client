@@ -61,6 +61,10 @@ export default class World {
 
     private _scene: Scene;
 
+    private _options!: SceneOptimizerOptions;
+
+    private _optimizer!: SceneOptimizer;
+
     private _camera!: ArcRotateCamera;
 
     private _pipeline!: DefaultRenderingPipeline;
@@ -118,8 +122,6 @@ export default class World {
         this._engine = new Engine(this._canvas, true);
         console.log = log;
 
-        //this._engine.setHardwareScalingLevel(4);
-
         this._scene = new Scene(this._engine);
         this._scene.detachControl();
 
@@ -133,14 +135,12 @@ export default class World {
         this._scene.performancePriority = ScenePerformancePriority.Intermediate;
         this._scene.skipFrustumClipping = true;
 
-        const options = SceneOptimizerOptions.HighDegradationAllowed();
-        options.targetFrameRate = 60;
-        options.trackerDuration = 50;
+        this._options = SceneOptimizerOptions.HighDegradationAllowed();
+        this._options.targetFrameRate = 60;
+        this._options.trackerDuration = 50;
 
-        console.log(options);
-
-        const optimizer = new SceneOptimizer(this._scene, options);
-        optimizer.start();
+        this._optimizer = new SceneOptimizer(this._scene, this._options);
+        this._optimizer.start();
     }
 
     private async _loadMesh(model: string, name: string) {
@@ -524,7 +524,6 @@ export default class World {
 
         this._updateHexTanks();
         this._updateShadows();
-        this._scene.render();
     }
 
     private _handleResize() {
@@ -547,6 +546,8 @@ export default class World {
     }
 
     updateWorld(): void {
+        this._scene.render();
+
         this._fpsText.text = `Simulated: ${+this._engine
             .getFps()
             .toFixed()
