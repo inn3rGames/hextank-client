@@ -1,5 +1,6 @@
 import { Engine } from "@babylonjs/core/Engines/engine";
 import { Scene } from "@babylonjs/core/scene";
+import { ScenePerformancePriority } from "@babylonjs/core/scene";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
 import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
@@ -122,7 +123,9 @@ export default class World {
         this._scene.autoClearDepthAndStencil = false;
         this._scene.blockMaterialDirtyMechanism = true;
         this._scene.skipPointerMovePicking = true;
-        this._scene.freezeActiveMeshes(true);
+        //this._scene.freezeActiveMeshes(true);
+
+        //this._scene.performancePriority = ScenePerformancePriority.Intermediate;
     }
 
     private async _loadMesh(model: string, name: string) {
