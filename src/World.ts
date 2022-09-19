@@ -137,7 +137,7 @@ export default class World {
 
         this._options = SceneOptimizerOptions.HighDegradationAllowed();
         this._options.targetFrameRate = 120;
-        this._options.trackerDuration = 2000;
+        this._options.trackerDuration = 250;
 
         this._optimizer = new SceneOptimizer(this._scene, this._options);
         this._optimizer.start();
@@ -524,6 +524,7 @@ export default class World {
 
         this._updateHexTanks();
         this._updateShadows();
+        this._scene.render();
     }
 
     private _handleResize() {
@@ -546,10 +547,6 @@ export default class World {
     }
 
     updateWorld(): void {
-        this._engine.beginFrame();
-
-        this._scene.render();
-
         this._fpsText.text = `Simulated: ${+this._engine
             .getFps()
             .toFixed()
@@ -579,11 +576,13 @@ export default class World {
             this._fixedUpdate();
         }
 
-        this._engine.endFrame();
-
         window.requestAnimationFrame(() => {
+            this._engine.beginFrame();
+
             this._handleResize();
             this.updateWorld();
+
+            this._engine.endFrame();
         });
     }
 }
