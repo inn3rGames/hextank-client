@@ -546,6 +546,8 @@ export default class World {
     }
 
     updateWorld(): void {
+        this._engine.beginFrame();
+
         this._scene.render();
 
         this._fpsText.text = `Simulated: ${+this._engine
@@ -576,6 +578,8 @@ export default class World {
             this._elapsedTime -= this._fixedFrameDuration;
             this._fixedUpdate();
         }
+
+        this._engine.endFrame();
 
         window.requestAnimationFrame(() => {
             this._handleResize();
