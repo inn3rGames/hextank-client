@@ -19,18 +19,18 @@
   },
   "homepage": "https://github.com/inn3rGames/hextank-client#readme",
   "dependencies": {
-    "@babylonjs/core": "^5.11.0",
-    "@babylonjs/gui": "^5.12.1",
-    "@babylonjs/loaders": "^5.11.0",
+    "@babylonjs/core": "^5.24.0",
+    "@babylonjs/gui": "^5.24.0",
+    "@babylonjs/loaders": "^5.24.0",
     "colyseus.js": "^0.14.13"
   },
   "devDependencies": {
     "html-webpack-plugin": "^5.5.0",
-    "ts-loader": "^9.3.0",
-    "typescript": "^4.7.3",
-    "webpack": "^5.73.0",
+    "ts-loader": "^9.4.0",
+    "typescript": "^4.8.3",
+    "webpack": "^5.74.0",
     "webpack-cli": "^4.10.0",
-    "webpack-dev-server": "^4.9.2",
+    "webpack-dev-server": "^4.11.0",
     "webpack-merge": "^5.8.0"
   }
 }
