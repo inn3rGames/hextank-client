@@ -136,7 +136,7 @@ export default class World {
         this._scene.skipFrustumClipping = true;
 
         this._options = SceneOptimizerOptions.HighDegradationAllowed();
-        this._options.targetFrameRate = 120;
+        this._options.targetFrameRate = 60;
         this._options.trackerDuration = 250;
 
         this._optimizer = new SceneOptimizer(this._scene, this._options);
@@ -547,13 +547,8 @@ export default class World {
     }
 
     updateWorld(): void {
-        this._fpsText.text = `Simulated: ${+this._engine
+        this._fpsText.text = `Limit: ${this._fpsLimit}, Engine: ${this._engine
             .getFps()
-            .toFixed()
-            .toString()}, Real: ${(
-            (this._fixedFrameDuration / this._delta) *
-            this._fpsLimit
-        )
             .toFixed()
             .toString()}`;
 
