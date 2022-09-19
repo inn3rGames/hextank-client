@@ -141,8 +141,8 @@ export default class World {
         this._optimizer = new SceneOptimizer(this._scene, this._options);
 
         this._optimizer.onSuccessObservable.add(() => {
-           console.log("succes");
-        })
+            console.log("succes");
+        });
     }
 
     private async _loadMesh(model: string, name: string) {
@@ -549,7 +549,7 @@ export default class World {
     }
 
     updateWorld(): void {
-        this._fpsText.text = `Limit: ${this._fpsLimit}, Engine: ${this._engine
+        this._fpsText.text = `FPS: ${this._engine
             .getFps()
             .toFixed()
             .toString()}`;
