@@ -1,6 +1,9 @@
 import { Engine } from "@babylonjs/core/Engines/engine";
 import { Scene } from "@babylonjs/core/scene";
 import { ScenePerformancePriority } from "@babylonjs/core/scene";
+import { SceneOptimizer } from "@babylonjs/core/Misc/sceneOptimizer";
+import { SceneOptimizerOptions } from "@babylonjs/core/Misc/sceneOptimizer";
+import { HardwareScalingOptimization } from "@babylonjs/core/Misc/sceneOptimizer";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
 import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
@@ -115,6 +118,8 @@ export default class World {
         this._engine = new Engine(this._canvas, true);
         console.log = log;
 
+        //this._engine.setHardwareScalingLevel(4);
+
         this._scene = new Scene(this._engine);
         this._scene.detachControl();
 
@@ -127,6 +132,15 @@ export default class World {
 
         this._scene.performancePriority = ScenePerformancePriority.Intermediate;
         this._scene.skipFrustumClipping = true;
+
+        const options = SceneOptimizerOptions.HighDegradationAllowed();
+        options.targetFrameRate = 60;
+        options.trackerDuration = 500;
+
+        console.log(options);
+
+        const optimizer = new SceneOptimizer(this._scene, options);
+        optimizer.start();
     }
 
     private async _loadMesh(model: string, name: string) {
