@@ -123,9 +123,9 @@ export default class World {
         this._scene.autoClearDepthAndStencil = false;
         this._scene.blockMaterialDirtyMechanism = true;
         this._scene.skipPointerMovePicking = true;
-        //this._scene.freezeActiveMeshes(true);
+        this._scene.freezeActiveMeshes(true);
 
-        //this._scene.performancePriority = ScenePerformancePriority.Intermediate;
+        this._scene.performancePriority = ScenePerformancePriority.Intermediate;
     }
 
     private async _loadMesh(model: string, name: string) {
