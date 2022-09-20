@@ -71,7 +71,7 @@ export default class World {
     private _options!: SceneOptimizerOptions;
     private _optimizer!: SceneOptimizer;
     private _didOptimizerStart: boolean = false;
-    private _priority: number = 0;
+    private _disableShadows: boolean = false;
 
     private _camera!: ArcRotateCamera;
 
@@ -145,46 +145,36 @@ export default class World {
 
         this._options = new SceneOptimizerOptions(60, 250);
 
+        this._options.optimizations.push(new MergeMeshesOptimization());
+
         this._options.optimizations.push(
-            new MergeMeshesOptimization(this._priority)
+            new TextureOptimization(undefined, 256)
         );
 
-        this._priority++;
+        this._options.optimizations.push(new PostProcessesOptimization());
+
+        this._options.optimizations.push(new LensFlaresOptimization());
+
+        this._options.optimizations.push(new ParticlesOptimization());
+
+        this._options.optimizations.push(new RenderTargetsOptimization());
+
         this._options.optimizations.push(
-            new TextureOptimization(this._priority, 256)
+            new HardwareScalingOptimization(undefined, 2, 0.25)
         );
 
-        this._priority++;
-        this._options.optimizations.push(
-            new PostProcessesOptimization(this._priority)
+        this._options.optimizations.push(new ShadowsOptimization());
+
+        this._optimizer = new SceneOptimizer(
+            this._scene,
+            this._options,
+            true,
+            false
         );
 
-        this._priority++;
-        this._options.optimizations.push(
-            new LensFlaresOptimization(this._priority)
-        );
-
-        this._priority++;
-        this._options.optimizations.push(
-            new ParticlesOptimization(this._priority)
-        );
-
-        this._priority++;
-        this._options.optimizations.push(
-            new RenderTargetsOptimization(this._priority)
-        );
-
-        this._priority++;
-        this._options.optimizations.push(
-            new HardwareScalingOptimization(this._priority, 2, 0.25)
-        );
-
-        this._priority++;
-        this._options.optimizations.push(
-            new ShadowsOptimization(this._priority)
-        );
-
-        this._optimizer = new SceneOptimizer(this._scene, this._options, false);
+        this._optimizer.onFailureObservable.add(() => {
+            this._disableShadows = true;
+        });
     }
 
     private async _loadMesh(model: string, name: string) {
@@ -541,7 +531,7 @@ export default class World {
     private _updateShadows() {
         this._shadowGenerator.getShadowMap()!.renderList!.length = 0;
 
-        if (this._optimizer.currentPriorityLevel !== this._priority) {
+        if (this._disableShadows === false) {
             this._shadowGenerator.getShadowMap()!.renderList!.push(this._torus);
 
             this._nodesWithShadow.forEach((value) => {
