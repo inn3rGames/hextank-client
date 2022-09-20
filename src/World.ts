@@ -143,7 +143,7 @@ export default class World {
         this._scene.performancePriority = ScenePerformancePriority.Intermediate;
         this._scene.skipFrustumClipping = true;
 
-        this._options = new SceneOptimizerOptions(60, 250);
+        this._options = new SceneOptimizerOptions(30, 250);
 
         this._options.optimizations.push(new MergeMeshesOptimization());
 
