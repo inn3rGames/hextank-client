@@ -72,6 +72,7 @@ export default class World {
     private _optimizer!: SceneOptimizer;
     private _didOptimizerStart: boolean = false;
     private _disableShadows: boolean = false;
+    private _updateCyclesCount: number = 0;
 
     private _camera!: ArcRotateCamera;
 
@@ -583,9 +584,13 @@ export default class World {
     }
 
     updateWorld(): void {
-        if (this._didOptimizerStart === false) {
-            this._didOptimizerStart = true;
-            this._optimizer.start();
+        if (this._updateCyclesCount < this._fpsLimit) {
+            this._updateCyclesCount += 1;
+        } else {
+            if (this._didOptimizerStart === false) {
+                this._didOptimizerStart = true;
+                this._optimizer.start();
+            }
         }
 
         this._fpsText.text = `Priority: ${
