@@ -184,7 +184,7 @@ export default class World {
             new ShadowsOptimization(this._priority)
         );
 
-        this._optimizer = new SceneOptimizer(this._scene, this._options);
+        this._optimizer = new SceneOptimizer(this._scene, this._options, false);
     }
 
     private async _loadMesh(model: string, name: string) {
