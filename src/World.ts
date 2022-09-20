@@ -61,8 +61,8 @@ export default class World {
     private _scene: Scene;
 
     private _options!: SceneOptimizerOptions;
-
     private _optimizer!: SceneOptimizer;
+    private _didOptimizerStart: boolean = false;
 
     private _camera!: ArcRotateCamera;
 
@@ -139,10 +139,6 @@ export default class World {
         this._options.trackerDuration = 250;
 
         this._optimizer = new SceneOptimizer(this._scene, this._options);
-
-        this._optimizer.onSuccessObservable.add(() => {
-            console.log("succes");
-        });
     }
 
     private async _loadMesh(model: string, name: string) {
@@ -549,6 +545,11 @@ export default class World {
     }
 
     updateWorld(): void {
+        if (this._didOptimizerStart === false) {
+            this._didOptimizerStart = true;
+            this._optimizer.start();
+        }
+
         this._fpsText.text = `Priority: ${
             this._optimizer.currentPriorityLevel
         }, FPS: ${this._engine.getFps().toFixed().toString()}`;
@@ -565,7 +566,6 @@ export default class World {
         ) {
             this._resetElapsedTime = false;
             this._elapsedTime = Math.round(this._fixedFrameDuration);
-            this._optimizer.start();
         }
 
         while (this._elapsedTime >= this._fixedFrameDuration) {
