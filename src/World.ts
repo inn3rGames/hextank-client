@@ -3,6 +3,14 @@ import { Scene } from "@babylonjs/core/scene";
 import { ScenePerformancePriority } from "@babylonjs/core/scene";
 import { SceneOptimizer } from "@babylonjs/core/Misc/sceneOptimizer";
 import { SceneOptimizerOptions } from "@babylonjs/core/Misc/sceneOptimizer";
+import { MergeMeshesOptimization } from "@babylonjs/core/Misc/sceneOptimizer";
+import { TextureOptimization } from "@babylonjs/core/Misc/sceneOptimizer";
+import { PostProcessesOptimization } from "@babylonjs/core/Misc/sceneOptimizer";
+import { LensFlaresOptimization } from "@babylonjs/core/Misc/sceneOptimizer";
+import { ParticlesOptimization } from "@babylonjs/core/Misc/sceneOptimizer";
+import { RenderTargetsOptimization } from "@babylonjs/core/Misc/sceneOptimizer";
+import { HardwareScalingOptimization } from "@babylonjs/core/Misc/sceneOptimizer";
+import { ShadowsOptimization } from "@babylonjs/core/Misc/sceneOptimizer";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
 import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
@@ -63,6 +71,7 @@ export default class World {
     private _options!: SceneOptimizerOptions;
     private _optimizer!: SceneOptimizer;
     private _didOptimizerStart: boolean = false;
+    private _priority: number = 0;
 
     private _camera!: ArcRotateCamera;
 
@@ -134,9 +143,46 @@ export default class World {
         this._scene.performancePriority = ScenePerformancePriority.Intermediate;
         this._scene.skipFrustumClipping = true;
 
-        this._options = SceneOptimizerOptions.HighDegradationAllowed();
-        this._options.targetFrameRate = 60;
-        this._options.trackerDuration = 250;
+        this._options = new SceneOptimizerOptions(60, 250);
+
+        this._options.optimizations.push(
+            new MergeMeshesOptimization(this._priority)
+        );
+
+        this._priority++;
+        this._options.optimizations.push(
+            new TextureOptimization(this._priority, 256)
+        );
+
+        this._priority++;
+        this._options.optimizations.push(
+            new PostProcessesOptimization(this._priority)
+        );
+
+        this._priority++;
+        this._options.optimizations.push(
+            new LensFlaresOptimization(this._priority)
+        );
+
+        this._priority++;
+        this._options.optimizations.push(
+            new ParticlesOptimization(this._priority)
+        );
+
+        this._priority++;
+        this._options.optimizations.push(
+            new RenderTargetsOptimization(this._priority)
+        );
+
+        this._priority++;
+        this._options.optimizations.push(
+            new HardwareScalingOptimization(this._priority, 2, 0.25)
+        );
+
+        this._priority++;
+        this._options.optimizations.push(
+            new ShadowsOptimization(this._priority)
+        );
 
         this._optimizer = new SceneOptimizer(this._scene, this._options);
     }
@@ -495,25 +541,27 @@ export default class World {
     private _updateShadows() {
         this._shadowGenerator.getShadowMap()!.renderList!.length = 0;
 
-        this._shadowGenerator.getShadowMap()!.renderList!.push(this._torus);
+        if (this._optimizer.currentPriorityLevel !== this._priority) {
+            this._shadowGenerator.getShadowMap()!.renderList!.push(this._torus);
 
-        this._nodesWithShadow.forEach((value) => {
-            const curentMesh = value;
+            this._nodesWithShadow.forEach((value) => {
+                const curentMesh = value;
 
-            const dX = this._camera.target.x - curentMesh.position.x;
-            const dZ = this._camera.target.z - curentMesh.position.z;
+                const dX = this._camera.target.x - curentMesh.position.x;
+                const dZ = this._camera.target.z - curentMesh.position.z;
 
-            const distance = Math.sqrt(dX * dX + dZ * dZ);
+                const distance = Math.sqrt(dX * dX + dZ * dZ);
 
-            if (distance <= 100) {
-                const children = curentMesh.getChildMeshes();
-                for (let j = 0; j < children.length; j++) {
-                    this._shadowGenerator
-                        .getShadowMap()!
-                        .renderList!.push(children[j]);
+                if (distance <= 100) {
+                    const children = curentMesh.getChildMeshes();
+                    for (let j = 0; j < children.length; j++) {
+                        this._shadowGenerator
+                            .getShadowMap()!
+                            .renderList!.push(children[j]);
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     private _fixedUpdate() {
