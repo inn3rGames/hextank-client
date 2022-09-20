@@ -549,10 +549,9 @@ export default class World {
     }
 
     updateWorld(): void {
-        this._fpsText.text = `FPS: ${this._engine
-            .getFps()
-            .toFixed()
-            .toString()}`;
+        this._fpsText.text = `Priority: ${
+            this._optimizer.currentPriorityLevel
+        }, FPS: ${this._engine.getFps().toFixed().toString()}`;
 
         this._currentFrame = performance.now();
         this._delta = this._currentFrame - this._lastFrame;
