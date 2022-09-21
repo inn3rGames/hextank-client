@@ -15,7 +15,6 @@ import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
 import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
 import { DefaultRenderingPipeline } from "@babylonjs/core/PostProcesses/RenderPipeline/Pipelines/defaultRenderingPipeline";
-import { PassPostProcess } from "@babylonjs/core/PostProcesses/passPostProcess";
 import { HemisphericLight } from "@babylonjs/core/Lights/hemisphericLight";
 import { ShadowGenerator } from "@babylonjs/core/Lights/Shadows/shadowGenerator";
 import { DirectionalLight } from "@babylonjs/core/Lights/directionalLight";
@@ -78,7 +77,6 @@ export default class World {
     private _camera!: ArcRotateCamera;
 
     private _pipeline!: DefaultRenderingPipeline;
-    private _postProcess!: PassPostProcess;
 
     private _wordlLight!: HemisphericLight;
     private _directionalLight!: DirectionalLight;
@@ -237,21 +235,6 @@ export default class World {
 
         this._pipeline.samples = 4;
         this._pipeline.fxaaEnabled = true;
-
-        this._postProcess = new PassPostProcess(
-            "postProcess",
-            1,
-            this._camera,
-            3,
-            this._engine
-        );
-        /* const postProcess = new FxaaPostProcess(
-            "postProcess",
-            1,
-            this._camera,
-            3,
-            this._engine
-        ); */
 
         this._wordlLight = new HemisphericLight(
             "wordlLight",
