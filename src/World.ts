@@ -58,7 +58,6 @@ import rock3 from "./assets/models/rock3.glb";
 import HexTank from "./HexTank";
 import StaticCircleEntity from "./StaticCircleEntity";
 import StaticRectangleEntity from "./StaticRectangleEntity";
-import { FxaaPostProcess } from "@babylonjs/core";
 
 export default class World {
     private _modelsMeshes: Map<string, Array<Mesh>> = new Map();
@@ -128,7 +127,7 @@ export default class World {
 
         const log = console.log;
         console.log = () => {};
-        this._engine = new Engine(this._canvas, true, undefined, true);
+        this._engine = new Engine(this._canvas, true);
         console.log = log;
 
         this._scene = new Scene(this._engine);
