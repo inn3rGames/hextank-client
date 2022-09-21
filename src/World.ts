@@ -232,7 +232,7 @@ export default class World {
             [this._camera]
         );
 
-        this._pipeline.samples = 1;
+        this._pipeline.samples = 4;
         this._pipeline.fxaaEnabled = true;
 
         this._wordlLight = new HemisphericLight(
