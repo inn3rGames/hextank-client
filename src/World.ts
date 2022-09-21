@@ -71,7 +71,6 @@ export default class World {
     private _options!: SceneOptimizerOptions;
     private _optimizer!: SceneOptimizer;
     private _didOptimizerStart: boolean = false;
-    private _disableShadows: boolean = false;
     private _updateCyclesCount: number = 0;
 
     private _camera!: ArcRotateCamera;
@@ -144,7 +143,9 @@ export default class World {
         this._scene.performancePriority = ScenePerformancePriority.Intermediate;
         this._scene.skipFrustumClipping = true;
 
-        this._options = new SceneOptimizerOptions(60, 250);
+        this._options = new SceneOptimizerOptions(60, 500);
+
+        this._options.optimizations.push(new ShadowsOptimization());
 
         this._options.optimizations.push(new MergeMeshesOptimization());
 
@@ -164,8 +165,6 @@ export default class World {
             new HardwareScalingOptimization(undefined, 2, 0.25)
         );
 
-        this._options.optimizations.push(new ShadowsOptimization());
-
         this._optimizer = new SceneOptimizer(
             this._scene,
             this._options,
@@ -174,7 +173,13 @@ export default class World {
         );
 
         this._optimizer.onFailureObservable.add(() => {
-            this._disableShadows = true;
+            this._shadowGenerator.dispose();
+        });
+
+        this._optimizer.onNewOptimizationAppliedObservable.add((event) => {
+            if (event.priority >= 0) {
+                this._shadowGenerator.dispose();
+            }
         });
     }
 
@@ -530,9 +535,9 @@ export default class World {
     }
 
     private _updateShadows() {
-        this._shadowGenerator.getShadowMap()!.renderList!.length = 0;
+        if (this._shadowGenerator.getShadowMap() !== null) {
+            this._shadowGenerator.getShadowMap()!.renderList!.length = 0;
 
-        if (this._disableShadows === false) {
             this._shadowGenerator.getShadowMap()!.renderList!.push(this._torus);
 
             this._nodesWithShadow.forEach((value) => {
