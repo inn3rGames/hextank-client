@@ -15,6 +15,7 @@ import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
 import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
 import { DefaultRenderingPipeline } from "@babylonjs/core/PostProcesses/RenderPipeline/Pipelines/defaultRenderingPipeline";
+import { PassPostProcess } from "@babylonjs/core/PostProcesses/passPostProcess";
 import { HemisphericLight } from "@babylonjs/core/Lights/hemisphericLight";
 import { ShadowGenerator } from "@babylonjs/core/Lights/Shadows/shadowGenerator";
 import { DirectionalLight } from "@babylonjs/core/Lights/directionalLight";
@@ -58,6 +59,7 @@ import rock3 from "./assets/models/rock3.glb";
 import HexTank from "./HexTank";
 import StaticCircleEntity from "./StaticCircleEntity";
 import StaticRectangleEntity from "./StaticRectangleEntity";
+import { FxaaPostProcess } from "@babylonjs/core";
 
 export default class World {
     private _modelsMeshes: Map<string, Array<Mesh>> = new Map();
@@ -76,6 +78,7 @@ export default class World {
     private _camera!: ArcRotateCamera;
 
     private _pipeline!: DefaultRenderingPipeline;
+    private _postProcess!: PassPostProcess;
 
     private _wordlLight!: HemisphericLight;
     private _directionalLight!: DirectionalLight;
@@ -127,7 +130,7 @@ export default class World {
 
         const log = console.log;
         console.log = () => {};
-        this._engine = new Engine(this._canvas, true);
+        this._engine = new Engine(this._canvas, true, undefined, true);
         console.log = log;
 
         this._scene = new Scene(this._engine);
@@ -234,6 +237,21 @@ export default class World {
 
         this._pipeline.samples = 4;
         this._pipeline.fxaaEnabled = true;
+
+        this._postProcess = new PassPostProcess(
+            "postProcess",
+            1,
+            this._camera,
+            3,
+            this._engine
+        );
+        /* const postProcess = new FxaaPostProcess(
+            "postProcess",
+            1,
+            this._camera,
+            3,
+            this._engine
+        ); */
 
         this._wordlLight = new HemisphericLight(
             "wordlLight",

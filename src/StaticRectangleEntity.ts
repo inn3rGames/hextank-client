@@ -49,7 +49,7 @@ export default class StaticRectangleEntity {
                 meshInstance.material?.freeze();
 
                 meshInstance.position.x = item.absolutePosition.x;
-                meshInstance.position.y = item.absolutePosition.y + 0.001;
+                meshInstance.position.y = item.absolutePosition.y + 0.002;
                 meshInstance.position.z = item.absolutePosition.z;
 
                 const itemRotation =
