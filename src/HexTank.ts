@@ -223,6 +223,10 @@ export default class HexTank {
             ) {
                 this._right = 1;
             }
+            
+            if (event.key === " ") {
+                this._room.send("shoot");
+            }
         });
 
         window.addEventListener("keyup", (event) => {

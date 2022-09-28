@@ -54,6 +54,7 @@ import building2 from "./assets/models/building2.glb";
 import rock1 from "./assets/models/rock1.glb";
 import rock2 from "./assets/models/rock2.glb";
 import rock3 from "./assets/models/rock3.glb";
+import bullet from "./assets/models/bullet.glb";
 
 import HexTank from "./HexTank";
 import StaticCircleEntity from "./StaticCircleEntity";
@@ -211,6 +212,7 @@ export default class World {
         await this._loadMesh(rock1, "rock1");
         await this._loadMesh(rock2, "rock2");
         await this._loadMesh(rock3, "rock3");
+        await this._loadMesh(bullet, "bullet");
     }
 
     async initWorld() {
