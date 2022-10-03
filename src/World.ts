@@ -59,6 +59,7 @@ import bullet from "./assets/models/bullet.glb";
 import HexTank from "./HexTank";
 import StaticCircleEntity from "./StaticCircleEntity";
 import StaticRectangleEntity from "./StaticRectangleEntity";
+import Bullet from "./Bullet";
 
 export default class World {
     private _modelsMeshes: Map<string, Array<Mesh>> = new Map();
@@ -102,6 +103,7 @@ export default class World {
     private _staticCircleEntities: Map<string, StaticCircleEntity> = new Map();
     private _staticRectangleEntities: Map<string, StaticRectangleEntity> =
         new Map();
+    private _bullets: Map<string, Bullet> = new Map();
 
     private _client!: Client;
     private _room!: Room;
@@ -486,6 +488,28 @@ export default class World {
         };
     }
 
+    private _setBulletsCallbacks() {
+        this._room.state.bullets.onAdd = (serverBullet: any) => {
+            const clientBullet = new Bullet(
+                serverBullet,
+                this._scene,
+                this._nodesWithShadow,
+                this._modelsMeshes.get(serverBullet.modelType)!
+            );
+            clientBullet.loadMeshes();
+            this._bullets.set(serverBullet.id, clientBullet);
+        };
+
+        this._room.state.bullets.onRemove = (bullet: any) => {
+            if (typeof bullet !== "undefined") {
+                if (typeof this._bullets.get(bullet.id) !== "undefined") {
+                    this._bullets.get(bullet.id)!.deleteMeshes();
+                    this._bullets.delete(bullet.id);
+                }
+            }
+        };
+    }
+
     private _focusRegained() {
         this._resetElapsedTime = true;
 
@@ -513,6 +537,7 @@ export default class World {
         this._setHexTanksCallbacks();
         this._setStaticCirclesCallbacks();
         this._setStaticRetanglesCallbacks();
+        this._setBulletsCallbacks();
 
         window.addEventListener("focus", () => {
             this._focusRegained();
@@ -532,6 +557,19 @@ export default class World {
                 } else {
                     clientHexTank.update(serverHexTank);
                 }
+            }
+        });
+    }
+
+    private _updateBullets() {
+        this._bullets.forEach((value, key) => {
+            const clientBullet = value;
+            const serverBullet = this._room.state.bullets.get(key);
+            if (
+                typeof clientBullet !== "undefined" &&
+                typeof serverBullet !== "undefined"
+            ) {
+                clientBullet.syncWithServer(serverBullet);
             }
         });
     }
@@ -567,6 +605,7 @@ export default class World {
         this._torus.rotation.z += 0.02;
 
         this._updateHexTanks();
+        this._updateBullets();
         this._updateShadows();
         this._scene.render();
     }

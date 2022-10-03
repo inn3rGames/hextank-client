@@ -27,12 +27,13 @@ export default class HexTank {
 
     private _linearInperpolationPercent: number = 0.2;
 
-    private _commandsPerFrame: number = 10;
+    private _commandsPerFrame: number = 100;
 
     private _up: number = 0;
     private _down: number = 0;
     private _left: number = 0;
     private _right: number = 0;
+    private _shoot: number = 0;
 
     private _commands: Array<string> = [];
 
@@ -192,9 +193,11 @@ export default class HexTank {
             if (this._debug === false) {
                 event.preventDefault();
             }
+
             this._defaultControls = true;
             this._resetGamepadButtons();
             this._resetTouchButtons();
+
             if (
                 event.key === "ArrowUp" ||
                 event.key === "w" ||
@@ -223,9 +226,8 @@ export default class HexTank {
             ) {
                 this._right = 1;
             }
-            
             if (event.key === " ") {
-                this._room.send("shoot");
+                this._shoot = 1;
             }
         });
 
@@ -233,6 +235,7 @@ export default class HexTank {
             if (this._debug === false) {
                 event.preventDefault();
             }
+
             this._defaultControls = false;
 
             if (
@@ -262,6 +265,9 @@ export default class HexTank {
                 event.key === "D"
             ) {
                 this._right = 2;
+            }
+            if (event.key === " ") {
+                this._shoot = 2;
             }
         });
 
@@ -524,6 +530,9 @@ export default class HexTank {
             if (this._right === 1) {
                 this._right = 2;
             }
+            if (this._shoot === 1) {
+                this._shoot = 2;
+            }
         });
 
         window.addEventListener("touchstart", (event) => {
@@ -566,6 +575,9 @@ export default class HexTank {
             if (this._right === 1) {
                 this._right = 2;
             }
+            if (this._shoot === 1) {
+                this._shoot = 2;
+            }
         }
     }
 
@@ -583,6 +595,9 @@ export default class HexTank {
             }
             if (this._right === 1) {
                 this._right = 2;
+            }
+            if (this._shoot === 1) {
+                this._shoot = 2;
             }
         }
     }
@@ -671,6 +686,10 @@ export default class HexTank {
             if (this._right === 1) {
                 this._commands.push("rightKeyDown");
             }
+            if (this._shoot === 1) {
+                this._commands.push("shootDown");
+            }
+            
             if (this._up === 2) {
                 this._commands.push("upKeyUp");
                 this._up = 0;
@@ -687,6 +706,10 @@ export default class HexTank {
                 this._commands.push("rightKeyUp");
                 this._right = 0;
             }
+            if (this._shoot === 2) {
+                this._commands.push("shootUp");
+                this._shoot = 0;
+            }
         }
     }
 
@@ -698,33 +721,33 @@ export default class HexTank {
             if (currentCommand === "upKeyDown") {
                 this._room.send("command", "upKeyDown");
             }
-
             if (currentCommand === "downKeyDown") {
                 this._room.send("command", "downKeyDown");
             }
-
             if (currentCommand === "leftKeyDown") {
                 this._room.send("command", "leftKeyDown");
             }
-
             if (currentCommand === "rightKeyDown") {
                 this._room.send("command", "rightKeyDown");
+            }
+            if (currentCommand === "shootDown") {
+                this._room.send("command", "shootDown");
             }
 
             if (currentCommand === "upKeyUp") {
                 this._room.send("command", "upKeyUp");
             }
-
             if (currentCommand === "downKeyUp") {
                 this._room.send("command", "downKeyUp");
             }
-
             if (currentCommand === "leftKeyUp") {
                 this._room.send("command", "leftKeyUp");
             }
-
             if (currentCommand === "rightKeyUp") {
                 this._room.send("command", "rightKeyUp");
+            }
+            if (currentCommand === "shootUp") {
+                this._room.send("command", "shootUp");
             }
         }
     }
