@@ -494,7 +494,7 @@ export default class World {
                 serverBullet,
                 this._scene,
                 this._nodesWithShadow,
-                this._modelsMeshes.get(serverBullet.modelType)!
+                this._modelsMeshes.get("bullet")!
             );
             clientBullet.loadMeshes();
             this._bullets.set(serverBullet.id, clientBullet);
