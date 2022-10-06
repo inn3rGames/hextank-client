@@ -26,7 +26,7 @@ export default class Bullet {
         this._x = serverBullet.x;
         this._z = serverBullet.z;
         this.id = serverBullet.id;
-        this._radius = serverBullet.radius;
+        this._radius = serverBullet.collisionBody.radius;
         this._angle = serverBullet.angle;
         this._scene = scene;
         this._nodesWithShadow = nodesWithShadow;

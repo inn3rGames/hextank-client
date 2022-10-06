@@ -5,9 +5,9 @@ import { TransformNode } from "@babylonjs/core/Meshes/transformNode";
 export default class StaticCircleEntity {
     private _x: number;
     private _z: number;
+    private _radius: number;
     id: string;
     private _scene: Scene;
-    private _radius: number;
     private _nodesWithShadow: Map<string, TransformNode>;
 
     private _mesh: Array<Mesh>;
@@ -22,8 +22,8 @@ export default class StaticCircleEntity {
     ) {
         this._x = serverStaticCircleEntity.x;
         this._z = serverStaticCircleEntity.z;
+        this._radius = serverStaticCircleEntity.collisionBody.radius;
         this.id = serverStaticCircleEntity.id;
-        this._radius = serverStaticCircleEntity.radius;
         this._scene = scene;
         this._nodesWithShadow = nodesWithShadow;
         this._mesh = mesh;

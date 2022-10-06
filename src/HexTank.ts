@@ -13,6 +13,7 @@ export default class HexTank {
     private _x: number;
     private _z: number;
     private _angle: number;
+    private _radius: number;
     id: string;
     private _room: Room;
     private _scene: Scene;
@@ -59,6 +60,7 @@ export default class HexTank {
         this._x = serverHexTank.x;
         this._z = serverHexTank.z;
         this._angle = serverHexTank.angle;
+        this._radius = serverHexTank.collisionBody.radius;
         this.id = serverHexTank.id;
         this._room = room;
         this._scene = scene;
@@ -108,7 +110,7 @@ export default class HexTank {
         if (this._debug === true) {
             this._debugBody = MeshBuilder.CreateCylinder("debugBody", {
                 height: 0.01,
-                diameter: 1.4,
+                diameter: 2 * this._radius,
             });
             this._debugMaterial = new StandardMaterial(
                 "debugMaterial",
@@ -689,7 +691,7 @@ export default class HexTank {
             if (this._shoot === 1) {
                 this._commands.push("shootDown");
             }
-            
+
             if (this._up === 2) {
                 this._commands.push("upKeyUp");
                 this._up = 0;
