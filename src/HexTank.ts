@@ -496,6 +496,61 @@ export default class HexTank {
                 this._right = 2;
                 buttonRight.style.backgroundColor = upColor;
             });
+
+            const shootUpColor = "rgba(255, 0, 0, 0.25)";
+            const shootDownColor = "rgba(64, 0, 0, 0.25)";
+
+            const buttonShoot = document.createElement("div");
+            container.appendChild(buttonShoot);
+            buttonShoot.style.position = "fixed";
+            buttonShoot.style.width = "72px";
+            buttonShoot.style.height = "72px";
+            buttonShoot.style.right = "calc(7.5vw + 40px + 8px)";
+            buttonShoot.style.bottom = "calc(5vw + 120px + 8px)";
+            buttonShoot.style.backgroundColor = shootUpColor;
+            buttonShoot.style.borderRadius = "80px 80px 80px 80px";
+
+            buttonShoot.addEventListener("touchstart", (event) => {
+                event.preventDefault();
+                this._resetGamepadButtons();
+                this._defaultControls = true;
+                this._touchDidRun = true;
+                this._shoot = 1;
+                buttonShoot.style.backgroundColor = shootDownColor;
+            });
+            buttonShoot.addEventListener("touchend", (event) => {
+                event.preventDefault();
+                this._defaultControls = false;
+                this._shoot = 2;
+                buttonShoot.style.backgroundColor = shootUpColor;
+            });
+            buttonShoot.addEventListener("touchcancel", (event) => {
+                event.preventDefault();
+                this._defaultControls = false;
+                this._shoot = 2;
+                buttonShoot.style.backgroundColor = shootUpColor;
+            });
+
+            buttonShoot.addEventListener("mousedown", (event) => {
+                event.preventDefault();
+                this._resetGamepadButtons();
+                this._defaultControls = true;
+                this._touchDidRun = true;
+                this._shoot = 1;
+                buttonShoot.style.backgroundColor = shootDownColor;
+            });
+            buttonShoot.addEventListener("mouseup", (event) => {
+                event.preventDefault();
+                this._defaultControls = false;
+                this._shoot = 2;
+                buttonShoot.style.backgroundColor = shootUpColor;
+            });
+            buttonShoot.addEventListener("mouseleave", (event) => {
+                event.preventDefault();
+                this._defaultControls = false;
+                this._shoot = 2;
+                buttonShoot.style.backgroundColor = shootUpColor;
+            });
         }
 
         window.addEventListener("gamepadconnected", (event) => {
