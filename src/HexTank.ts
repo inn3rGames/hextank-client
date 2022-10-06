@@ -297,7 +297,7 @@ export default class HexTank {
             buttonUp.style.left = "7.5vw";
             buttonUp.style.bottom = "calc(5vw + 80px + 8px)";
             buttonUp.style.backgroundColor = upColor;
-            buttonUp.style.borderRadius = "80px 80px 12px 12px";
+            buttonUp.style.borderRadius = "40px 40px 12px 12px";
 
             buttonUp.addEventListener("touchstart", (event) => {
                 event.preventDefault();
@@ -349,7 +349,7 @@ export default class HexTank {
             buttonDown.style.left = "7.5vw";
             buttonDown.style.bottom = "5vw";
             buttonDown.style.backgroundColor = upColor;
-            buttonDown.style.borderRadius = "12px 12px 80px 80px";
+            buttonDown.style.borderRadius = "12px 12px 40px 40px";
 
             buttonDown.addEventListener("touchstart", (event) => {
                 event.preventDefault();
@@ -401,7 +401,7 @@ export default class HexTank {
             buttonLeft.style.right = "calc(7.5vw + 80px + 8px)";
             buttonLeft.style.bottom = "calc(5vw + 40px + 8px)";
             buttonLeft.style.backgroundColor = upColor;
-            buttonLeft.style.borderRadius = "80px 12px 12px 80px";
+            buttonLeft.style.borderRadius = "40px 12px 12px 40px";
 
             buttonLeft.addEventListener("touchstart", (event) => {
                 event.preventDefault();
@@ -453,7 +453,7 @@ export default class HexTank {
             buttonRight.style.right = "7.5vw";
             buttonRight.style.bottom = "calc(5vw + 40px + 8px)";
             buttonRight.style.backgroundColor = upColor;
-            buttonRight.style.borderRadius = "12px 80px 80px 12px";
+            buttonRight.style.borderRadius = "12px 40px 40px 12px";
 
             buttonRight.addEventListener("touchstart", (event) => {
                 event.preventDefault();
@@ -498,7 +498,7 @@ export default class HexTank {
             });
 
             const shootUpColor = "rgba(255, 0, 0, 0.25)";
-            const shootDownColor = "rgba(64, 0, 0, 0.25)";
+            const shootDownColor = "rgba(63, 0, 0, 0.25)";
 
             const buttonShoot = document.createElement("div");
             container.appendChild(buttonShoot);
@@ -508,7 +508,7 @@ export default class HexTank {
             buttonShoot.style.right = "calc(7.5vw + 40px + 8px)";
             buttonShoot.style.bottom = "calc(5vw + 120px + 8px)";
             buttonShoot.style.backgroundColor = shootUpColor;
-            buttonShoot.style.borderRadius = "80px 80px 80px 80px";
+            buttonShoot.style.borderRadius = "36px 36px 36px 36px";
 
             buttonShoot.addEventListener("touchstart", (event) => {
                 event.preventDefault();
