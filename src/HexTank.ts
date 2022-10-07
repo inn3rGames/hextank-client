@@ -399,7 +399,7 @@ export default class HexTank {
             buttonLeft.style.width = "80px";
             buttonLeft.style.height = "72px";
             buttonLeft.style.right = "calc(7.5vw + 80px + 8px)";
-            buttonLeft.style.bottom = "calc(5vw + 40px + 8px)";
+            buttonLeft.style.bottom = "calc(5vw + 8px)";
             buttonLeft.style.backgroundColor = upColor;
             buttonLeft.style.borderRadius = "40px 12px 12px 40px";
 
@@ -451,7 +451,7 @@ export default class HexTank {
             buttonRight.style.width = "80px";
             buttonRight.style.height = "72px";
             buttonRight.style.right = "7.5vw";
-            buttonRight.style.bottom = "calc(5vw + 40px + 8px)";
+            buttonRight.style.bottom = "calc(5vw + 8px)";
             buttonRight.style.backgroundColor = upColor;
             buttonRight.style.borderRadius = "12px 40px 40px 12px";
 
@@ -506,7 +506,7 @@ export default class HexTank {
             buttonShoot.style.width = "72px";
             buttonShoot.style.height = "72px";
             buttonShoot.style.right = "calc(7.5vw + 40px + 8px)";
-            buttonShoot.style.bottom = "calc(5vw + 120px + 8px)";
+            buttonShoot.style.bottom = "calc(5vw + 80px + 8px)";
             buttonShoot.style.backgroundColor = shootUpColor;
             buttonShoot.style.borderRadius = "36px 36px 36px 36px";
 

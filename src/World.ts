@@ -146,7 +146,7 @@ export default class World {
         this._scene.performancePriority = ScenePerformancePriority.Intermediate;
         this._scene.skipFrustumClipping = true;
 
-        this._options = new SceneOptimizerOptions(60, 500);
+        this._options = new SceneOptimizerOptions(60, 1000);
 
         this._options.optimizations.push(new ShadowsOptimization());
 
