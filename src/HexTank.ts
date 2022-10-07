@@ -683,16 +683,31 @@ export default class HexTank {
                         currentGamepadList[i] !== null
                     ) {
                         if (currentGamepadList[i]!.axes.length >= 4) {
-                        }
-                        for (
-                            let j = 0;
-                            j < currentGamepadList[i]!.axes.length;
-                            j++
-                        ) {
-                            if (j === 1 || j === 2) {
+                            for (
+                                let j = 0;
+                                j < currentGamepadList[i]!.axes.length;
+                                j++
+                            ) {
+                                if (j === 1 || j === 2) {
+                                    if (
+                                        Math.abs(
+                                            currentGamepadList[i]!.axes[j]
+                                        ) > 0.5
+                                    ) {
+                                        this._gamepadDidRun = true;
+                                        currentGamepad = currentGamepadList[i]!;
+                                    }
+                                }
+                            }
+
+                            for (
+                                let k = 0;
+                                k < currentGamepadList[i]!.buttons.length;
+                                k++
+                            ) {
                                 if (
-                                    Math.abs(currentGamepadList[i]!.axes[j]) >
-                                    0.5
+                                    currentGamepadList[i]!.buttons[k]
+                                        .pressed === true
                                 ) {
                                     this._gamepadDidRun = true;
                                     currentGamepad = currentGamepadList[i]!;
@@ -723,6 +738,17 @@ export default class HexTank {
                         this._right = 1;
                     } else if (this._right === 1) {
                         this._right = 2;
+                    }
+
+                    if (
+                        currentGamepad!.buttons[4].pressed === true ||
+                        currentGamepad!.buttons[5].pressed === true ||
+                        currentGamepad!.buttons[6].pressed === true ||
+                        currentGamepad!.buttons[7].pressed === true
+                    ) {
+                        this._shoot = 1;
+                    } else if (this._shoot === 1) {
+                        this._shoot = 2;
                     }
                 }
             }
