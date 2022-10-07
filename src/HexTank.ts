@@ -503,12 +503,12 @@ export default class HexTank {
             const buttonShoot = document.createElement("div");
             container.appendChild(buttonShoot);
             buttonShoot.style.position = "fixed";
-            buttonShoot.style.width = "72px";
-            buttonShoot.style.height = "72px";
-            buttonShoot.style.right = "calc(7.5vw + 40px + 8px)";
+            buttonShoot.style.width = "80px";
+            buttonShoot.style.height = "80px";
+            buttonShoot.style.right = "calc(7.5vw + 40px + 4px)";
             buttonShoot.style.bottom = "calc(5vw + 80px + 8px)";
             buttonShoot.style.backgroundColor = shootUpColor;
-            buttonShoot.style.borderRadius = "36px 36px 36px 36px";
+            buttonShoot.style.borderRadius = "40px 40px 40px 40px";
 
             buttonShoot.addEventListener("touchstart", (event) => {
                 event.preventDefault();
