@@ -119,7 +119,7 @@ export default class HexTank {
             height: 2,
         });
         this._healthPlane.billboardMode = Mesh.BILLBOARDMODE_ALL;
-        this._healthPlane.position.y = 1.8;
+        this._healthPlane.position.y = 1.9;
         this._healthPlane.setParent(this._bodyNode);
 
         this._healthUI = AdvancedDynamicTexture.CreateForMesh(
@@ -129,22 +129,50 @@ export default class HexTank {
             false
         );
 
+        this._healthStroke = new Rectangle();
+        this._healthStroke.widthInPixels = 732;
+        this._healthStroke.heightInPixels = 152;
+        this._healthStroke.cornerRadius = 70;
+        this._healthStroke.thickness = 15;
+        this._healthStroke.color = "#316E00";
+        this._healthUI.addControl(this._healthStroke);
+
         this._healthBar = new Rectangle();
         this._healthBar.widthInPixels = 700;
-        this._healthBar.heightInPixels = 80;
+        this._healthBar.heightInPixels = 120;
         this._healthBar.transformCenterX = 0;
         this._healthBar.thickness = 0;
         this._healthBar.alpha = 0.75;
-        this._healthBar.background = "#00AA00";
-        this._healthUI.addControl(this._healthBar);
+        this._healthBar.background = "#6DF200";
+        this._healthStroke.addControl(this._healthBar);
 
-        this._healthStroke = new Rectangle();
-        this._healthStroke.widthInPixels = 732;
-        this._healthStroke.heightInPixels = 100;
-        this._healthStroke.cornerRadius = 40;
-        this._healthStroke.thickness = 15;
-        this._healthStroke.color = "#000000";
-        this._healthUI.addControl(this._healthStroke);
+        const healthSeparator1 = new Rectangle();
+        healthSeparator1.widthInPixels = 15;
+        healthSeparator1.heightInPixels = 152;
+        healthSeparator1.leftInPixels = -350 + 700 * 0.2;
+        healthSeparator1.background = "#316E00";
+        this._healthStroke.addControl(healthSeparator1);
+
+        const healthSeparator2 = new Rectangle();
+        healthSeparator2.widthInPixels = 15;
+        healthSeparator2.heightInPixels = 152;
+        healthSeparator2.leftInPixels = -350 + 700 * 0.4;
+        healthSeparator2.background = "#316E00";
+        this._healthStroke.addControl(healthSeparator2);
+
+        const healthSeparator3 = new Rectangle();
+        healthSeparator3.widthInPixels = 15;
+        healthSeparator3.heightInPixels = 152;
+        healthSeparator3.leftInPixels = -350 + 700 * 0.6;
+        healthSeparator3.background = "#316E00";
+        this._healthStroke.addControl(healthSeparator3);
+
+        const healthSeparator4 = new Rectangle();
+        healthSeparator4.widthInPixels = 15;
+        healthSeparator4.heightInPixels = 152;
+        healthSeparator4.leftInPixels = -350 + 700 * 0.8;
+        healthSeparator4.background = "#316E00";
+        this._healthStroke.addControl(healthSeparator4);
 
         if (this._debug === true) {
             this._debugBody = MeshBuilder.CreateCylinder("debugBody", {
