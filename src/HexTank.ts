@@ -7,6 +7,8 @@ import { InstancedMesh } from "@babylonjs/core/Meshes/instancedMesh";
 import { TransformNode } from "@babylonjs/core/Meshes/transformNode";
 import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
 import { Color3 } from "@babylonjs/core/Maths/math.color";
+import { AdvancedDynamicTexture } from "@babylonjs/gui/2D/advancedDynamicTexture";
+import { Rectangle } from "@babylonjs/gui/2D/controls/rectangle";
 import isMobile from "./Utilities";
 
 export default class HexTank {
@@ -25,6 +27,11 @@ export default class HexTank {
 
     private _bodyNode!: TransformNode;
     private _jetNodes: Array<TransformNode> = [];
+
+    private _healthPlane!: Mesh;
+    private _healthUI!: AdvancedDynamicTexture;
+    private _healthBar!: Rectangle;
+    private _healthStroke!: Rectangle;
 
     private _linearInperpolationPercent: number = 0.2;
 
@@ -106,6 +113,38 @@ export default class HexTank {
         this._loadJet("jetFrontRight");
         this._loadJet("jetBackLeft");
         this._loadJet("jetBackRight");
+
+        this._healthPlane = MeshBuilder.CreatePlane("plane", {
+            width: 2,
+            height: 2,
+        });
+        this._healthPlane.billboardMode = Mesh.BILLBOARDMODE_ALL;
+        this._healthPlane.position.y = 1.8;
+        this._healthPlane.setParent(this._bodyNode);
+
+        this._healthUI = AdvancedDynamicTexture.CreateForMesh(
+            this._healthPlane,
+            1024,
+            1024,
+            false
+        );
+
+        this._healthBar = new Rectangle();
+        this._healthBar.widthInPixels = 700;
+        this._healthBar.heightInPixels = 80;
+        this._healthBar.transformCenterX = 0;
+        this._healthBar.thickness = 0;
+        this._healthBar.alpha = 0.75;
+        this._healthBar.background = "#00AA00";
+        this._healthUI.addControl(this._healthBar);
+
+        this._healthStroke = new Rectangle();
+        this._healthStroke.widthInPixels = 732;
+        this._healthStroke.heightInPixels = 100;
+        this._healthStroke.cornerRadius = 40;
+        this._healthStroke.thickness = 15;
+        this._healthStroke.color = "#000000";
+        this._healthUI.addControl(this._healthStroke);
 
         if (this._debug === true) {
             this._debugBody = MeshBuilder.CreateCylinder("debugBody", {
@@ -947,6 +986,12 @@ export default class HexTank {
             flame.scaling.y = this._linearInterpolation(
                 flame.scaling.y,
                 serverHexTank.jetsFlameScale,
+                this._linearInperpolationPercent
+            );
+
+            this._healthBar.scaleX = this._linearInterpolation(
+                this._healthBar.scaleX,
+                serverHexTank.health / 5,
                 this._linearInperpolationPercent
             );
         }
