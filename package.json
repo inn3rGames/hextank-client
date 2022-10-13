@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/inn3rGames/hextank-client#readme",
   "dependencies": {
-    "@babylonjs/core": "^5.24.0",
+    "@babylonjs/core": "^5.25.0",
     "@babylonjs/gui": "^5.24.0",
     "@babylonjs/loaders": "^5.24.0",
     "colyseus.js": "^0.14.13"
