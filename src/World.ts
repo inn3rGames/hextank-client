@@ -29,6 +29,7 @@ import { Texture } from "@babylonjs/core/Materials/Textures/texture";
 import { AdvancedDynamicTexture } from "@babylonjs/gui/2D/advancedDynamicTexture";
 import { TextBlock } from "@babylonjs/gui/2D/controls/textBlock";
 import { Logger } from "@babylonjs/core/Misc/logger";
+import { ParticleSystem } from "@babylonjs/core/Particles/particleSystem";
 import "@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent";
 import "@babylonjs/core/Culling/ray";
 import "@babylonjs/loaders/glTF/2.0/";
@@ -43,6 +44,7 @@ import skyboxNx from "./assets/textures/skybox/skybox_nx.png";
 import skyboxNy from "./assets/textures/skybox/skybox_ny.png";
 import skyboxNz from "./assets/textures/skybox/skybox_nz.png";
 import sand from "./assets/textures/sand.png";
+import bulletParticle from "./assets/textures/bulletParticle.png";
 
 import body from "./assets/models/hexTankBody.glb";
 import jet from "./assets/models/hexTankJet.glb";
@@ -500,11 +502,11 @@ export default class World {
             this._bullets.set(serverBullet.id, clientBullet);
         };
 
-        this._room.state.bullets.onRemove = (bullet: any) => {
-            if (typeof bullet !== "undefined") {
-                if (typeof this._bullets.get(bullet.id) !== "undefined") {
-                    this._bullets.get(bullet.id)!.deleteMeshes();
-                    this._bullets.delete(bullet.id);
+        this._room.state.bullets.onRemove = (serverBullet: any) => {
+            if (typeof serverBullet !== "undefined") {
+                if (typeof this._bullets.get(serverBullet.id) !== "undefined") {
+                    this._bullets.get(serverBullet.id)!.deleteMeshes();
+                    this._bullets.delete(serverBullet.id);
                 }
             }
         };
@@ -538,6 +540,27 @@ export default class World {
         this._setStaticCirclesCallbacks();
         this._setStaticRetanglesCallbacks();
         this._setBulletsCallbacks();
+
+        this._room.onMessage("bulletExplosion", (message) => {
+            const explosionLocationX = message.x as number;
+            const explosionLocationZ = message.z as number;
+
+            const particles = new ParticleSystem("particles", 100, this._scene);
+            particles.particleTexture = new Texture(bulletParticle);
+            particles.disposeOnStop = true;
+
+            particles.emitter = new Vector3(
+                explosionLocationX,
+                2,
+                explosionLocationZ
+            );
+            particles.manualEmitCount = 100;
+            particles.createSphereEmitter(1);
+
+            particles.blendMode = 4;
+
+            particles.start();
+        });
 
         window.addEventListener("focus", () => {
             this._focusRegained();
