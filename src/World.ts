@@ -45,6 +45,7 @@ import skyboxNy from "./assets/textures/skybox/skybox_ny.png";
 import skyboxNz from "./assets/textures/skybox/skybox_nz.png";
 import sand from "./assets/textures/sand.png";
 import bulletParticle from "./assets/textures/bulletParticle.png";
+import hexTankParticle from "./assets/textures/hexTankParticle.png";
 
 import body from "./assets/models/hexTankBody.glb";
 import jet from "./assets/models/hexTankJet.glb";
@@ -518,7 +519,7 @@ export default class World {
             const explosionLocationZ = message.z as number;
 
             const bulletExplosion = new ParticleSystem(
-                "particles",
+                "bulletParticles",
                 25,
                 this._scene
             );
@@ -559,6 +560,53 @@ export default class World {
         });
     }
 
+    private _setHexTankExplosions() {
+        this._room.onMessage("hexTankExplosion", (message) => {
+            const explosionLocationX = message.x as number;
+            const explosionLocationZ = message.z as number;
+
+            const hexTankExplosion = new ParticleSystem(
+                "hexTankParticles",
+                25,
+                this._scene
+            );
+            hexTankExplosion.particleTexture = new Texture(hexTankParticle);
+
+            hexTankExplosion.emitter = new Vector3(
+                explosionLocationX,
+                1.48,
+                explosionLocationZ
+            );
+            hexTankExplosion.manualEmitCount = 25;
+            hexTankExplosion.createSphereEmitter(1);
+
+            hexTankExplosion.blendMode = ParticleSystem.BLENDMODE_STANDARD;
+
+            hexTankExplosion.maxSize = 0;
+            hexTankExplosion.minSize = 0;
+
+            hexTankExplosion.updateFunction = (particles) => {
+                for (let i = 0; i < particles.length; i++) {
+                    const particle = particles[i];
+
+                    particle.age += 1;
+                    particle.size += 0.1;
+                    particle.color = new Color4(
+                        1,
+                        1,
+                        1,
+                        Math.max(1 - particle.age / 200, 0)
+                    );
+                    if (particle.age >= 200) {
+                        hexTankExplosion.dispose();
+                    }
+                }
+            };
+
+            hexTankExplosion.start();
+        });
+    }
+
     private _focusRegained() {
         this._resetElapsedTime = true;
 
@@ -589,6 +637,7 @@ export default class World {
         this._setBulletsCallbacks();
 
         this._setBulletExplosions();
+        this._setHexTankExplosions();
 
         window.addEventListener("focus", () => {
             this._focusRegained();
