@@ -37,13 +37,13 @@ import "@babylonjs/core/Materials/Textures/Loaders/ktxTextureLoader";
 
 import { Client, Room } from "colyseus.js";
 
-import skyboxPx from "./assets/textures/skybox/skybox_px.png";
-import skyboxPy from "./assets/textures/skybox/skybox_py.png";
-import skyboxPz from "./assets/textures/skybox/skybox_pz.png";
-import skyboxNx from "./assets/textures/skybox/skybox_nx.png";
-import skyboxNy from "./assets/textures/skybox/skybox_ny.png";
-import skyboxNz from "./assets/textures/skybox/skybox_nz.png";
-import sand from "./assets/textures/sand.png";
+import skyboxPx from "./assets/textures/skybox/skybox_px.jpg";
+import skyboxPy from "./assets/textures/skybox/skybox_py.jpg";
+import skyboxPz from "./assets/textures/skybox/skybox_pz.jpg";
+import skyboxNx from "./assets/textures/skybox/skybox_nx.jpg";
+import skyboxNy from "./assets/textures/skybox/skybox_ny.jpg";
+import skyboxNz from "./assets/textures/skybox/skybox_nz.jpg";
+import sand from "./assets/textures/sand.jpg";
 import bulletParticle from "./assets/textures/bulletParticle.png";
 import hexTankParticle from "./assets/textures/hexTankParticle.png";
 
