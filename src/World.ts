@@ -33,7 +33,7 @@ import { ParticleSystem } from "@babylonjs/core/Particles/particleSystem";
 import "@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent";
 import "@babylonjs/core/Culling/ray";
 import "@babylonjs/loaders/glTF/2.0/";
-import "@babylonjs/core";
+import "@babylonjs/core/Materials/Textures/Loaders/ktxTextureLoader";
 
 import { Client, Room } from "colyseus.js";
 
