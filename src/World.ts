@@ -29,7 +29,6 @@ import { Texture } from "@babylonjs/core/Materials/Textures/texture";
 import { AdvancedDynamicTexture } from "@babylonjs/gui/2D/advancedDynamicTexture";
 import { TextBlock } from "@babylonjs/gui/2D/controls/textBlock";
 import { Logger } from "@babylonjs/core/Misc/logger";
-import { ParticleSystem } from "@babylonjs/core/Particles/particleSystem";
 import "@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent";
 import "@babylonjs/core/Culling/ray";
 import "@babylonjs/loaders/glTF/2.0/";
@@ -44,8 +43,6 @@ import skyboxNx from "./assets/textures/skybox/skybox_nx.jpg";
 import skyboxNy from "./assets/textures/skybox/skybox_ny.jpg";
 import skyboxNz from "./assets/textures/skybox/skybox_nz.jpg";
 import sand from "./assets/textures/sand.jpg";
-import bulletParticle from "./assets/textures/bulletParticle.png";
-import hexTankParticle from "./assets/textures/hexTankParticle.png";
 
 import body from "./assets/models/hexTankBody.glb";
 import jet from "./assets/models/hexTankJet.glb";
@@ -58,11 +55,14 @@ import rock1 from "./assets/models/rock1.glb";
 import rock2 from "./assets/models/rock2.glb";
 import rock3 from "./assets/models/rock3.glb";
 import bullet from "./assets/models/bullet.glb";
+import bulletExplosion from "./assets/models/bulletExplosion.glb";
+import hexTankExplosion from "./assets/models/hexTankExplosion.glb";
 
 import HexTank from "./HexTank";
 import StaticCircleEntity from "./StaticCircleEntity";
 import StaticRectangleEntity from "./StaticRectangleEntity";
 import Bullet from "./Bullet";
+import Explosion from "./Explosion";
 
 export default class World {
     private _modelsMeshes: Map<string, Array<Mesh>> = new Map();
@@ -107,6 +107,7 @@ export default class World {
     private _staticRectangleEntities: Map<string, StaticRectangleEntity> =
         new Map();
     private _bullets: Map<string, Bullet> = new Map();
+    private _explosions: Map<string, Explosion> = new Map();
 
     private _client!: Client;
     private _room!: Room;
@@ -218,6 +219,8 @@ export default class World {
         await this._loadMesh(rock2, "rock2");
         await this._loadMesh(rock3, "rock3");
         await this._loadMesh(bullet, "bullet");
+        await this._loadMesh(bulletExplosion, "bulletExplosion");
+        await this._loadMesh(hexTankExplosion, "hexTankExplosion");
     }
 
     async initWorld() {
@@ -514,96 +517,30 @@ export default class World {
     }
 
     private _setBulletExplosions() {
-        this._room.onMessage("bulletExplosion", (message) => {
-            const explosionLocationX = message.x as number;
-            const explosionLocationZ = message.z as number;
-
-            const bulletExplosion = new ParticleSystem(
-                "bulletParticles",
-                25,
-                this._scene
+        this._room.onMessage("bulletExplosion", (serverMessage) => {
+            const currentBulletExplosion = new Explosion(
+                serverMessage,
+                this._scene,
+                this._modelsMeshes.get("bulletExplosion")!,
+                "bulletExplosion"
             );
-            bulletExplosion.particleTexture = new Texture(bulletParticle);
+            currentBulletExplosion.loadMeshes();
 
-            bulletExplosion.emitter = new Vector3(
-                explosionLocationX,
-                1.48,
-                explosionLocationZ
-            );
-            bulletExplosion.manualEmitCount = 25;
-            bulletExplosion.createSphereEmitter(0.5);
-
-            bulletExplosion.blendMode = ParticleSystem.BLENDMODE_MULTIPLYADD;
-
-            bulletExplosion.maxSize = 0;
-            bulletExplosion.minSize = 0;
-
-            bulletExplosion.updateFunction = (particles) => {
-                for (let i = 0; i < particles.length; i++) {
-                    const particle = particles[i];
-
-                    particle.age += 1;
-                    particle.size += 0.05;
-                    particle.color = new Color4(
-                        1,
-                        1,
-                        1,
-                        Math.max(1 - particle.age / 100, 0)
-                    );
-                    if (particle.age >= 100) {
-                        bulletExplosion.dispose();
-                    }
-                }
-            };
-
-            bulletExplosion.start();
+            this._explosions.set(serverMessage.id, currentBulletExplosion);
         });
     }
 
     private _setHexTankExplosions() {
-        this._room.onMessage("hexTankExplosion", (message) => {
-            const explosionLocationX = message.x as number;
-            const explosionLocationZ = message.z as number;
-
-            const hexTankExplosion = new ParticleSystem(
-                "hexTankParticles",
-                25,
-                this._scene
+        this._room.onMessage("hexTankExplosion", (serverMessage) => {
+            const currenthexTankExplosion = new Explosion(
+                serverMessage,
+                this._scene,
+                this._modelsMeshes.get("hexTankExplosion")!,
+                "hexTankExplosion"
             );
-            hexTankExplosion.particleTexture = new Texture(hexTankParticle);
+            currenthexTankExplosion.loadMeshes();
 
-            hexTankExplosion.emitter = new Vector3(
-                explosionLocationX,
-                1.48,
-                explosionLocationZ
-            );
-            hexTankExplosion.manualEmitCount = 25;
-            hexTankExplosion.createSphereEmitter(1);
-
-            hexTankExplosion.blendMode = ParticleSystem.BLENDMODE_STANDARD;
-
-            hexTankExplosion.maxSize = 0;
-            hexTankExplosion.minSize = 0;
-
-            hexTankExplosion.updateFunction = (particles) => {
-                for (let i = 0; i < particles.length; i++) {
-                    const particle = particles[i];
-
-                    particle.age += 1;
-                    particle.size += 0.1;
-                    particle.color = new Color4(
-                        1,
-                        1,
-                        1,
-                        Math.max(1 - particle.age / 200, 0)
-                    );
-                    if (particle.age >= 200) {
-                        hexTankExplosion.dispose();
-                    }
-                }
-            };
-
-            hexTankExplosion.start();
+            this._explosions.set(serverMessage.id, currenthexTankExplosion);
         });
     }
 
@@ -700,6 +637,28 @@ export default class World {
         }
     }
 
+    private _updateExplosions() {
+        this._explosions.forEach((value, key) => {
+            const explosion = value;
+
+            explosion.update();
+
+            if (explosion.type === "bulletExplosion") {
+                if (explosion.age >= 100) {
+                    explosion.deleteMeshes();
+                    this._explosions.delete(key);
+                }
+            }
+
+            if (explosion.type === "hexTankExplosion") {
+                if (explosion.age >= 200) {
+                    explosion.deleteMeshes();
+                    this._explosions.delete(key);
+                }
+            }
+        });
+    }
+
     private _fixedUpdate() {
         this._torus.rotation.x += 0.01;
         this._torus.rotation.z += 0.02;
@@ -707,6 +666,7 @@ export default class World {
         this._updateHexTanks();
         this._updateBullets();
         this._updateShadows();
+        this._updateExplosions();
         this._scene.render();
     }
 
