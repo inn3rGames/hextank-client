@@ -76,9 +76,11 @@ export default class HexTank {
         this._bodyMesh = bodyMesh;
         this._jetMesh = jetMesh;
         this._debug = debug;
+
+        this._loadMeshes();
     }
 
-    loadMeshes() {
+    private _loadMeshes() {
         this._bodyNode = new TransformNode("body" + this.id, this._scene);
         this._bodyNode.rotationQuaternion = null;
         this._bodyNode.rotation.setAll(0);

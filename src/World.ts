@@ -103,9 +103,6 @@ export default class World {
     private _fpsText!: TextBlock;
 
     private _hexTanks: Map<string, HexTank> = new Map();
-    private _staticCircleEntities: Map<string, StaticCircleEntity> = new Map();
-    private _staticRectangleEntities: Map<string, StaticRectangleEntity> =
-        new Map();
     private _bullets: Map<string, Bullet> = new Map();
     private _explosions: Map<string, Explosion> = new Map();
 
@@ -223,7 +220,7 @@ export default class World {
         await this._loadMesh(hexTankExplosion, "hexTankExplosion");
     }
 
-    async initWorld() {
+    async loadWorld() {
         await this._loadMeshes();
 
         this._camera = new ArcRotateCamera(
@@ -355,6 +352,682 @@ export default class World {
         });
     }
 
+    createWorldMap() {
+        const collisionBodyOffset = 1.03;
+
+        const wallWidth = this._worldSize / 5;
+        const wallHeight = 10;
+        for (let i = 1; i <= 5; i++) {
+            new StaticRectangleEntity(
+                -this._worldSize * 0.5 + i * wallWidth - wallWidth * 0.5,
+                -this._worldSize * 0.5 - wallHeight * 0.5,
+                wallWidth * collisionBodyOffset,
+                wallHeight * collisionBodyOffset,
+                "wall1" + i,
+                this._modelsMeshes.get("wall")!,
+                this._scene,
+                this._nodesWithShadow
+            );
+
+            new StaticRectangleEntity(
+                this._worldSize * 0.5 + wallHeight * 0.5,
+                -this._worldSize * 0.5 + i * wallWidth - wallWidth * 0.5,
+                wallHeight * collisionBodyOffset,
+                wallWidth * collisionBodyOffset,
+                "wall2" + i,
+                this._modelsMeshes.get("wall")!,
+                this._scene,
+                this._nodesWithShadow
+            );
+
+            new StaticRectangleEntity(
+                this._worldSize * 0.5 - i * wallWidth + wallWidth * 0.5,
+                this._worldSize * 0.5 + wallHeight * 0.5,
+                wallWidth * collisionBodyOffset,
+                wallHeight * collisionBodyOffset,
+                "wall3" + i,
+                this._modelsMeshes.get("wall")!,
+                this._scene,
+                this._nodesWithShadow
+            );
+
+            new StaticRectangleEntity(
+                -this._worldSize * 0.5 - wallHeight * 0.5,
+                this._worldSize * 0.5 - i * wallWidth + wallWidth * 0.5,
+                wallHeight * collisionBodyOffset,
+                wallWidth * collisionBodyOffset,
+                "wall4" + i,
+                this._modelsMeshes.get("wall")!,
+                this._scene,
+                this._nodesWithShadow
+            );
+        }
+
+        new StaticRectangleEntity(
+            0,
+            Math.sqrt(3) * 32 * 0.5,
+            50 * collisionBodyOffset,
+            50 * collisionBodyOffset,
+            "pyramid1",
+            this._modelsMeshes.get("pyramid")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticRectangleEntity(
+            32,
+            -Math.sqrt(3) * 32 * 0.5,
+            50 * collisionBodyOffset,
+            50 * collisionBodyOffset,
+            "pyramid2",
+            this._modelsMeshes.get("pyramid")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticRectangleEntity(
+            -32,
+            -Math.sqrt(3) * 32 * 0.5,
+            50 * collisionBodyOffset,
+            50 * collisionBodyOffset,
+            "pyramid3",
+            this._modelsMeshes.get("pyramid")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticCircleEntity(
+            0,
+            -110,
+            43.75 * collisionBodyOffset,
+            "oasis1",
+            this._modelsMeshes.get("oasis")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticRectangleEntity(
+            0,
+            150,
+            20 * collisionBodyOffset,
+            12 * collisionBodyOffset,
+            "building1",
+            this._modelsMeshes.get("building1")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticRectangleEntity(
+            -25,
+            150,
+            20 * collisionBodyOffset,
+            12 * collisionBodyOffset,
+            "building2",
+            this._modelsMeshes.get("building1")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticRectangleEntity(
+            25,
+            150,
+            20 * collisionBodyOffset,
+            12 * collisionBodyOffset,
+            "building3",
+            this._modelsMeshes.get("building1")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticRectangleEntity(
+            -50,
+            150,
+            20 * collisionBodyOffset,
+            12 * collisionBodyOffset,
+            "building4",
+            this._modelsMeshes.get("building1")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticRectangleEntity(
+            50,
+            150,
+            20 * collisionBodyOffset,
+            12 * collisionBodyOffset,
+            "building5",
+            this._modelsMeshes.get("building1")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticRectangleEntity(
+            -75,
+            150,
+            20 * collisionBodyOffset,
+            12 * collisionBodyOffset,
+            "building6",
+            this._modelsMeshes.get("building1")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticRectangleEntity(
+            75,
+            150,
+            20 * collisionBodyOffset,
+            12 * collisionBodyOffset,
+            "building7",
+            this._modelsMeshes.get("building1")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticRectangleEntity(
+            0,
+            110,
+            20 * collisionBodyOffset,
+            12 * collisionBodyOffset,
+            "building8",
+            this._modelsMeshes.get("building1")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticRectangleEntity(
+            -25,
+            110,
+            20 * collisionBodyOffset,
+            12 * collisionBodyOffset,
+            "building9",
+            this._modelsMeshes.get("building1")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticRectangleEntity(
+            25,
+            110,
+            20 * collisionBodyOffset,
+            12 * collisionBodyOffset,
+            "building10",
+            this._modelsMeshes.get("building1")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticRectangleEntity(
+            -50,
+            110,
+            20 * collisionBodyOffset,
+            12 * collisionBodyOffset,
+            "building11",
+            this._modelsMeshes.get("building1")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticRectangleEntity(
+            50,
+            110,
+            20 * collisionBodyOffset,
+            12 * collisionBodyOffset,
+            "building12",
+            this._modelsMeshes.get("building1")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticRectangleEntity(
+            -75,
+            110,
+            20 * collisionBodyOffset,
+            12 * collisionBodyOffset,
+            "building13",
+            this._modelsMeshes.get("building1")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticRectangleEntity(
+            75,
+            110,
+            20 * collisionBodyOffset,
+            12 * collisionBodyOffset,
+            "building14",
+            this._modelsMeshes.get("building1")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticRectangleEntity(
+            0,
+            190,
+            20 * collisionBodyOffset,
+            12 * collisionBodyOffset,
+            "building15",
+            this._modelsMeshes.get("building1")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticRectangleEntity(
+            -25,
+            190,
+            20 * collisionBodyOffset,
+            12 * collisionBodyOffset,
+            "building16",
+            this._modelsMeshes.get("building1")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticRectangleEntity(
+            25,
+            190,
+            20 * collisionBodyOffset,
+            12 * collisionBodyOffset,
+            "building17",
+            this._modelsMeshes.get("building1")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticRectangleEntity(
+            -50,
+            190,
+            20 * collisionBodyOffset,
+            12 * collisionBodyOffset,
+            "building18",
+            this._modelsMeshes.get("building1")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticRectangleEntity(
+            50,
+            190,
+            20 * collisionBodyOffset,
+            12 * collisionBodyOffset,
+            "building19",
+            this._modelsMeshes.get("building1")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticRectangleEntity(
+            -75,
+            190,
+            20 * collisionBodyOffset,
+            12 * collisionBodyOffset,
+            "building20",
+            this._modelsMeshes.get("building1")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticRectangleEntity(
+            75,
+            190,
+            20 * collisionBodyOffset,
+            12 * collisionBodyOffset,
+            "building21",
+            this._modelsMeshes.get("building1")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticRectangleEntity(
+            0,
+            130,
+            12 * collisionBodyOffset,
+            12 * collisionBodyOffset,
+            "building22",
+            this._modelsMeshes.get("building2")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticRectangleEntity(
+            0,
+            170,
+            12 * collisionBodyOffset,
+            12 * collisionBodyOffset,
+            "building23",
+            this._modelsMeshes.get("building2")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticRectangleEntity(
+            50,
+            130,
+            12 * collisionBodyOffset,
+            12 * collisionBodyOffset,
+            "building24",
+            this._modelsMeshes.get("building2")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticRectangleEntity(
+            50,
+            170,
+            12 * collisionBodyOffset,
+            12 * collisionBodyOffset,
+            "building25",
+            this._modelsMeshes.get("building2")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticRectangleEntity(
+            -50,
+            130,
+            12 * collisionBodyOffset,
+            12 * collisionBodyOffset,
+            "building26",
+            this._modelsMeshes.get("building2")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticRectangleEntity(
+            -50,
+            170,
+            12 * collisionBodyOffset,
+            12 * collisionBodyOffset,
+            "building27",
+            this._modelsMeshes.get("building2")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticRectangleEntity(
+            75,
+            130,
+            12 * collisionBodyOffset,
+            20 * collisionBodyOffset,
+            "building28",
+            this._modelsMeshes.get("building1")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticRectangleEntity(
+            75,
+            170,
+            12 * collisionBodyOffset,
+            20 * collisionBodyOffset,
+            "building29",
+            this._modelsMeshes.get("building1")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticRectangleEntity(
+            -75,
+            130,
+            12 * collisionBodyOffset,
+            20 * collisionBodyOffset,
+            "building30",
+            this._modelsMeshes.get("building1")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticRectangleEntity(
+            -75,
+            170,
+            12 * collisionBodyOffset,
+            20 * collisionBodyOffset,
+            "building31",
+            this._modelsMeshes.get("building1")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticCircleEntity(
+            -150,
+            -100,
+            12.25 * collisionBodyOffset,
+            "rock1",
+            this._modelsMeshes.get("rock1")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticCircleEntity(
+            -140,
+            -90,
+            12.25 * collisionBodyOffset,
+            "rock2",
+            this._modelsMeshes.get("rock2")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticCircleEntity(
+            -160,
+            -100,
+            12.25 * collisionBodyOffset,
+            "rock3",
+            this._modelsMeshes.get("rock3")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticCircleEntity(
+            -100,
+            -210,
+            12.25 * collisionBodyOffset,
+            "rock4",
+            this._modelsMeshes.get("rock1")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticCircleEntity(
+            -100,
+            -190,
+            12.25 * collisionBodyOffset,
+            "rock5",
+            this._modelsMeshes.get("rock2")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticCircleEntity(
+            -100,
+            -200,
+            12.25 * collisionBodyOffset,
+            "rock6",
+            this._modelsMeshes.get("rock3")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticCircleEntity(
+            -170,
+            120,
+            12.25 * collisionBodyOffset,
+            "rock7",
+            this._modelsMeshes.get("rock1")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticCircleEntity(
+            -160,
+            120,
+            12.25 * collisionBodyOffset,
+            "rock8",
+            this._modelsMeshes.get("rock2")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticCircleEntity(
+            -150,
+            120,
+            12.25 * collisionBodyOffset,
+            "rock9",
+            this._modelsMeshes.get("rock3")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticCircleEntity(
+            60,
+            -210,
+            12.25 * collisionBodyOffset,
+            "rock10",
+            this._modelsMeshes.get("rock1")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticCircleEntity(
+            50,
+            -210,
+            12.25 * collisionBodyOffset,
+            "rock11",
+            this._modelsMeshes.get("rock2")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticCircleEntity(
+            70,
+            -210,
+            12.25 * collisionBodyOffset,
+            "rock12",
+            this._modelsMeshes.get("rock3")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticCircleEntity(
+            190,
+            170,
+            12.25 * collisionBodyOffset,
+            "rock13",
+            this._modelsMeshes.get("rock1")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticCircleEntity(
+            200,
+            180,
+            12.25 * collisionBodyOffset,
+            "rock14",
+            this._modelsMeshes.get("rock2")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticCircleEntity(
+            210,
+            170,
+            12.25 * collisionBodyOffset,
+            "rock15",
+            this._modelsMeshes.get("rock3")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticCircleEntity(
+            190,
+            -50,
+            12.25 * collisionBodyOffset,
+            "rock16",
+            this._modelsMeshes.get("rock1")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticCircleEntity(
+            170,
+            -50,
+            12.25 * collisionBodyOffset,
+            "rock17",
+            this._modelsMeshes.get("rock2")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticCircleEntity(
+            180,
+            -50,
+            12.25 * collisionBodyOffset,
+            "rock18",
+            this._modelsMeshes.get("rock3")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticCircleEntity(
+            190,
+            -200,
+            12.25 * collisionBodyOffset,
+            "rock19",
+            this._modelsMeshes.get("rock1")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticCircleEntity(
+            200,
+            -190,
+            12.25 * collisionBodyOffset,
+            "rock20",
+            this._modelsMeshes.get("rock2")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticCircleEntity(
+            210,
+            -200,
+            12.25 * collisionBodyOffset,
+            "rock21",
+            this._modelsMeshes.get("rock3")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticCircleEntity(
+            -140,
+            -20,
+            12.25 * collisionBodyOffset,
+            "rock22",
+            this._modelsMeshes.get("rock1")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticCircleEntity(
+            -160,
+            -20,
+            12.25 * collisionBodyOffset,
+            "rock23",
+            this._modelsMeshes.get("rock2")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+
+        new StaticCircleEntity(
+            -150,
+            -30,
+            12.25 * collisionBodyOffset,
+            "rock24",
+            this._modelsMeshes.get("rock3")!,
+            this._scene,
+            this._nodesWithShadow
+        );
+    }
+
     async connect() {
         let serverAddress = "wss://gerxml.colyseus.de";
         if (window.location.protocol === "http:") {
@@ -388,8 +1061,6 @@ export default class World {
                 this._modelsMeshes.get("jet")!,
                 this._debug
             );
-            clientHexTank.loadMeshes();
-
             this._hexTanks.set(serverHexTank.id, clientHexTank);
 
             if (this._room.sessionId === clientHexTank.id) {
@@ -420,80 +1091,6 @@ export default class World {
         };
     }
 
-    private _setStaticCirclesCallbacks() {
-        this._room.state.staticCircleEntities.onAdd = (
-            serverStaticCircleEntity: any
-        ) => {
-            const clientStaticEntity = new StaticCircleEntity(
-                serverStaticCircleEntity,
-                this._scene,
-                this._nodesWithShadow,
-                this._modelsMeshes.get(serverStaticCircleEntity.modelType)!
-            );
-            clientStaticEntity.loadMeshes();
-            this._staticCircleEntities.set(
-                serverStaticCircleEntity.id,
-                clientStaticEntity
-            );
-        };
-
-        this._room.state.staticCircleEntities.onRemove = (
-            serverStaticCircleEntity: any
-        ) => {
-            if (typeof serverStaticCircleEntity !== "undefined") {
-                if (
-                    typeof this._staticCircleEntities.get(
-                        serverStaticCircleEntity.id
-                    ) !== "undefined"
-                ) {
-                    this._staticCircleEntities
-                        .get(serverStaticCircleEntity.id)!
-                        .deleteMeshes();
-                    this._staticCircleEntities.delete(
-                        serverStaticCircleEntity.id
-                    );
-                }
-            }
-        };
-    }
-
-    private _setStaticRetanglesCallbacks() {
-        this._room.state.staticRectangleEntities.onAdd = (
-            serverStaticRectangleEntity: any
-        ) => {
-            const clientStaticEntity = new StaticRectangleEntity(
-                serverStaticRectangleEntity,
-                this._scene,
-                this._nodesWithShadow,
-                this._modelsMeshes.get(serverStaticRectangleEntity.modelType)!
-            );
-            clientStaticEntity.loadMeshes();
-            this._staticRectangleEntities.set(
-                serverStaticRectangleEntity.id,
-                clientStaticEntity
-            );
-        };
-
-        this._room.state.staticRectangleEntities.onRemove = (
-            serverStaticRectangleEntity: any
-        ) => {
-            if (typeof serverStaticRectangleEntity !== "undefined") {
-                if (
-                    typeof this._staticRectangleEntities.get(
-                        serverStaticRectangleEntity.id
-                    ) !== "undefined"
-                ) {
-                    this._staticRectangleEntities
-                        .get(serverStaticRectangleEntity.id)!
-                        .deleteMeshes();
-                    this._staticRectangleEntities.delete(
-                        serverStaticRectangleEntity.id
-                    );
-                }
-            }
-        };
-    }
-
     private _setBulletsCallbacks() {
         this._room.state.bullets.onAdd = (serverBullet: any) => {
             const clientBullet = new Bullet(
@@ -502,7 +1099,6 @@ export default class World {
                 this._nodesWithShadow,
                 this._modelsMeshes.get("bullet")!
             );
-            clientBullet.loadMeshes();
             this._bullets.set(serverBullet.id, clientBullet);
         };
 
@@ -524,8 +1120,6 @@ export default class World {
                 this._modelsMeshes.get("bulletExplosion")!,
                 "bulletExplosion"
             );
-            currentBulletExplosion.loadMeshes();
-
             this._explosions.set(serverMessage.id, currentBulletExplosion);
         });
     }
@@ -538,8 +1132,6 @@ export default class World {
                 this._modelsMeshes.get("hexTankExplosion")!,
                 "hexTankExplosion"
             );
-            currenthexTankExplosion.loadMeshes();
-
             this._explosions.set(serverMessage.id, currenthexTankExplosion);
         });
     }
@@ -561,7 +1153,7 @@ export default class World {
         });
     }
 
-    async createWorld() {
+    async connectWorld() {
         await this.connect();
 
         if (this._debug === true) {
@@ -569,8 +1161,6 @@ export default class World {
         }
 
         this._setHexTanksCallbacks();
-        this._setStaticCirclesCallbacks();
-        this._setStaticRetanglesCallbacks();
         this._setBulletsCallbacks();
 
         this._setBulletExplosions();

@@ -5,30 +5,37 @@ import { TransformNode } from "@babylonjs/core/Meshes/transformNode";
 export default class StaticRectangleEntity {
     private _x: number;
     private _z: number;
-    id: string;
-    private _scene: Scene;
     private _width: number;
     private _height: number;
-    private _nodesWithShadow: Map<string, TransformNode>;
-
+    id: string;
     private _mesh: Array<Mesh>;
+
+    private _scene: Scene;
+
+    private _nodesWithShadow: Map<string, TransformNode>;
 
     private _node!: TransformNode;
 
     constructor(
-        serverStaticRectangleEntity: any,
+        x: number,
+        z: number,
+        width: number,
+        height: number,
+        id: string,
+        mesh: Array<Mesh>,
         scene: Scene,
-        nodesWithShadow: Map<string, TransformNode>,
-        mesh: Array<Mesh>
+        nodesWithShadow: Map<string, TransformNode>
     ) {
-        this._x = serverStaticRectangleEntity.x;
-        this._z = serverStaticRectangleEntity.z;
-        this.id = serverStaticRectangleEntity.id;
-        this._width = serverStaticRectangleEntity.collisionBody.width;
-        this._height = serverStaticRectangleEntity.collisionBody.height;
+        this._x = x;
+        this._z = z;
+        this.id = id;
+        this._width = width;
+        this._height = height;
         this._scene = scene;
         this._nodesWithShadow = nodesWithShadow;
         this._mesh = mesh;
+
+        this.loadMeshes();
     }
 
     loadMeshes() {

@@ -3,10 +3,11 @@ import World from "./World";
 const world = new World();
 
 async function loadGame() {
-    await world.initWorld();
+    await world.loadWorld();
+    world.createWorldMap();
 
-    await world.createWorld();
-    
+    await world.connectWorld();
+
     window.requestAnimationFrame(() => {
         world.updateWorld();
     });

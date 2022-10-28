@@ -31,9 +31,11 @@ export default class Explosion {
         this._scene = scene;
         this._mesh = mesh;
         this.type = type;
+
+        this._loadMeshes();
     }
 
-    loadMeshes() {
+    private _loadMeshes() {
         this._node = new TransformNode("explosion" + this.id, this._scene);
         this._node.rotationQuaternion = null;
         this._node.rotation.setAll(0);

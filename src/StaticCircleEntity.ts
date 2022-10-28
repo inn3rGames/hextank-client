@@ -7,26 +7,30 @@ export default class StaticCircleEntity {
     private _z: number;
     private _radius: number;
     id: string;
+    private _mesh: Array<Mesh>;
     private _scene: Scene;
     private _nodesWithShadow: Map<string, TransformNode>;
-
-    private _mesh: Array<Mesh>;
 
     private _node!: TransformNode;
 
     constructor(
-        serverStaticCircleEntity: any,
+        x: number,
+        z: number,
+        radius: number,
+        id: string,
+        mesh: Array<Mesh>,
         scene: Scene,
-        nodesWithShadow: Map<string, TransformNode>,
-        mesh: Array<Mesh>
+        nodesWithShadow: Map<string, TransformNode>
     ) {
-        this._x = serverStaticCircleEntity.x;
-        this._z = serverStaticCircleEntity.z;
-        this._radius = serverStaticCircleEntity.collisionBody.radius;
-        this.id = serverStaticCircleEntity.id;
+        this._x = x;
+        this._z = z;
+        this._radius = radius;
+        this.id = id;
         this._scene = scene;
         this._nodesWithShadow = nodesWithShadow;
         this._mesh = mesh;
+
+        this.loadMeshes();
     }
 
     loadMeshes() {
