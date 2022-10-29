@@ -29,6 +29,8 @@ import { Texture } from "@babylonjs/core/Materials/Textures/texture";
 import { AdvancedDynamicTexture } from "@babylonjs/gui/2D/advancedDynamicTexture";
 import { TextBlock } from "@babylonjs/gui/2D/controls/textBlock";
 import { Logger } from "@babylonjs/core/Misc/logger";
+import { DracoCompression } from "@babylonjs/core/Meshes/Compression/dracoCompression";
+import { KhronosTextureContainer2 } from "@babylonjs/core/Misc/khronosTextureContainer2";
 import "@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent";
 import "@babylonjs/core/Culling/ray";
 import "@babylonjs/loaders/glTF/2.0/";
@@ -63,6 +65,25 @@ import StaticCircleEntity from "./StaticCircleEntity";
 import StaticRectangleEntity from "./StaticRectangleEntity";
 import Bullet from "./Bullet";
 import Explosion from "./Explosion";
+
+DracoCompression.Configuration = {
+    decoder: {
+        wasmUrl: "./draco/draco_wasm_wrapper_gltf.js",
+        wasmBinaryUrl: "./draco/draco_decoder_gltf.wasm",
+        fallbackUrl: "./draco/draco_decoder_gltf.js",
+    },
+};
+
+KhronosTextureContainer2.URLConfig = {
+    jsDecoderModule: "./ktx2/babylon.ktx2Decoder.js",
+    wasmUASTCToASTC: "./ktx2/uastc_astc.wasm",
+    wasmUASTCToBC7: "./ktx2/uastc_bc7.wasm",
+    wasmUASTCToRGBA_UNORM: "./ktx2/uastc_rgba32_unorm.wasm",
+    wasmUASTCToRGBA_SRGB: "./ktx2/uastc_rgba32_srgb.wasm",
+    jsMSCTranscoder: "./ktx2/msc_basis_transcoder.js",
+    wasmMSCTranscoder: "./ktx2/msc_basis_transcoder.wasm",
+    wasmZSTDDecoder: "./ktx2/zstddec.wasm",
+};
 
 export default class World {
     private _modelsMeshes: Map<string, Array<Mesh>> = new Map();

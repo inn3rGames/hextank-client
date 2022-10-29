@@ -16,7 +16,7 @@ module.exports = {
             {
                 test: /\.(png|jpg|jpeg|gif|glb)$/i,
                 type: "asset/resource",
-            }
+            },
         ],
     },
     output: {
@@ -29,6 +29,6 @@ module.exports = {
             inject: true,
             template: "./public/index.html",
             favicon: "./public/favicon.ico",
-        })
+        }),
     ],
 };
