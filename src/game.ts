@@ -6,11 +6,11 @@ async function loadGame() {
     await world.loadWorld();
     world.createWorldMap();
 
-    await world.connectWorld();
-
     window.requestAnimationFrame(() => {
         world.updateWorld();
     });
+
+    await world.connectWorld();
 }
 
 window.addEventListener("load", () => {
