@@ -91,6 +91,7 @@ export default class World {
     private _canvas: HTMLCanvasElement;
     private _splashScreen: HTMLDivElement;
     private _splashScreenContent: HTMLDivElement;
+    private _start: HTMLDivElement;
 
     private _engine: Engine;
 
@@ -131,6 +132,7 @@ export default class World {
 
     private _client!: Client;
     private _room!: Room;
+    private _readyToConnect: boolean = true;
 
     private _fpsLimit: number = 60;
     private _lastFrame: number = 0;
@@ -160,6 +162,8 @@ export default class World {
             "splash-screen-content"
         ) as HTMLDivElement;
         this._splashScreenContent.textContent = "Loading...";
+
+        this._start = document.getElementById("start") as HTMLDivElement;
 
         const log = console.log;
         console.log = () => {};
@@ -211,8 +215,7 @@ export default class World {
         this._optimizer.onFailureObservable.add(() => {
             this._shadowGenerator.dispose();
 
-            this._splashScreenContent.textContent = "Game ready";
-            this._splashScreen.style.display = "none";
+            this._gameStart();
         });
 
         this._optimizer.onNewOptimizationAppliedObservable.add((event) => {
@@ -221,14 +224,53 @@ export default class World {
             }
 
             this._splashScreenContent.textContent = `Optimizing scene step ${event.priority}`;
-
-            console.log(this._optimizer.optimizations[event.priority]);
         });
 
         this._optimizer.onSuccessObservable.add(() => {
-            this._splashScreenContent.textContent = "Game ready";
-            this._splashScreen.style.display = "none";
+            this._gameStart();
         });
+
+        this._start.addEventListener("touchstart", async (event) => {
+            event.preventDefault();
+            this._startSession();
+        });
+
+        this._start.addEventListener("mousedown", async (event) => {
+            event.preventDefault();
+            this._startSession();
+        });
+    }
+
+    private _gameStart() {
+        this._splashScreenContent.textContent = "Game ready";
+        this._splashScreen.style.display = "none";
+        this._start.style.display = "block";
+    }
+
+    private _gameOver() {
+        this._start.style.display = "block";
+        this._start.textContent = "RESTART";
+
+        this._hexTanks.forEach((item) => {
+            item.deleteMeshes();
+        });
+        this._hexTanks.clear();
+        this._bullets.forEach((item) => {
+            item.deleteMeshes();
+        });
+        this._bullets.clear();
+        this._nodesWithShadow.clear();
+
+        this._room.leave();
+        this._readyToConnect = true;
+    }
+
+    private async _startSession() {
+        if (this._readyToConnect === true) {
+            this._readyToConnect = false;
+            await this._connectWorld();
+            this._start.style.display = "none";
+        }
     }
 
     private async _loadMesh(model: string, name: string) {
@@ -293,8 +335,8 @@ export default class World {
         this._splashScreenContent.textContent = "Loading assets...";
         await this._loadMeshes();
         this._splashScreenContent.textContent = "Loading assets finished...";
-
         this._splashScreenContent.textContent = "Loading world...";
+
         this._camera = new ArcRotateCamera(
             "Camera",
             0,
@@ -303,6 +345,9 @@ export default class World {
             new Vector3(0, 2, 0),
             this._scene
         );
+        this._camera.alpha = -(Math.PI + Math.PI / 2);
+        this._camera.target.x = 0;
+        this._camera.target.z = -25;
 
         this._pipeline = new DefaultRenderingPipeline(
             "pipeline",
@@ -1106,8 +1151,7 @@ export default class World {
             "Creating world map finished...";
     }
 
-    async connect() {
-        this._splashScreenContent.textContent = "Looking for room...";
+    private async _connect() {
         let serverAddress = "wss://gerxml.colyseus.de";
         if (window.location.protocol === "http:") {
             serverAddress = "ws://localhost:2567";
@@ -1121,12 +1165,10 @@ export default class World {
         this._client = new Client(serverAddress);
         try {
             this._room = await this._client.join("world_room");
-            this._splashScreenContent.textContent = "Room found";
         } catch (e) {
             if (this._debug === true) {
                 console.log(e);
             }
-            this._splashScreenContent.textContent = "Room not found";
         }
     }
 
@@ -1146,7 +1188,6 @@ export default class World {
 
             if (this._room.sessionId === clientHexTank.id) {
                 clientHexTank.enableInput();
-                this._splashScreenContent.textContent = "Player joined";
             }
 
             if (this._debug === true) {
@@ -1168,6 +1209,10 @@ export default class World {
                 ) {
                     this._hexTanks.get(serverHexTank.id)!.deleteMeshes();
                     this._hexTanks.delete(serverHexTank.id);
+
+                    if (this._room.sessionId === serverHexTank.id) {
+                        this._gameOver();
+                    }
                 }
             }
         };
@@ -1235,8 +1280,8 @@ export default class World {
         });
     }
 
-    async connectWorld() {
-        await this.connect();
+    private async _connectWorld() {
+        await this._connect();
 
         if (this._debug === true) {
             console.log(this._client);

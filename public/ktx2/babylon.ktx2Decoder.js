@@ -1186,4 +1186,3 @@
             return t.default;
         })()
 );
-//# sourceMappingURL=babylon.ktx2Decoder.js.map
