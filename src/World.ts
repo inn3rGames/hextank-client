@@ -65,6 +65,7 @@ import StaticCircleEntity from "./StaticCircleEntity";
 import StaticRectangleEntity from "./StaticRectangleEntity";
 import Bullet from "./Bullet";
 import Explosion from "./Explosion";
+import Input from "./Input";
 
 DracoCompression.Configuration = {
     decoder: {
@@ -146,6 +147,8 @@ export default class World {
     private _currentWindowWidth = window.innerWidth;
     private _lastWindowHeight = window.innerHeight;
     private _currentWindowHeight = window.innerHeight;
+
+    private _input: Input;
 
     private _debug: boolean = false;
 
@@ -239,6 +242,9 @@ export default class World {
             event.preventDefault();
             this._startSession();
         });
+
+        this._input = new Input();
+        this._input.enableInput();
     }
 
     private _gameStart() {
@@ -271,6 +277,8 @@ export default class World {
             this._readyToConnect = false;
             await this._connectWorld();
             this._start.style.display = "none";
+
+            this._input.setRoom(this._room, this._debug);
         }
     }
 
@@ -1177,7 +1185,6 @@ export default class World {
         this._room.state.hexTanks.onAdd = (serverHexTank: any) => {
             const clientHexTank = new HexTank(
                 serverHexTank,
-                this._room,
                 this._scene,
                 this._camera,
                 this._nodesWithShadow,
@@ -1186,10 +1193,6 @@ export default class World {
                 this._debug
             );
             this._hexTanks.set(serverHexTank.id, clientHexTank);
-
-            if (this._room.sessionId === clientHexTank.id) {
-                clientHexTank.enableInput();
-            }
 
             if (this._debug === true) {
                 console.log(`HexTank ${serverHexTank.id} joined at: `, {
@@ -1386,6 +1389,8 @@ export default class World {
         this._updateShadows();
         this._updateExplosions();
         this._scene.render();
+
+        this._input.update();
     }
 
     private _handleResize() {
