@@ -269,7 +269,6 @@ export default class World {
             item.deleteMeshes();
         });
         this._bullets.clear();
-        this._nodesWithShadow.clear();
 
         this._readyToConnect = true;
 
@@ -284,6 +283,20 @@ export default class World {
     private async _startSession() {
         if (this._readyToConnect === true) {
             this._readyToConnect = false;
+
+            this._hexTanks.forEach((item) => {
+                item.deleteMeshes();
+            });
+            this._hexTanks.clear();
+            this._bullets.forEach((item) => {
+                item.deleteMeshes();
+            });
+            this._bullets.clear();
+            this._bullets.forEach((item) => {
+                item.deleteMeshes();
+            });
+            this._bullets.clear();
+
             await this._connectWorld();
             this._start.style.display = "none";
         }
