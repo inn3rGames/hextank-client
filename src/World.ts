@@ -89,6 +89,8 @@ export default class World {
     private _modelsMeshes: Map<string, Array<Mesh>> = new Map();
 
     private _canvas: HTMLCanvasElement;
+    private _splashScreen: HTMLDivElement;
+    private _splashScreenContent: HTMLDivElement;
 
     private _engine: Engine;
 
@@ -150,6 +152,15 @@ export default class World {
             "hextankgame"
         ) as HTMLCanvasElement;
 
+        this._splashScreen = document.getElementById(
+            "splash-screen"
+        ) as HTMLDivElement;
+
+        this._splashScreenContent = document.getElementById(
+            "splash-screen-content"
+        ) as HTMLDivElement;
+        this._splashScreenContent.textContent = "Loading...";
+
         const log = console.log;
         console.log = () => {};
         this._engine = new Engine(this._canvas, true);
@@ -199,12 +210,24 @@ export default class World {
 
         this._optimizer.onFailureObservable.add(() => {
             this._shadowGenerator.dispose();
+
+            this._splashScreenContent.textContent = "Game ready";
+            this._splashScreen.style.display = "none";
         });
 
         this._optimizer.onNewOptimizationAppliedObservable.add((event) => {
             if (event.priority >= 0) {
                 this._shadowGenerator.dispose();
             }
+
+            this._splashScreenContent.textContent = `Optimizing scene step ${event.priority}`;
+
+            console.log(this._optimizer.optimizations[event.priority]);
+        });
+
+        this._optimizer.onSuccessObservable.add(() => {
+            this._splashScreenContent.textContent = "Game ready";
+            this._splashScreen.style.display = "none";
         });
     }
 
@@ -226,24 +249,52 @@ export default class World {
     private async _loadMeshes() {
         Logger.LogLevels = Logger.NoneLogLevel;
 
+        this._splashScreenContent.textContent = "Loading assets 1/13";
         await this._loadMesh(body, "body");
+
+        this._splashScreenContent.textContent = "Loading assets 2/13";
         await this._loadMesh(jet, "jet");
+
+        this._splashScreenContent.textContent = "Loading assets 3/13";
         await this._loadMesh(wall, "wall");
+
+        this._splashScreenContent.textContent = "Loading assets 4/13";
         await this._loadMesh(pyramid, "pyramid");
+
+        this._splashScreenContent.textContent = "Loading assets 5/13";
         await this._loadMesh(oasis, "oasis");
+
+        this._splashScreenContent.textContent = "Loading assets 6/13";
         await this._loadMesh(building1, "building1");
+
+        this._splashScreenContent.textContent = "Loading assets 7/13";
         await this._loadMesh(building2, "building2");
+
+        this._splashScreenContent.textContent = "Loading assets 8/13";
         await this._loadMesh(rock1, "rock1");
+
+        this._splashScreenContent.textContent = "Loading assets 9/13";
         await this._loadMesh(rock2, "rock2");
+
+        this._splashScreenContent.textContent = "Loading assets 10/13";
         await this._loadMesh(rock3, "rock3");
+
+        this._splashScreenContent.textContent = "Loading assets 11/13";
         await this._loadMesh(bullet, "bullet");
+
+        this._splashScreenContent.textContent = "Loading assets 12/13";
         await this._loadMesh(bulletExplosion, "bulletExplosion");
+
+        this._splashScreenContent.textContent = "Loading assets 13/13";
         await this._loadMesh(hexTankExplosion, "hexTankExplosion");
     }
 
     async loadWorld() {
+        this._splashScreenContent.textContent = "Loading assets...";
         await this._loadMeshes();
+        this._splashScreenContent.textContent = "Loading assets finished...";
 
+        this._splashScreenContent.textContent = "Loading world...";
         this._camera = new ArcRotateCamera(
             "Camera",
             0,
@@ -371,9 +422,12 @@ export default class World {
         this._canvas.addEventListener("touchmove", (e) => {
             e.preventDefault();
         });
+
+        this._splashScreenContent.textContent = "Loading world finished...";
     }
 
     createWorldMap() {
+        this._splashScreenContent.textContent = "Creating world map..";
         const collisionBodyOffset = 1.03;
 
         const wallWidth = this._worldSize / 5;
@@ -1047,9 +1101,13 @@ export default class World {
             this._scene,
             this._nodesWithShadow
         );
+
+        this._splashScreenContent.textContent =
+            "Creating world map finished...";
     }
 
     async connect() {
+        this._splashScreenContent.textContent = "Looking for room...";
         let serverAddress = "wss://gerxml.colyseus.de";
         if (window.location.protocol === "http:") {
             serverAddress = "ws://localhost:2567";
@@ -1063,10 +1121,12 @@ export default class World {
         this._client = new Client(serverAddress);
         try {
             this._room = await this._client.join("world_room");
+            this._splashScreenContent.textContent = "Room found";
         } catch (e) {
             if (this._debug === true) {
                 console.log(e);
             }
+            this._splashScreenContent.textContent = "Room not found";
         }
     }
 
@@ -1086,6 +1146,7 @@ export default class World {
 
             if (this._room.sessionId === clientHexTank.id) {
                 clientHexTank.enableInput();
+                this._splashScreenContent.textContent = "Player joined";
             }
 
             if (this._debug === true) {
@@ -1303,10 +1364,12 @@ export default class World {
     updateWorld(): void {
         if (this._updateCyclesCount < this._fpsLimit) {
             this._updateCyclesCount += 1;
+            this._splashScreenContent.textContent = `Starting scene ${this._updateCyclesCount}/${this._fpsLimit}`;
         } else {
             if (this._didOptimizerStart === false) {
                 this._didOptimizerStart = true;
                 this._optimizer.start();
+                this._splashScreenContent.textContent = "Optimizing scene...";
             }
         }
 
