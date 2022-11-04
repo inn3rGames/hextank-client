@@ -248,8 +248,7 @@ export default class World {
     }
 
     private _gameOver() {
-        this._start.style.display = "block";
-        this._start.textContent = "RESTART";
+        this._room.leave();
 
         this._hexTanks.forEach((item) => {
             item.deleteMeshes();
@@ -261,8 +260,10 @@ export default class World {
         this._bullets.clear();
         this._nodesWithShadow.clear();
 
-        this._room.leave();
         this._readyToConnect = true;
+
+        this._start.style.display = "block";
+        this._start.textContent = "RESTART";
     }
 
     private async _startSession() {
