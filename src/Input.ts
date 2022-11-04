@@ -2,7 +2,7 @@ import { Room } from "colyseus.js";
 import isMobile from "./Utilities";
 
 export default class Input {
-    private _room!: Room;
+    private _room!: Room | undefined;
 
     private _commandsPerFrame: number = 100;
 
@@ -633,40 +633,40 @@ export default class Input {
             typeof (currentCommand = this._commands.shift()) !== "undefined"
         ) {
             if (currentCommand === "upKeyDown") {
-                this._room.send("command", "upKeyDown");
+                this._room!.send("command", "upKeyDown");
             }
             if (currentCommand === "downKeyDown") {
-                this._room.send("command", "downKeyDown");
+                this._room!.send("command", "downKeyDown");
             }
             if (currentCommand === "leftKeyDown") {
-                this._room.send("command", "leftKeyDown");
+                this._room!.send("command", "leftKeyDown");
             }
             if (currentCommand === "rightKeyDown") {
-                this._room.send("command", "rightKeyDown");
+                this._room!.send("command", "rightKeyDown");
             }
             if (currentCommand === "shootDown") {
-                this._room.send("command", "shootDown");
+                this._room!.send("command", "shootDown");
             }
 
             if (currentCommand === "upKeyUp") {
-                this._room.send("command", "upKeyUp");
+                this._room!.send("command", "upKeyUp");
             }
             if (currentCommand === "downKeyUp") {
-                this._room.send("command", "downKeyUp");
+                this._room!.send("command", "downKeyUp");
             }
             if (currentCommand === "leftKeyUp") {
-                this._room.send("command", "leftKeyUp");
+                this._room!.send("command", "leftKeyUp");
             }
             if (currentCommand === "rightKeyUp") {
-                this._room.send("command", "rightKeyUp");
+                this._room!.send("command", "rightKeyUp");
             }
             if (currentCommand === "shootUp") {
-                this._room.send("command", "shootUp");
+                this._room!.send("command", "shootUp");
             }
         }
     }
 
-    setRoom(room: Room, debug: boolean) {
+    setRoom(room: Room | undefined, debug: boolean) {
         this._room = room;
         this._debug = debug;
     }

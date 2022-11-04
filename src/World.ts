@@ -245,6 +245,10 @@ export default class World {
 
         this._input = new Input();
         this._input.enableInput();
+
+        window.addEventListener("focus", () => {
+            this._focusRegained();
+        });
     }
 
     private _gameStart() {
@@ -254,6 +258,7 @@ export default class World {
     }
 
     private _gameOver() {
+        this._room.removeAllListeners();
         this._room.leave();
 
         this._hexTanks.forEach((item) => {
@@ -270,6 +275,10 @@ export default class World {
 
         this._start.style.display = "block";
         this._start.textContent = "RESTART";
+
+        if (this._debug === true) {
+            console.clear();
+        }
     }
 
     private async _startSession() {
@@ -277,8 +286,6 @@ export default class World {
             this._readyToConnect = false;
             await this._connectWorld();
             this._start.style.display = "none";
-
-            this._input.setRoom(this._room, this._debug);
         }
     }
 
@@ -1179,6 +1186,8 @@ export default class World {
                 console.log(e);
             }
         }
+
+        this._input.setRoom(this._room, this._debug);
     }
 
     private _setHexTanksCallbacks() {
@@ -1220,6 +1229,10 @@ export default class World {
                 }
             }
         };
+
+        this._room.onLeave(() => {
+            this._input.setRoom(undefined, false);
+        });
     }
 
     private _setBulletsCallbacks() {
@@ -1272,16 +1285,18 @@ export default class World {
 
         this._lastFrame = performance.now();
 
-        this._hexTanks.forEach((value, key) => {
-            const clientHexTank = value;
-            const serverHexTank = this._room.state.hexTanks.get(key);
-            if (
-                typeof clientHexTank !== "undefined" &&
-                typeof serverHexTank !== "undefined"
-            ) {
-                clientHexTank.setPosition(serverHexTank);
-            }
-        });
+        if (typeof this._room !== undefined) {
+            this._hexTanks.forEach((value, key) => {
+                const clientHexTank = value;
+                const serverHexTank = this._room.state.hexTanks.get(key);
+                if (
+                    typeof clientHexTank !== "undefined" &&
+                    typeof serverHexTank !== "undefined"
+                ) {
+                    clientHexTank.setPosition(serverHexTank);
+                }
+            });
+        }
     }
 
     private async _connectWorld() {
@@ -1296,10 +1311,6 @@ export default class World {
 
         this._setBulletExplosions();
         this._setHexTankExplosions();
-
-        window.addEventListener("focus", () => {
-            this._focusRegained();
-        });
     }
 
     private _updateHexTanks() {
