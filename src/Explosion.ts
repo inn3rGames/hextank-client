@@ -1,5 +1,6 @@
 import { Scene } from "@babylonjs/core/scene";
 import { Mesh } from "@babylonjs/core/Meshes/mesh";
+import { InstancedMesh } from "@babylonjs/core/Meshes/instancedMesh";
 import { TransformNode } from "@babylonjs/core/Meshes/transformNode";
 
 export default class Explosion {
@@ -16,7 +17,7 @@ export default class Explosion {
     age: number = 0;
     type: string;
 
-    private _clonedMeshes: Array<Mesh> = [];
+    private _instancedMeshes: Array<InstancedMesh> = [];
 
     constructor(
         serverMessage: any,
@@ -42,28 +43,30 @@ export default class Explosion {
 
         this._mesh.forEach((item, index) => {
             if (index > 0) {
-                const meshClone = item.clone("explosionMesh" + this.id + index);
-                meshClone.setEnabled(true);
-                meshClone.material!.backFaceCulling = false;
-                meshClone.material?.freeze();
+                const meshInstance = item.createInstance(
+                    "explosionMesh" + this.id + index
+                );
+                meshInstance.setEnabled(true);
+                meshInstance.material!.backFaceCulling = false;
+                meshInstance.material?.freeze();
 
-                meshClone.position.x = item.absolutePosition.x;
-                meshClone.position.y = item.absolutePosition.y + 0.002;
-                meshClone.position.z = item.absolutePosition.z;
+                meshInstance.position.x = item.absolutePosition.x;
+                meshInstance.position.y = item.absolutePosition.y + 0.002;
+                meshInstance.position.z = item.absolutePosition.z;
 
                 const itemRotation =
                     item.absoluteRotationQuaternion.toEulerAngles();
-                meshClone.rotation.x = itemRotation.x;
-                meshClone.rotation.y = itemRotation.y;
-                meshClone.rotation.z = itemRotation.z;
+                meshInstance.rotation.x = itemRotation.x;
+                meshInstance.rotation.y = itemRotation.y;
+                meshInstance.rotation.z = itemRotation.z;
 
-                meshClone.scaling.x = item.absoluteScaling.x;
-                meshClone.scaling.y = item.absoluteScaling.y;
-                meshClone.scaling.z = item.absoluteScaling.z;
+                meshInstance.scaling.x = item.absoluteScaling.x;
+                meshInstance.scaling.y = item.absoluteScaling.y;
+                meshInstance.scaling.z = item.absoluteScaling.z;
 
-                meshClone.setParent(this._node);
+                meshInstance.setParent(this._node);
 
-                this._clonedMeshes.push(meshClone);
+                this._instancedMeshes.push(meshInstance);
             }
         });
 
@@ -85,26 +88,38 @@ export default class Explosion {
         this.age += 1;
 
         if (this.type === "bulletExplosion") {
-            this._node.scaling.x += 0.025;
-            this._node.scaling.y += 0.025;
-            this._node.scaling.z += 0.025;
+            if (this.age <= 50) {
+                this._node.scaling.x += 0.05;
+                this._node.scaling.y += 0.05;
+                this._node.scaling.z += 0.05;
+            }
+            if (this.age > 50) {
+                this._node.scaling.x -= 0.25;
+                this._node.scaling.y -= 0.25;
+                this._node.scaling.z -= 0.25;
+            }
+            if (this._node.scaling.x < 0) {
+                this._node.scaling.x = 0;
+                this._node.scaling.y = 0;
+                this._node.scaling.z = 0;
+            }
         }
 
         if (this.type === "hexTankExplosion") {
-            this._node.scaling.x += 0.05;
-            this._node.scaling.y += 0.05;
-            this._node.scaling.z += 0.05;
-        }
-
-        for (let i = 0; i < this._clonedMeshes.length; i++) {
-            const clone = this._clonedMeshes[i];
-
-            if (this.type === "bulletExplosion") {
-                clone.visibility = Math.max(1 - this.age / 100, 0);
+            if (this.age <= 100) {
+                this._node.scaling.x += 0.1;
+                this._node.scaling.y += 0.1;
+                this._node.scaling.z += 0.1;
             }
-
-            if (this.type === "hexTankExplosion") {
-                clone.visibility = Math.max(1 - this.age / 200, 0);
+            if (this.age > 100) {
+                this._node.scaling.x -= 0.5;
+                this._node.scaling.y -= 0.5;
+                this._node.scaling.z -= 0.5;
+            }
+            if (this._node.scaling.x < 0) {
+                this._node.scaling.x = 0;
+                this._node.scaling.y = 0;
+                this._node.scaling.z = 0;
             }
         }
     }

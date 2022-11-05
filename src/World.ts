@@ -1389,14 +1389,14 @@ export default class World {
             explosion.update();
 
             if (explosion.type === "bulletExplosion") {
-                if (explosion.age >= 100) {
+                if (explosion.age >= 60) {
                     explosion.deleteMeshes();
                     this._explosions.delete(key);
                 }
             }
 
             if (explosion.type === "hexTankExplosion") {
-                if (explosion.age >= 200) {
+                if (explosion.age >= 120) {
                     explosion.deleteMeshes();
                     this._explosions.delete(key);
                 }
