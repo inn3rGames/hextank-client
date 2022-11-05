@@ -476,7 +476,7 @@ export default class World {
         this._shadowGenerator.useExponentialShadowMap = true;
         this._shadowGenerator.usePoissonSampling = false;
 
-        this._fpsTexture = AdvancedDynamicTexture.CreateFullscreenUI("FPS");
+        /* this._fpsTexture = AdvancedDynamicTexture.CreateFullscreenUI("FPS");
         this._fpsText = new TextBlock();
         this._fpsText.text = "0";
         this._fpsText.color = "#FFFFFF";
@@ -487,7 +487,7 @@ export default class World {
         this._fpsText.top = 5;
         this._fpsText.outlineColor = "#000000";
         this._fpsText.outlineWidth = 5;
-        this._fpsTexture.addControl(this._fpsText);
+        this._fpsTexture.addControl(this._fpsText); */
 
         this._canvas.addEventListener("mousemove", (e) => {
             e.preventDefault();
@@ -1439,7 +1439,9 @@ export default class World {
     updateWorld(): void {
         if (this._updateCyclesCount < this._fpsLimit) {
             this._updateCyclesCount += 1;
-            this._splashScreenContent.textContent = `Starting scene ${this._updateCyclesCount}/${this._fpsLimit}`;
+            this._splashScreenContent.textContent = `Starting scene ${Math.round(
+                (this._updateCyclesCount / this._fpsLimit) * 100
+            )}%`;
         } else {
             if (this._didOptimizerStart === false) {
                 this._didOptimizerStart = true;
@@ -1448,9 +1450,9 @@ export default class World {
             }
         }
 
-        this._fpsText.text = `Priority: ${
+        /* this._fpsText.text = `Priority: ${
             this._optimizer.currentPriorityLevel
-        }, FPS: ${this._engine.getFps().toFixed().toString()}`;
+        }, FPS: ${this._engine.getFps().toFixed().toString()}`; */
 
         this._currentFrame = performance.now();
         this._delta = this._currentFrame - this._lastFrame;
