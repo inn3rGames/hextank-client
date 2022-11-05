@@ -94,9 +94,9 @@ export default class Explosion {
                 this._node.scaling.z += 0.05;
             }
             if (this.age > 50) {
-                this._node.scaling.x -= 0.25;
-                this._node.scaling.y -= 0.25;
-                this._node.scaling.z -= 0.25;
+                this._node.scaling.x -= 1;
+                this._node.scaling.y -= 1;
+                this._node.scaling.z -= 1;
             }
             if (this._node.scaling.x < 0) {
                 this._node.scaling.x = 0;
@@ -112,9 +112,9 @@ export default class Explosion {
                 this._node.scaling.z += 0.1;
             }
             if (this.age > 100) {
-                this._node.scaling.x -= 0.5;
-                this._node.scaling.y -= 0.5;
-                this._node.scaling.z -= 0.5;
+                this._node.scaling.x -= 2;
+                this._node.scaling.y -= 2;
+                this._node.scaling.z -= 2;
             }
             if (this._node.scaling.x < 0) {
                 this._node.scaling.x = 0;
