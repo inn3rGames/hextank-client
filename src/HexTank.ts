@@ -8,7 +8,6 @@ import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
 import { Color3 } from "@babylonjs/core/Maths/math.color";
 import { AdvancedDynamicTexture } from "@babylonjs/gui/2D/advancedDynamicTexture";
 import { Rectangle } from "@babylonjs/gui/2D/controls/rectangle";
-import isMobile from "./Utilities";
 
 export default class HexTank {
     private _x: number;
