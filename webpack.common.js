@@ -1,5 +1,6 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
     entry: "./src/game.ts",
@@ -14,8 +15,12 @@ module.exports = {
                 exclude: /node_modules/,
             },
             {
-                test: /\.(png|jpg|jpeg|gif|glb)$/i,
+                test: /\.(png|jpg|jpeg|gif|glb|woff|woff2)$/i,
                 type: "asset/resource",
+            },
+            {
+                test: /\.css$/i,
+                use: [MiniCssExtractPlugin.loader, "css-loader"],
             },
         ],
     },
@@ -30,5 +35,6 @@ module.exports = {
             template: "./public/index.html",
             favicon: "./public/favicon.ico",
         }),
+        new MiniCssExtractPlugin(),
     ],
 };

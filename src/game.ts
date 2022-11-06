@@ -1,4 +1,5 @@
 import World from "./World";
+import "./assets/styles/style.css";
 
 const world = new World();
 
