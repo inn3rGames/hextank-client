@@ -319,44 +319,85 @@ export default class World {
 
     private async _loadMeshes() {
         Logger.LogLevels = Logger.NoneLogLevel;
+        let load = 0;
+        const maxLoad = 13;
 
-        this._splashScreenContent.textContent = "Loading assets 1/13";
+        load++;
+        this._splashScreenContent.textContent = `Loading assets ${Math.round(
+            (load / maxLoad) * 100
+        )}%`;
         await this._loadMesh(body, "body");
 
-        this._splashScreenContent.textContent = "Loading assets 2/13";
+        load++;
+        this._splashScreenContent.textContent = `Loading assets ${Math.round(
+            (load / maxLoad) * 100
+        )}%`;
         await this._loadMesh(jet, "jet");
 
-        this._splashScreenContent.textContent = "Loading assets 3/13";
+        load++;
+        this._splashScreenContent.textContent = `Loading assets ${Math.round(
+            (load / maxLoad) * 100
+        )}%`;
         await this._loadMesh(wall, "wall");
 
-        this._splashScreenContent.textContent = "Loading assets 4/13";
+        load++;
+        this._splashScreenContent.textContent = `Loading assets ${Math.round(
+            (load / maxLoad) * 100
+        )}%`;
         await this._loadMesh(pyramid, "pyramid");
 
-        this._splashScreenContent.textContent = "Loading assets 5/13";
+        load++;
+        this._splashScreenContent.textContent = `Loading assets ${Math.round(
+            (load / maxLoad) * 100
+        )}%`;
         await this._loadMesh(oasis, "oasis");
 
-        this._splashScreenContent.textContent = "Loading assets 6/13";
+        load++;
+        this._splashScreenContent.textContent = `Loading assets ${Math.round(
+            (load / maxLoad) * 100
+        )}%`;
         await this._loadMesh(building1, "building1");
 
-        this._splashScreenContent.textContent = "Loading assets 7/13";
+        load++;
+        this._splashScreenContent.textContent = `Loading assets ${Math.round(
+            (load / maxLoad) * 100
+        )}%`;
         await this._loadMesh(building2, "building2");
 
-        this._splashScreenContent.textContent = "Loading assets 8/13";
+        load++;
+        this._splashScreenContent.textContent = `Loading assets ${Math.round(
+            (load / maxLoad) * 100
+        )}%`;
         await this._loadMesh(rock1, "rock1");
 
-        this._splashScreenContent.textContent = "Loading assets 9/13";
+        load++;
+        this._splashScreenContent.textContent = `Loading assets ${Math.round(
+            (load / maxLoad) * 100
+        )}%`;
         await this._loadMesh(rock2, "rock2");
 
-        this._splashScreenContent.textContent = "Loading assets 10/13";
+        load++;
+        this._splashScreenContent.textContent = `Loading assets ${Math.round(
+            (load / maxLoad) * 100
+        )}%`;
         await this._loadMesh(rock3, "rock3");
 
-        this._splashScreenContent.textContent = "Loading assets 11/13";
+        load++;
+        this._splashScreenContent.textContent = `Loading assets ${Math.round(
+            (load / maxLoad) * 100
+        )}%`;
         await this._loadMesh(bullet, "bullet");
 
-        this._splashScreenContent.textContent = "Loading assets 12/13";
+        load++;
+        this._splashScreenContent.textContent = `Loading assets ${Math.round(
+            (load / maxLoad) * 100
+        )}%`;
         await this._loadMesh(bulletExplosion, "bulletExplosion");
 
-        this._splashScreenContent.textContent = "Loading assets 13/13";
+        load++;
+        this._splashScreenContent.textContent = `Loading assets ${Math.round(
+            (load / maxLoad) * 100
+        )}%`;
         await this._loadMesh(hexTankExplosion, "hexTankExplosion");
     }
 

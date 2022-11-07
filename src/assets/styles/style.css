@@ -60,6 +60,7 @@ body {
     text-align: center;
     font-size: 60px;
     color: #FFFFFF;
+    word-break: break-word;
 }
 
 #start {

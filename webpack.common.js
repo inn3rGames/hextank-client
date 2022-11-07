@@ -1,6 +1,7 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const FontPreloadPlugin = require("webpack-font-preload-plugin");
 
 module.exports = {
     entry: "./src/game.ts",
@@ -28,6 +29,7 @@ module.exports = {
         filename: "bundle.js",
         path: path.join(__dirname, "dist"),
         clean: true,
+        publicPath: "",
     },
     plugins: [
         new HtmlWebpackPlugin({
@@ -36,5 +38,10 @@ module.exports = {
             favicon: "./public/favicon.ico",
         }),
         new MiniCssExtractPlugin(),
+        new FontPreloadPlugin({
+            crossorigin: true,
+            extensions: ["woff", "woff2"],
+            loadType: "preload",
+        }),
     ],
 };
