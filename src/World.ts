@@ -292,10 +292,6 @@ export default class World {
                 item.deleteMeshes();
             });
             this._bullets.clear();
-            this._bullets.forEach((item) => {
-                item.deleteMeshes();
-            });
-            this._bullets.clear();
 
             await this._connectWorld();
             this._start.style.display = "none";
