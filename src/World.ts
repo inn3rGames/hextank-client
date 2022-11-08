@@ -124,9 +124,6 @@ export default class World {
     private _shadowGenerator!: ShadowGenerator;
     private _nodesWithShadow: Map<string, AbstractMesh | Mesh> = new Map();
 
-    private _fpsTexture!: AdvancedDynamicTexture;
-    private _fpsText!: TextBlock;
-
     private _hexTanks: Map<string, HexTank> = new Map();
     private _bullets: Map<string, Bullet> = new Map();
     private _explosions: Map<string, Explosion> = new Map();
@@ -512,19 +509,6 @@ export default class World {
         );
         this._shadowGenerator.useExponentialShadowMap = true;
         this._shadowGenerator.usePoissonSampling = false;
-
-        /* this._fpsTexture = AdvancedDynamicTexture.CreateFullscreenUI("FPS");
-        this._fpsText = new TextBlock();
-        this._fpsText.text = "0";
-        this._fpsText.color = "#FFFFFF";
-        this._fpsText.fontSize = 32;
-        this._fpsText.textHorizontalAlignment = 0;
-        this._fpsText.textVerticalAlignment = 0;
-        this._fpsText.left = 10;
-        this._fpsText.top = 5;
-        this._fpsText.outlineColor = "#000000";
-        this._fpsText.outlineWidth = 5;
-        this._fpsTexture.addControl(this._fpsText); */
 
         this._canvas.addEventListener("mousemove", (e) => {
             e.preventDefault();
@@ -1487,9 +1471,7 @@ export default class World {
             }
         }
 
-        /* this._fpsText.text = `Priority: ${
-            this._optimizer.currentPriorityLevel
-        }, FPS: ${this._engine.getFps().toFixed().toString()}`; */
+        /* this._fpsText.text = `FPS: ${this._engine.getFps().toFixed().toString()}`; */
 
         this._currentFrame = performance.now();
         this._delta = this._currentFrame - this._lastFrame;
