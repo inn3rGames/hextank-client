@@ -77,10 +77,9 @@ body {
     line-height: 10vmin;
 }
 
-#start:hover {
+#start:hover,
+#start:active {
     border-color: #000000;
     border-width: 0.5vmin;
     border-style: solid;
-   
-   
 }

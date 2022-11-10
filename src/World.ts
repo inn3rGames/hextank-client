@@ -232,12 +232,12 @@ export default class World {
     }
 
     private _ui() {
-        this._start.addEventListener("touchstart", async (event) => {
+        this._start.addEventListener("touchend", async (event) => {
             event.preventDefault();
             this._startSession();
         });
 
-        this._start.addEventListener("mousedown", async (event) => {
+        this._start.addEventListener("mouseup", async (event) => {
             event.preventDefault();
             this._startSession();
         });
