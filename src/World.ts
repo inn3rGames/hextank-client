@@ -88,7 +88,7 @@ export default class World {
     private _modelsMeshes: Map<string, Array<Mesh>> = new Map();
 
     private _canvas: HTMLCanvasElement;
-    private _buttonsContainer: HTMLDivElement;
+    private _touchButtonsContainer: HTMLDivElement;
     private _splashScreen: HTMLDivElement;
     private _splashScreenContent: HTMLDivElement;
     private _start: HTMLDivElement;
@@ -153,8 +153,8 @@ export default class World {
             "hextankgame"
         ) as HTMLCanvasElement;
 
-        this._buttonsContainer = document.getElementById(
-            "buttons-container"
+        this._touchButtonsContainer = document.getElementById(
+            "touch-buttons-container"
         ) as HTMLDivElement;
 
         this._splashScreen = document.getElementById(
@@ -276,7 +276,7 @@ export default class World {
 
         this._readyToConnect = true;
 
-        this._buttonsContainer.style.display = "none";
+        this._touchButtonsContainer.style.display = "none";
         this._start.style.display = "block";
         this._start.textContent = "RESTART";
 
@@ -299,7 +299,8 @@ export default class World {
             this._bullets.clear();
 
             await this._connectWorld();
-            this._buttonsContainer.style.display = "block";
+
+            this._touchButtonsContainer.style.display = "block";
             this._start.style.display = "none";
         }
     }
