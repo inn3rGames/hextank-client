@@ -234,12 +234,12 @@ export default class World {
     private _ui() {
         this._start.addEventListener("touchend", async (event) => {
             event.preventDefault();
-            this._startSession();
+            await this._startSession();
         });
 
         this._start.addEventListener("mouseup", async (event) => {
             event.preventDefault();
-            this._startSession();
+            await this._startSession();
         });
 
         this._input = new Input();
