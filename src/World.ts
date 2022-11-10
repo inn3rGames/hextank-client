@@ -278,7 +278,7 @@ export default class World {
 
         this._touchButtonsContainer.style.display = "none";
         this._start.style.display = "flex";
-        this._start.textContent = "RESTART";
+        this._start.children[0].textContent = "RESTART";
 
         if (this._debug === true) {
             console.clear();
