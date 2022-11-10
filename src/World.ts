@@ -166,7 +166,7 @@ export default class World {
         ) as HTMLDivElement;
         this._splashScreenContent.textContent = "Loading...";
 
-        this._start = document.getElementById("start") as HTMLDivElement;
+        this._start = document.getElementById("start-container") as HTMLDivElement;
 
         const log = console.log;
         console.log = () => {};
@@ -258,7 +258,7 @@ export default class World {
     private _gameStart() {
         this._splashScreenContent.textContent = "Game ready";
         this._splashScreen.style.display = "none";
-        this._start.style.display = "block";
+        this._start.style.display = "flex";
     }
 
     private _gameOver() {
@@ -277,7 +277,7 @@ export default class World {
         this._readyToConnect = true;
 
         this._touchButtonsContainer.style.display = "none";
-        this._start.style.display = "block";
+        this._start.style.display = "flex";
         this._start.textContent = "RESTART";
 
         if (this._debug === true) {

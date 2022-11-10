@@ -65,22 +65,28 @@ body {
     word-break: break-word;
 }
 
-#start {
+#start-container {
     position: fixed;
     display: none;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    filter: drop-shadow(0.5vmin 0 0 #000000) drop-shadow(0 0.5vmin 0 #000000) drop-shadow(-0.5vmin 0 0 #000000) drop-shadow(0 -0.5vmin 0 #000000);
+}
+
+#start {
     text-align: center;
     font-size: 7vmin;
     background-color: #FFFF00;
     color: #000000;
-    border-radius: 2vmin;
-    width: 35vmin;
-    height: 10vmin;
-    line-height: 10vmin;
+    padding-left: 2vmin;
+    padding-right: 2vmin;
+    height: 8vmin;
+    line-height: 8vmin;
+    clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
 }
 
 #start:hover,
 #start:active {
-    border-color: #000000;
-    border-width: 0.5vmin;
-    border-style: solid;
+    background-color: #B0B000;
 }
