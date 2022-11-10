@@ -40,7 +40,7 @@ body {
     height: 100%;
 }
 
-#buttons-container {
+#touch-buttons-container {
     position: fixed;
     display: none;
     width: 100%;
