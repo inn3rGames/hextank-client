@@ -42,6 +42,7 @@ body {
 
 #buttons-container {
     position: fixed;
+    display: none;
     width: 100%;
     height: 100%;
 }
