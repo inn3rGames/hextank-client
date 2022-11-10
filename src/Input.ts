@@ -113,6 +113,8 @@ export default class Input {
         );
 
         if (currentDeviceIsMobile === true) {
+            document.body.addEventListener("touchstart", () => {}, false);
+
             const container = document.getElementById(
                 "touch-buttons-container"
             ) as HTMLElement;
