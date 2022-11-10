@@ -57,8 +57,9 @@ body {
 }
 
 #splash-screen-content {
+    margin: 6vmin;
     text-align: center;
-    font-size: 60px;
+    font-size: 12vmin;
     color: #FFFFFF;
     word-break: break-word;
 }
@@ -67,11 +68,19 @@ body {
     position: fixed;
     display: none;
     text-align: center;
-    font-size: 30px;
+    font-size: 7vmin;
     background-color: #FFFF00;
     color: #000000;
-    border-radius: 30px;
-    width: 200px;
-    height: 100px;
-    line-height: 100px;
+    border-radius: 2vmin;
+    width: 35vmin;
+    height: 10vmin;
+    line-height: 10vmin;
+}
+
+#start:hover {
+    border-color: #000000;
+    border-width: 0.5vmin;
+    border-style: solid;
+   
+   
 }

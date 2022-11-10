@@ -143,7 +143,7 @@ export default class World {
     private _lastWindowHeight = window.innerHeight;
     private _currentWindowHeight = window.innerHeight;
 
-    private _input: Input;
+    private _input!: Input;
 
     private _debug: boolean = false;
 
@@ -228,6 +228,10 @@ export default class World {
             this._gameStart();
         });
 
+        this._ui();
+    }
+
+    private _ui() {
         this._start.addEventListener("touchstart", async (event) => {
             event.preventDefault();
             this._startSession();
