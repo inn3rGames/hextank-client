@@ -114,7 +114,7 @@ export default class Input {
 
         if (currentDeviceIsMobile === true) {
             const container = document.getElementById(
-                "buttons-container"
+                "touch-buttons-container"
             ) as HTMLElement;
 
             const upColor = "rgba(255, 255, 255, 0.25)";
