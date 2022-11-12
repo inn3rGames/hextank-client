@@ -166,7 +166,7 @@ export default class World {
         ) as HTMLDivElement;
         this._splashScreenContent.textContent = "Loading...";
 
-        this._start = document.getElementById("start-container") as HTMLDivElement;
+        this._start = document.getElementById("start-button-container") as HTMLDivElement;
 
         const log = console.log;
         console.log = () => {};

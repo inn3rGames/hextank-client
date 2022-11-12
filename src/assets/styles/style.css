@@ -65,7 +65,7 @@ body {
     word-break: break-word;
 }
 
-#start-container {
+.button-container {
     position: fixed;
     display: none;
     align-items: center;
@@ -74,7 +74,7 @@ body {
     filter: drop-shadow(0.5vmin 0 0 #000000) drop-shadow(0 0.5vmin 0 #000000) drop-shadow(-0.5vmin 0 0 #000000) drop-shadow(0 -0.5vmin 0 #000000);
 }
 
-#start {
+.button {
     text-align: center;
     font-size: 7vmin;
     background-color: #FFFF00;
@@ -86,7 +86,7 @@ body {
     clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
 }
 
-#start:hover,
-#start:active {
+.button:hover,
+.button:active {
     background-color: #B0B000;
 }
