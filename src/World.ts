@@ -235,32 +235,46 @@ export default class World {
             this._gameStart();
         });
 
-        this._ui();
+        this._setUICallbacks();
     }
 
-    private _ui() {
-        this._startButtonContainer.addEventListener(
-            "touchend",
-            async (event) => {
-                event.preventDefault();
-                await this._startSession();
-            }
-        );
-
+    private _setUICallbacks() {
         this._startButtonContainer.addEventListener(
             "mouseup",
             async (event) => {
                 event.preventDefault();
+
                 await this._startSession();
             }
         );
 
-        this._input = new Input();
-        this._input.enableInput();
+        this._startButtonContainer.addEventListener(
+            "touchend",
+            async (event) => {
+                event.preventDefault();
+
+                const child = this._startButtonContainer
+                    .firstElementChild as HTMLDivElement;
+                child.style.backgroundColor = "#B0B000";
+
+                await this._startSession();
+            }
+        );
+
+        this._startButtonContainer.addEventListener("touchcancel", (event) => {
+            event.preventDefault();
+
+            const child = this._startButtonContainer
+                .firstElementChild as HTMLDivElement;
+            child.style.backgroundColor = "#B0B000";
+        });
 
         window.addEventListener("focus", () => {
             this._focusRegained();
         });
+
+        this._input = new Input();
+        this._input.enableInput();
     }
 
     private _gameStart() {

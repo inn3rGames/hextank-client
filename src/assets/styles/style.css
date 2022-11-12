@@ -90,7 +90,3 @@ body {
 .button:active {
     background-color: #B0B000;
 }
-
-.button:not(:hover) {
-    background-color: #FFFF00;
-}
