@@ -91,7 +91,7 @@ export default class World {
     private _touchButtonsContainer: HTMLDivElement;
     private _splashScreen: HTMLDivElement;
     private _splashScreenContent: HTMLDivElement;
-    private _start: HTMLDivElement;
+    private _startButtonContainer: HTMLDivElement;
 
     private _engine: Engine;
 
@@ -166,7 +166,9 @@ export default class World {
         ) as HTMLDivElement;
         this._splashScreenContent.textContent = "Loading...";
 
-        this._start = document.getElementById("start-button-container") as HTMLDivElement;
+        this._startButtonContainer = document.getElementById(
+            "start-button-container"
+        ) as HTMLDivElement;
 
         const log = console.log;
         console.log = () => {};
@@ -237,15 +239,21 @@ export default class World {
     }
 
     private _ui() {
-        this._start.addEventListener("touchend", async (event) => {
-            event.preventDefault();
-            await this._startSession();
-        });
+        this._startButtonContainer.addEventListener(
+            "touchend",
+            async (event) => {
+                event.preventDefault();
+                await this._startButtonContainerSession();
+            }
+        );
 
-        this._start.addEventListener("mouseup", async (event) => {
-            event.preventDefault();
-            await this._startSession();
-        });
+        this._startButtonContainer.addEventListener(
+            "mouseup",
+            async (event) => {
+                event.preventDefault();
+                await this._startButtonContainerSession();
+            }
+        );
 
         this._input = new Input();
         this._input.enableInput();
@@ -258,7 +266,7 @@ export default class World {
     private _gameStart() {
         this._splashScreenContent.textContent = "Game ready";
         this._splashScreen.style.display = "none";
-        this._start.style.display = "flex";
+        this._startButtonContainer.style.display = "flex";
     }
 
     private _gameOver() {
@@ -277,15 +285,15 @@ export default class World {
         this._readyToConnect = true;
 
         this._touchButtonsContainer.style.display = "none";
-        this._start.style.display = "flex";
-        this._start.children[0].textContent = "RESTART";
+        this._startButtonContainer.style.display = "flex";
+        this._startButtonContainer.children[0].textContent = "RESTART";
 
         if (this._debug === true) {
             console.clear();
         }
     }
 
-    private async _startSession() {
+    private async _startButtonContainerSession() {
         if (this._readyToConnect === true) {
             this._readyToConnect = false;
 
@@ -301,7 +309,7 @@ export default class World {
             await this._connectWorld();
 
             this._touchButtonsContainer.style.display = "block";
-            this._start.style.display = "none";
+            this._startButtonContainer.style.display = "none";
         }
     }
 
