@@ -255,7 +255,7 @@ export default class World {
 
                 const child = this._startButtonContainer
                     .firstElementChild as HTMLDivElement;
-                child.style.backgroundColor = "#B0B000";
+                child.style.backgroundColor = "#FFFF00";
 
                 await this._startSession();
             }
@@ -266,7 +266,7 @@ export default class World {
 
             const child = this._startButtonContainer
                 .firstElementChild as HTMLDivElement;
-            child.style.backgroundColor = "#B0B000";
+            child.style.backgroundColor = "#FFFF00";
         });
 
         window.addEventListener("focus", () => {
