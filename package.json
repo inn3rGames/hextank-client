@@ -22,7 +22,8 @@
     "@babylonjs/core": "^5.31.0",
     "@babylonjs/gui": "^5.31.0",
     "@babylonjs/loaders": "^5.31.0",
-    "colyseus.js": "^0.14.13"
+    "colyseus.js": "^0.14.13",
+    "screenfull": "^6.0.2"
   },
   "devDependencies": {
     "copy-webpack-plugin": "^11.0.0",

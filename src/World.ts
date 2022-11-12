@@ -35,6 +35,7 @@ import "@babylonjs/loaders/glTF/2.0/";
 import "@babylonjs/core/Materials/Textures/Loaders/ktxTextureLoader";
 
 import { Client, Room } from "colyseus.js";
+import screenfull from "screenfull";
 
 import skyboxPx from "./assets/textures/skybox/skybox_px.jpg";
 import skyboxPy from "./assets/textures/skybox/skybox_py.jpg";
@@ -91,7 +92,9 @@ export default class World {
     private _touchButtonsContainer: HTMLDivElement;
     private _splashScreen: HTMLDivElement;
     private _splashScreenContent: HTMLDivElement;
+    private _buttonsModal: HTMLDivElement;
     private _startButtonContainer: HTMLDivElement;
+    private _fullscreenButtonContainer: HTMLDivElement;
 
     private _engine: Engine;
 
@@ -166,8 +169,16 @@ export default class World {
         ) as HTMLDivElement;
         this._splashScreenContent.textContent = "Loading...";
 
+        this._buttonsModal = document.getElementById(
+            "buttons-modal"
+        ) as HTMLDivElement;
+
         this._startButtonContainer = document.getElementById(
             "start-button-container"
+        ) as HTMLDivElement;
+
+        this._fullscreenButtonContainer = document.getElementById(
+            "fullscreen-button-container"
         ) as HTMLDivElement;
 
         const log = console.log;
@@ -269,6 +280,40 @@ export default class World {
             child.style.backgroundColor = "#FFFF00";
         });
 
+        this._fullscreenButtonContainer.addEventListener("mouseup", (event) => {
+            event.preventDefault();
+
+            if (screenfull.isEnabled) {
+                screenfull.toggle();
+            }
+        });
+
+        this._fullscreenButtonContainer.addEventListener(
+            "touchend",
+            (event) => {
+                event.preventDefault();
+
+                const child = this._fullscreenButtonContainer
+                    .firstElementChild as HTMLDivElement;
+                child.style.backgroundColor = "#FFFF00";
+
+                if (screenfull.isEnabled) {
+                    screenfull.toggle();
+                }
+            }
+        );
+
+        this._fullscreenButtonContainer.addEventListener(
+            "touchcancel",
+            (event) => {
+                event.preventDefault();
+
+                const child = this._fullscreenButtonContainer
+                    .firstElementChild as HTMLDivElement;
+                child.style.backgroundColor = "#FFFF00";
+            }
+        );
+
         window.addEventListener("focus", () => {
             this._focusRegained();
         });
@@ -280,7 +325,7 @@ export default class World {
     private _gameStart() {
         this._splashScreenContent.textContent = "Game ready";
         this._splashScreen.style.display = "none";
-        this._startButtonContainer.style.display = "flex";
+        this._buttonsModal.style.display = "flex";
     }
 
     private _gameOver() {
@@ -299,7 +344,7 @@ export default class World {
         this._readyToConnect = true;
 
         this._touchButtonsContainer.style.display = "none";
-        this._startButtonContainer.style.display = "flex";
+        this._buttonsModal.style.display = "flex";
         this._startButtonContainer.children[0].textContent = "RESTART";
 
         if (this._debug === true) {
@@ -323,7 +368,7 @@ export default class World {
             await this._connectWorld();
 
             this._touchButtonsContainer.style.display = "block";
-            this._startButtonContainer.style.display = "none";
+            this._buttonsModal.style.display = "none";
         }
     }
 
