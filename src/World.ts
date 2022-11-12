@@ -243,7 +243,7 @@ export default class World {
             "touchend",
             async (event) => {
                 event.preventDefault();
-                await this._startButtonContainerSession();
+                await this._startSession();
             }
         );
 
@@ -251,7 +251,7 @@ export default class World {
             "mouseup",
             async (event) => {
                 event.preventDefault();
-                await this._startButtonContainerSession();
+                await this._startSession();
             }
         );
 
@@ -293,7 +293,7 @@ export default class World {
         }
     }
 
-    private async _startButtonContainerSession() {
+    private async _startSession() {
         if (this._readyToConnect === true) {
             this._readyToConnect = false;
 
