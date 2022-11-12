@@ -120,6 +120,9 @@ body {
 
 #fullscreen-button {
     width: 10vmin;
-    left: calc(50vw - 12.25vmin - 1vmin);
-    bottom: calc(50vh - 4.25vmin - 1vmin);
+}
+
+#fullscreen-button-container {
+    left: calc(100% - 6.25vmin - 1vmin);
+    bottom: calc(100% - 2.25vmin - 1vmin);
 }
