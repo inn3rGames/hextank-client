@@ -347,9 +347,6 @@ export default class World {
             this._bullets.clear();
 
             await this._connectWorld();
-
-            this._touchButtonsContainer.style.display = "block";
-            this._splashScreen.style.display = "none";
         }
     }
 
@@ -1294,6 +1291,11 @@ export default class World {
                 this._debug
             );
             this._hexTanks.set(serverHexTank.id, clientHexTank);
+
+            if (clientHexTank.id === this._room.sessionId) {
+                this._touchButtonsContainer.style.display = "block";
+                this._splashScreen.style.display = "none";
+            }
 
             if (this._debug === true) {
                 console.log(`HexTank ${serverHexTank.id} joined at: `, {
