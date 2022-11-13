@@ -318,7 +318,11 @@ export default class World {
 
         this._touchButtonsContainer.style.display = "none";
         this._buttonsModal.style.display = "flex";
-        this._startButtonContainer.children[0].textContent = "RESTART";
+
+        this._startButtonContainer.style.width = "35vmin";
+        const child = this._startButtonContainer.children[0] as HTMLElement;
+        child.textContent = "RESTART";
+        child.style.width = "35vmin";
 
         if (this._debug === true) {
             console.clear();
