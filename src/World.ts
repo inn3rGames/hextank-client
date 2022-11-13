@@ -331,6 +331,10 @@ export default class World {
 
     private async _startSession() {
         if (this._readyToConnect === true) {
+            this._buttonsModal.style.display = "none";
+            this._splashScreenContent.textContent = "Connecting...";
+            this._splashScreen.style.display = "flex";
+
             this._readyToConnect = false;
 
             this._hexTanks.forEach((item) => {
@@ -345,7 +349,7 @@ export default class World {
             await this._connectWorld();
 
             this._touchButtonsContainer.style.display = "block";
-            this._buttonsModal.style.display = "none";
+            this._splashScreen.style.display = "none";
         }
     }
 
