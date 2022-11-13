@@ -117,6 +117,7 @@ export default class HexTank {
         this._healthStroke.cornerRadius = 70;
         this._healthStroke.thickness = 15;
         this._healthStroke.color = "#316E00";
+        this._healthStroke.useBitmapCache = true;
         this._healthUI.addControl(this._healthStroke);
 
         this._healthBar = new Rectangle();
@@ -126,6 +127,7 @@ export default class HexTank {
         this._healthBar.thickness = 0;
         this._healthBar.alpha = 0.75;
         this._healthBar.background = "#6DF200";
+        this._healthBar.useBitmapCache = true;
         this._healthStroke.addControl(this._healthBar);
 
         const healthSeparator1 = new Rectangle();
@@ -133,6 +135,7 @@ export default class HexTank {
         healthSeparator1.heightInPixels = 152;
         healthSeparator1.leftInPixels = -350 + 700 * 0.2;
         healthSeparator1.background = "#316E00";
+        healthSeparator1.useBitmapCache = true;
         this._healthStroke.addControl(healthSeparator1);
 
         const healthSeparator2 = new Rectangle();
@@ -140,6 +143,7 @@ export default class HexTank {
         healthSeparator2.heightInPixels = 152;
         healthSeparator2.leftInPixels = -350 + 700 * 0.4;
         healthSeparator2.background = "#316E00";
+        healthSeparator2.useBitmapCache = true;
         this._healthStroke.addControl(healthSeparator2);
 
         const healthSeparator3 = new Rectangle();
@@ -147,6 +151,7 @@ export default class HexTank {
         healthSeparator3.heightInPixels = 152;
         healthSeparator3.leftInPixels = -350 + 700 * 0.6;
         healthSeparator3.background = "#316E00";
+        healthSeparator3.useBitmapCache = true;
         this._healthStroke.addControl(healthSeparator3);
 
         const healthSeparator4 = new Rectangle();
@@ -154,6 +159,7 @@ export default class HexTank {
         healthSeparator4.heightInPixels = 152;
         healthSeparator4.leftInPixels = -350 + 700 * 0.8;
         healthSeparator4.background = "#316E00";
+        healthSeparator4.useBitmapCache = true;
         this._healthStroke.addControl(healthSeparator4);
 
         if (this._debug === true) {
