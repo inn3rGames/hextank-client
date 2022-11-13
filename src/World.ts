@@ -127,6 +127,7 @@ export default class World {
     private _nodesWithShadow: Map<string, AbstractMesh | Mesh> = new Map();
 
     private _hexTanks: Map<string, HexTank> = new Map();
+    private _fakeClientHexTank!: HexTank | undefined;
     private _bullets: Map<string, Bullet> = new Map();
     private _explosions: Map<string, Explosion> = new Map();
 
@@ -447,6 +448,23 @@ export default class World {
             (load / maxLoad) * 100
         )}%`;
         await this._loadMesh(hexTankExplosion, "hexTankExplosion");
+
+        const fakeServerHexTank = {
+            x: 0,
+            z: 0,
+            angle: 0,
+            collisionBody: { radius: 0 },
+            id: "abcde",
+        };
+        this._fakeClientHexTank = new HexTank(
+            fakeServerHexTank,
+            this._scene,
+            this._camera,
+            this._nodesWithShadow,
+            this._modelsMeshes.get("body")!,
+            this._modelsMeshes.get("jet")!,
+            this._debug
+        );
     }
 
     async loadWorld() {
@@ -1295,6 +1313,11 @@ export default class World {
             if (clientHexTank.id === this._room.sessionId) {
                 this._touchButtonsContainer.style.display = "block";
                 this._splashScreen.style.display = "none";
+
+                if (typeof this._fakeClientHexTank !== "undefined") {
+                    this._fakeClientHexTank.deleteMeshes();
+                    this._fakeClientHexTank = undefined;
+                }
             }
 
             if (this._debug === true) {
