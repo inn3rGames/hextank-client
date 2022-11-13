@@ -33,7 +33,7 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            inject: true,
+            inject: "body",
             template: "./public/index.html",
             favicon: "./public/favicon.ico",
         }),
