@@ -264,21 +264,9 @@ export default class World {
             async (event) => {
                 event.preventDefault();
 
-                const child = this._startButtonContainer
-                    .firstElementChild as HTMLDivElement;
-                child.style.backgroundColor = "#FFFF00";
-
                 await this._startSession();
             }
         );
-
-        this._startButtonContainer.addEventListener("touchcancel", (event) => {
-            event.preventDefault();
-
-            const child = this._startButtonContainer
-                .firstElementChild as HTMLDivElement;
-            child.style.backgroundColor = "#FFFF00";
-        });
 
         this._fullscreenButtonContainer.addEventListener("mouseup", (event) => {
             event.preventDefault();
@@ -293,24 +281,9 @@ export default class World {
             (event) => {
                 event.preventDefault();
 
-                const child = this._fullscreenButtonContainer
-                    .firstElementChild as HTMLDivElement;
-                child.style.backgroundColor = "#FFFF00";
-
                 if (screenfull.isEnabled) {
                     screenfull.toggle();
                 }
-            }
-        );
-
-        this._fullscreenButtonContainer.addEventListener(
-            "touchcancel",
-            (event) => {
-                event.preventDefault();
-
-                const child = this._fullscreenButtonContainer
-                    .firstElementChild as HTMLDivElement;
-                child.style.backgroundColor = "#FFFF00";
             }
         );
 

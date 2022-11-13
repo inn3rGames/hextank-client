@@ -126,13 +126,11 @@ body {
     transform: scale(95%);
 }
 
-.button:hover,
-.button:active {
+.button:hover {
     background-color: #B0B000;
 }
 
-.button-small:hover,
-.button-small:active {
+.button-small:hover {
     background-color: #B0B000;
 }
 
