@@ -24,6 +24,15 @@ body {
     background-color: #FFA72D;
 }
 
+body::after {
+    position: absolute;
+    width: 0px;
+    height: 0px;
+    z-index: -1;
+    content: url("../../assets/images/logo.png");
+    visibility: hidden;
+}
+
 #main-container {
     position: fixed;
     display: flex;
@@ -200,6 +209,18 @@ body {
     background-color: rgba(0, 0, 0, 0.5);
 }
 
+#logo {
+    position: fixed;
+    width: 95vmin;
+    height: 34vmin;
+    background-image: url("../../assets/images/logo.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    left: calc(50% - 47.5vmin);
+    bottom: calc(72.5% - 17vmin);
+}
+
 .button-container,
 .button-container-small {
     position: fixed;
@@ -258,6 +279,11 @@ body {
 .button-small:hover {
     background-color: #B0B000;
 }
+
+/* #start-button-container {
+    left: calc(50% - 12.5vmin);
+    bottom: calc(32% - 4vmin);
+} */
 
 #fullscreen-button-container {
     left: calc(100% - 12.5vmin - 5vmin);
