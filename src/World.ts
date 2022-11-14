@@ -272,7 +272,7 @@ export default class World {
         this._fullscreenButtonContainer.addEventListener("mouseup", (event) => {
             event.preventDefault();
 
-            if (screenfull.isEnabled) {
+            if (screenfull.isEnabled === true) {
                 screenfull.toggle();
             }
         });
@@ -282,7 +282,7 @@ export default class World {
             (event) => {
                 event.preventDefault();
 
-                if (screenfull.isEnabled) {
+                if (screenfull.isEnabled === true) {
                     screenfull.toggle();
                 }
             }
