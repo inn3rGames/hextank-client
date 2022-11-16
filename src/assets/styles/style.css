@@ -235,12 +235,12 @@ body::after {
 .button-small {
     position: fixed;
     text-align: center;
-    font-size: 3.5vmin;
+    font-size: 5.25vmin;
     background-color: #FFFF00;
     color: #000000;
-    width: 12.5vmin;
-    height: 4vmin;
-    line-height: 4vmin;
+    width: 18.75vmin;
+    height: 6vmin;
+    line-height: 6vmin;
     clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
 }
 
@@ -293,7 +293,7 @@ body::after {
     background-repeat: no-repeat;
     background-position: center center;
     left: calc(50% - 47.5vmin);
-    bottom: calc(70% - 17vmin);
+    bottom: calc(72% - 17vmin);
 }
 
 #start-button-container {
@@ -302,43 +302,43 @@ body::after {
 }
 
 #twitter-button {
-    width: 16vmin;
-    height: 8vmin;
+    width: 12vmin;
+    height: 6vmin;
     background-image: url("../../assets/images/twitter.png");
-    background-size: 9vmin 7.4vmin;
+    background-size: 6.75vmin 5.55vmin;
     background-repeat: no-repeat;
     background-position: center center;
 }
 
 #twitter-button-container {
-    width: 16vmin;
-    height: 8vmin;
-    right: calc(50% + 25vmin + 7.5vmin);
-    top: calc(100% - 8vmin - 10vmin);
+    width: 12vmin;
+    height: 6vmin;
+    right: calc(50% + 18.75vmin + 7.5vmin);
+    top: calc(100% - 6vmin - 10vmin);
 }
 
 #help-button-container {
     right: calc(50% + 2.5vmin);
-    top: calc(100% - 8vmin - 10vmin);
+    top: calc(100% - 6vmin - 10vmin);
 }
 
 #about-button-container {
     left: calc(50% + 2.5vmin);
-    top: calc(100% - 8vmin - 10vmin);
+    top: calc(100% - 6vmin - 10vmin);
 }
 
 #discord-button {
-    width: 16vmin;
-    height: 8vmin;
+    width: 12vmin;
+    height: 6vmin;
     background-image: url("../../assets/images/discord.png");
-    background-size: 10vmin 7.56vmin;
+    background-size: 7.5vmin 5.67vmin;
     background-repeat: no-repeat;
     background-position: center center;
 }
 
 #discord-button-container {
-    width: 16vmin;
-    height: 8vmin;
-    left: calc(50% + 25vmin + 7.5vmin);
-    top: calc(100% - 8vmin - 10vmin);
+    width: 12vmin;
+    height: 6vmin;
+    left: calc(50% + 18.75vmin + 7.5vmin);
+    top: calc(100% - 6vmin - 10vmin);
 }
