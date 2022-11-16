@@ -29,7 +29,7 @@ body::after {
     width: 0px;
     height: 0px;
     z-index: -1;
-    content: url("../../assets/images/logo.png");
+    content: url("../../assets/images/fullscreen.png") url("../../assets/images/logo.png") url("../../assets/images/twitter.png") url("../../assets/images/discord.png");
     visibility: hidden;
 }
 
@@ -92,7 +92,7 @@ body::after {
     position: absolute;
     width: 1.8vmin;
     height: 1.8vmin;
-    background: #fff;
+    background: #FFFFFF;
     border-radius: 50%;
     animation: lds-default 1.2s linear infinite;
 }
@@ -209,18 +209,6 @@ body::after {
     background-color: rgba(0, 0, 0, 0.5);
 }
 
-#logo {
-    position: fixed;
-    width: 95vmin;
-    height: 34vmin;
-    background-image: url("../../assets/images/logo.png");
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
-    left: calc(50% - 47.5vmin);
-    bottom: calc(72.5% - 17vmin);
-}
-
 .button-container,
 .button-container-small {
     position: fixed;
@@ -285,7 +273,39 @@ body::after {
     bottom: calc(32% - 4vmin);
 } */
 
-#fullscreen-button-container {
-    left: calc(100% - 12.5vmin - 5vmin);
-    bottom: calc(100% - 4vmin - 5vmin);
+#twitter-button {
+    width: 8vmin;
+    height: 4vmin;
+    background-image: url("../../assets/images/twitter.png");
+    background-size: 4.5vmin 3.7vmin;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+#twitter-button-container {
+    width: 8vmin;
+    height: 4vmin;
+    right: calc(100% - 8vmin - 5vmin);
+    top: calc(100% - 4vmin - 5vmin);
+}
+
+#about-button-container {
+    left: calc(50% - 6.25vmin);
+    top: calc(100% - 4vmin - 5vmin);
+}
+
+#discord-button {
+    width: 8vmin;
+    height: 4vmin;
+    background-image: url("../../assets/images/discord.png");
+    background-size: 5vmin 3.78vmin;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+#discord-button-container {
+    width: 8vmin;
+    height: 4vmin;
+    left: calc(100% - 8vmin - 5vmin);
+    top: calc(100% - 4vmin - 5vmin);
 }
