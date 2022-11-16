@@ -269,24 +269,24 @@ body::after {
 }
 
 #help-button-container {
-    left: calc(50% - 6.25vmin);
-    bottom: calc(100% - 4vmin - 5vmin);
+    left: calc(50% - 12.5vmin);
+    bottom: calc(100% - 8vmin - 10vmin);
 }
 
 #fullscreen-button {
-    width: 4vmin;
-    height: 4vmin;
+    width: 8vmin;
+    height: 8vmin;
     background-image: url("../../assets/images/fullscreen.png");
-    background-size: 3vmin 3vmin;
+    background-size: 6vmin 6vmin;
     background-repeat: no-repeat;
     background-position: center center;
 }
 
 #fullscreen-button-container {
-    width: 4vmin;
-    height: 4vmin;
-    left: calc(100% - 3vmin - 5vmin);
-    bottom: calc(100% - 3vmin - 5vmin);
+    width: 8vmin;
+    height: 8vmin;
+    left: calc(100% - 8vmin - 10vmin);
+    bottom: calc(100% - 8vmin - 10vmin);
 }
 
 #logo {
@@ -298,47 +298,47 @@ body::after {
     background-repeat: no-repeat;
     background-position: center center;
     left: calc(50% - 47.5vmin);
-    bottom: calc(72.5% - 17vmin);
+    bottom: calc(62.5% - 17vmin);
 }
 
-/* #start-button-container {
+#start-button-container {
     left: calc(50% - 12.5vmin);
-    bottom: calc(32% - 4vmin);
-} */
+    bottom: calc(39% - 4vmin);
+}
 
 #twitter-button {
-    width: 8vmin;
-    height: 4vmin;
+    width: 16vmin;
+    height: 8vmin;
     background-image: url("../../assets/images/twitter.png");
-    background-size: 4.5vmin 3.7vmin;
+    background-size: 9vmin 7.4vmin;
     background-repeat: no-repeat;
     background-position: center center;
 }
 
 #twitter-button-container {
-    width: 8vmin;
-    height: 4vmin;
-    right: calc(100% - 8vmin - 5vmin);
-    top: calc(100% - 4vmin - 5vmin);
+    width: 16vmin;
+    height: 8vmin;
+    right: calc(100% - 16vmin - 10vmin);
+    top: calc(100% - 8vmin - 10vmin);
 }
 
 #about-button-container {
-    left: calc(50% - 6.25vmin);
-    top: calc(100% - 4vmin - 5vmin);
+    left: calc(50% - 12.5vmin);
+    top: calc(100% - 8vmin - 10vmin);
 }
 
 #discord-button {
-    width: 8vmin;
-    height: 4vmin;
+    width: 16vmin;
+    height: 8vmin;
     background-image: url("../../assets/images/discord.png");
-    background-size: 5vmin 3.78vmin;
+    background-size: 10vmin 7.56vmin;
     background-repeat: no-repeat;
     background-position: center center;
 }
 
 #discord-button-container {
-    width: 8vmin;
-    height: 4vmin;
-    left: calc(100% - 8vmin - 5vmin);
-    top: calc(100% - 4vmin - 5vmin);
+    width: 16vmin;
+    height: 8vmin;
+    left: calc(100% - 16vmin - 10vmin);
+    top: calc(100% - 8vmin - 10vmin);
 }
