@@ -268,11 +268,6 @@ body::after {
     background-color: #B0B000;
 }
 
-#help-button-container {
-    left: calc(50% - 12.5vmin);
-    bottom: calc(100% - 8vmin - 10vmin);
-}
-
 #fullscreen-button {
     width: 5vmin;
     height: 5vmin;
@@ -298,12 +293,12 @@ body::after {
     background-repeat: no-repeat;
     background-position: center center;
     left: calc(50% - 47.5vmin);
-    bottom: calc(62.5% - 17vmin);
+    bottom: calc(70% - 17vmin);
 }
 
 #start-button-container {
     left: calc(50% - 12.5vmin);
-    bottom: calc(39% - 4vmin);
+    bottom: calc(50% - 4vmin);
 }
 
 #twitter-button {
@@ -318,12 +313,17 @@ body::after {
 #twitter-button-container {
     width: 16vmin;
     height: 8vmin;
-    right: calc(50% - 8vmin + 30vmin);
+    right: calc(50% + 25vmin + 7.5vmin);
+    top: calc(100% - 8vmin - 10vmin);
+}
+
+#help-button-container {
+    right: calc(50% + 2.5vmin);
     top: calc(100% - 8vmin - 10vmin);
 }
 
 #about-button-container {
-    left: calc(50% - 12.5vmin);
+    left: calc(50% + 2.5vmin);
     top: calc(100% - 8vmin - 10vmin);
 }
 
@@ -339,6 +339,6 @@ body::after {
 #discord-button-container {
     width: 16vmin;
     height: 8vmin;
-    left: calc(50% - 8vmin + 30vmin);
+    left: calc(50% + 25vmin + 7.5vmin);
     top: calc(100% - 8vmin - 10vmin);
 }
