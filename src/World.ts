@@ -95,6 +95,8 @@ export default class World {
     private _buttonsModal: HTMLDivElement;
     private _startButtonContainer: HTMLDivElement;
     private _fullscreenButtonContainer: HTMLDivElement;
+    private _discordButtonContainer: HTMLDivElement;
+    private _twitterButtonContainer: HTMLDivElement;
 
     private _engine: Engine;
 
@@ -180,6 +182,14 @@ export default class World {
 
         this._fullscreenButtonContainer = document.getElementById(
             "fullscreen-button-container"
+        ) as HTMLDivElement;
+
+        this._twitterButtonContainer = document.getElementById(
+            "twitter-button-container"
+        ) as HTMLDivElement;
+
+        this._discordButtonContainer = document.getElementById(
+            "discord-button-container"
         ) as HTMLDivElement;
 
         const log = console.log;
@@ -287,6 +297,26 @@ export default class World {
                 }
             }
         );
+
+        this._twitterButtonContainer.addEventListener("mouseup", (event) => {
+            event.preventDefault();
+            window.open("https://twitter.com/HexTank_io");
+        });
+
+        this._twitterButtonContainer.addEventListener("touchend", (event) => {
+            event.preventDefault();
+            window.open("https://twitter.com/HexTank_io");
+        });
+
+        this._discordButtonContainer.addEventListener("mouseup", (event) => {
+            event.preventDefault();
+            window.open("https://discord.gg/PgW9BVysqH");
+        });
+
+        this._discordButtonContainer.addEventListener("touchend", (event) => {
+            event.preventDefault();
+            window.open("https://discord.gg/PgW9BVysqH");
+        });
 
         window.addEventListener("focus", () => {
             this._focusRegained();
