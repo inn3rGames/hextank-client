@@ -92,7 +92,7 @@ body::after {
     position: absolute;
     width: 1.8vmin;
     height: 1.8vmin;
-    background: #fff;
+    background: #FFFFFF;
     border-radius: 50%;
     animation: lds-default 1.2s linear infinite;
 }
@@ -223,7 +223,7 @@ body::after {
     position: fixed;
     text-align: center;
     font-size: 7vmin;
-    background-color: #ffff00;
+    background-color: #FFFF00;
     color: #000000;
     width: 25vmin;
     height: 8vmin;
@@ -236,7 +236,7 @@ body::after {
     position: fixed;
     text-align: center;
     font-size: 3.5vmin;
-    background-color: #ffff00;
+    background-color: #FFFF00;
     color: #000000;
     width: 12.5vmin;
     height: 4vmin;
@@ -261,11 +261,11 @@ body::after {
 }
 
 .button:hover {
-    background-color: #b0b000;
+    background-color: #B0B000;
 }
 
 .button-small:hover {
-    background-color: #b0b000;
+    background-color: #B0B000;
 }
 
 #help-button-container {
