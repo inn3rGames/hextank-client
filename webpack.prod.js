@@ -9,6 +9,7 @@ module.exports = merge(common, {
             patterns: [
                 { from: "./public/draco", to: "./draco" },
                 { from: "./public/ktx2", to: "./ktx2" },
+                { from: "./public/smallLogo.png", to: "./" },
             ],
         }),
     ],
