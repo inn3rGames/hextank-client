@@ -296,6 +296,26 @@ body::after {
     bottom: calc(72% - 17vmin);
 }
 
+#beta-button-container {
+    position: absolute;
+    font-size: 3.5vmin;
+    width: 12.5vmin;
+    height: 4vmin;
+    line-height: 4vmin;
+    background-color: #FFFFFF;
+    left: calc(100% - 12.5vmin - 1.5vmin);
+    top: calc(50% - 2vmin + 6.5vmin);
+}
+
+#beta-button {
+    font-size: 3.5vmin;
+    width: 12.5vmin;
+    height: 4vmin;
+    line-height: 4vmin;
+    background-color: #0ac70a;
+    color: #FFFFFF;
+}
+
 #start-button-container {
     left: calc(50% - 12.5vmin);
     bottom: calc(50% - 4vmin);
