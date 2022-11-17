@@ -342,3 +342,15 @@ body::after {
     left: calc(50% + 18.75vmin + 7.5vmin);
     top: calc(100% - 6vmin - 10vmin);
 }
+
+#version {
+    position: fixed;
+    text-align: center;
+    font-size: 2.5vmin;
+    color: #000000;
+    width: 50vmin;
+    height: 2.5vmin;
+    line-height: 2.5vmin;
+    top: calc(100% - 10vmin + 4vmin);
+    opacity: 25%;
+}
