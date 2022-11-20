@@ -22,7 +22,6 @@ body {
     user-select: none;
     -webkit-user-select: none;
     background-color: #FFA72D;
-    pointer-events: none;
 }
 
 body::after {
@@ -55,7 +54,6 @@ body::after {
     display: none;
     width: 100%;
     height: 100%;
-    pointer-events: auto;
 }
 
 #splash-screen {
@@ -231,7 +229,6 @@ body::after {
     height: 8vmin;
     line-height: 8vmin;
     clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
-    pointer-events: auto;
 }
 
 .button-container-small,
@@ -245,7 +242,6 @@ body::after {
     height: 6vmin;
     line-height: 6vmin;
     clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
-    pointer-events: auto;
 }
 
 .button-container {
@@ -332,7 +328,6 @@ body::after {
     left: calc(50% - 30vmin);
     bottom: calc(42%);
     clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
-    pointer-events: auto;
 }
 
 #input-field-container:hover {
@@ -353,7 +348,6 @@ body::after {
     border: solid 0vmin;
     clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
     transform: scale(95%);
-    pointer-events: auto;
 }
 
 #input-field::selection {
