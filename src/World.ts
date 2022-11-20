@@ -266,40 +266,25 @@ export default class World {
     }
 
     private _setUICallbacks() {
-        /* this._inputField.addEventListener("keydown", (event) => {
-            //event.preventDefault();
-            console.log(event);
-        });
-        this._inputField.addEventListener("keyeup", (event) => {
-            //event.preventDefault();
-            console.log(event);
-        });
-
         this._inputField.addEventListener("mousedown", (event) => {
-            //event.preventDefault();
-            console.log(event);
+            event.stopPropagation();
         });
         this._inputField.addEventListener("mouseup", (event) => {
-            //event.preventDefault();
-            console.log(event);
+            event.stopPropagation();
         });
         this._inputField.addEventListener("mouseleave", (event) => {
-            //event.preventDefault();
-            console.log(event);
+            event.stopPropagation();
         });
 
         this._inputField.addEventListener("touchstart", (event) => {
-            //event.preventDefault();
-            console.log(event);
+            event.stopPropagation();
         });
         this._inputField.addEventListener("touchend", (event) => {
-            //event.preventDefault();
-            console.log(event);
+            event.stopPropagation();
         });
         this._inputField.addEventListener("touchcancel", (event) => {
-            //event.preventDefault();
-            console.log(event);
-        }); */
+            event.stopPropagation();
+        });
 
         this._startButtonContainer.addEventListener(
             "mouseup",
