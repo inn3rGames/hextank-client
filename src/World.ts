@@ -1375,7 +1375,9 @@ export default class World {
 
         this._client = new Client(serverAddress);
         try {
-            this._room = await this._client.join("world_room");
+            this._room = await this._client.join("world_room", {
+                name: this._inputField.value,
+            });
         } catch (e) {
             if (this._debug === true) {
                 console.log(e);

@@ -8,6 +8,7 @@ import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
 import { Color3 } from "@babylonjs/core/Maths/math.color";
 import { AdvancedDynamicTexture } from "@babylonjs/gui/2D/advancedDynamicTexture";
 import { Rectangle } from "@babylonjs/gui/2D/controls/rectangle";
+import { TextBlock } from "@babylonjs/gui/2D/controls/textBlock";
 
 export default class HexTank {
     private _x: number;
@@ -15,6 +16,7 @@ export default class HexTank {
     private _angle: number;
     private _radius: number;
     id: string;
+    private _name: string;
     private _scene: Scene;
     private _camera: ArcRotateCamera;
     private _nodesWithShadow: Map<string, TransformNode>;
@@ -50,6 +52,7 @@ export default class HexTank {
         this._angle = serverHexTank.angle;
         this._radius = serverHexTank.collisionBody.radius;
         this.id = serverHexTank.id;
+        this._name = serverHexTank.name;
         this._scene = scene;
         this._camera = camera;
         this._nodesWithShadow = nodesWithShadow;
@@ -161,6 +164,15 @@ export default class HexTank {
         healthSeparator4.background = "#316E00";
         healthSeparator4.useBitmapCache = true;
         this._healthStroke.addControl(healthSeparator4);
+
+        const nameText = new TextBlock("name" + this.id, this._name);
+        nameText.color = "#FFFFFF";
+        nameText.fontSize = 200;
+        nameText.fontFamily = "HexTank Font";
+        nameText.topInPixels = -200;
+        nameText.outlineColor = "#000000";
+        nameText.outlineWidth = 20;
+        this._healthUI.addControl(nameText);
 
         if (this._debug === true) {
             this._debugBody = MeshBuilder.CreateCylinder("debugBody", {
