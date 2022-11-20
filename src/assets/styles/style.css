@@ -347,6 +347,8 @@ body::after {
     appearance: none;
     border: solid 0vmin;
     clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
+    margin: 0vmin;
+    padding: 0vmin;
 }
 
 #input-field::selection {
