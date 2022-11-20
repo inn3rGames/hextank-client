@@ -93,6 +93,7 @@ export default class World {
     private _splashScreen: HTMLDivElement;
     private _splashScreenContent: HTMLDivElement;
     private _buttonsModal: HTMLDivElement;
+    private _inputFieldContainer: HTMLDivElement;
     private _inputField: HTMLInputElement;
     private _startButtonContainer: HTMLDivElement;
     private _fullscreenButtonContainer: HTMLDivElement;
@@ -175,6 +176,10 @@ export default class World {
 
         this._buttonsModal = document.getElementById(
             "buttons-modal"
+        ) as HTMLDivElement;
+
+        this._inputFieldContainer = document.getElementById(
+            "input-field-container"
         ) as HTMLDivElement;
 
         this._inputField = document.getElementById(
@@ -268,6 +273,7 @@ export default class World {
     private _setUICallbacks() {
         this._inputField.addEventListener("mousedown", (event) => {
             event.stopPropagation();
+            this._inputFieldContainer.style.backgroundColor = "#000000";
         });
         this._inputField.addEventListener("mouseup", (event) => {
             event.stopPropagation();
@@ -277,6 +283,7 @@ export default class World {
         });
 
         this._inputField.addEventListener("touchstart", (event) => {
+            this._inputFieldContainer.style.backgroundColor = "#000000";
             event.stopPropagation();
         });
         this._inputField.addEventListener("touchend", (event) => {
@@ -288,6 +295,7 @@ export default class World {
 
         this._buttonsModal.addEventListener("mousedown", (event) => {
             event.stopPropagation();
+            this._inputFieldContainer.style.backgroundColor = "#767676";
         });
         this._buttonsModal.addEventListener("mouseup", (event) => {
             event.stopPropagation();
@@ -298,6 +306,7 @@ export default class World {
 
         this._buttonsModal.addEventListener("touchstart", (event) => {
             event.stopPropagation();
+            this._inputFieldContainer.style.backgroundColor = "#767676";
         });
         this._buttonsModal.addEventListener("touchend", (event) => {
             event.stopPropagation();
