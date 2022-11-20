@@ -376,6 +376,10 @@ export default class World {
             this._focusRegained();
         });
 
+        window.addEventListener("blur", () => {
+            this._inputFieldContainer.style.backgroundColor = "#767676";
+        });
+
         this._input = new Input();
         this._input.enableInput();
     }

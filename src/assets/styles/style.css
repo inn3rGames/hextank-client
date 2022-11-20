@@ -336,6 +336,7 @@ body::after {
     font-size: 10vmin;
     background-color: #FFFFFF;
     color: #000000;
+    caret-color: #000000;
     width: 60vmin;
     height: 12vmin;
     line-height: 12vmin;
