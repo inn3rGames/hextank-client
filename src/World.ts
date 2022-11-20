@@ -286,6 +286,26 @@ export default class World {
             event.stopPropagation();
         });
 
+        this._buttonsModal.addEventListener("mousedown", (event) => {
+            event.stopPropagation();
+        });
+        this._buttonsModal.addEventListener("mouseup", (event) => {
+            event.stopPropagation();
+        });
+        this._buttonsModal.addEventListener("mouseleave", (event) => {
+            event.stopPropagation();
+        });
+
+        this._buttonsModal.addEventListener("touchstart", (event) => {
+            event.stopPropagation();
+        });
+        this._buttonsModal.addEventListener("touchend", (event) => {
+            event.stopPropagation();
+        });
+        this._buttonsModal.addEventListener("touchcancel", (event) => {
+            event.stopPropagation();
+        });
+
         this._startButtonContainer.addEventListener(
             "mouseup",
             async (event) => {
