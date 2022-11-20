@@ -337,17 +337,16 @@ body::after {
 #input-field {
     position: fixed;
     text-align: center;
-    font-size: 10vmin;
+    font-size: 9.5vmin;
     background-color: #FFFFFF;
     color: #000000;
-    width: 60vmin;
-    height: 12vmin;
-    line-height: 12vmin;
+    width: 57vmin;
+    height: 11.4vmin;
+    line-height: 11.4vmin;
     outline: none;
     appearance: none;
     border: solid 0vmin;
     clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
-    transform: scale(95%);
 }
 
 #input-field::selection {
