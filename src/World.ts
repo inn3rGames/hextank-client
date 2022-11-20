@@ -93,6 +93,7 @@ export default class World {
     private _splashScreen: HTMLDivElement;
     private _splashScreenContent: HTMLDivElement;
     private _buttonsModal: HTMLDivElement;
+    private _inputField: HTMLInputElement;
     private _startButtonContainer: HTMLDivElement;
     private _fullscreenButtonContainer: HTMLDivElement;
     private _discordButtonContainer: HTMLDivElement;
@@ -175,6 +176,10 @@ export default class World {
         this._buttonsModal = document.getElementById(
             "buttons-modal"
         ) as HTMLDivElement;
+
+        this._inputField = document.getElementById(
+            "input-field"
+        ) as HTMLInputElement;
 
         this._startButtonContainer = document.getElementById(
             "start-button-container"
@@ -261,6 +266,41 @@ export default class World {
     }
 
     private _setUICallbacks() {
+        /* this._inputField.addEventListener("keydown", (event) => {
+            //event.preventDefault();
+            console.log(event);
+        });
+        this._inputField.addEventListener("keyeup", (event) => {
+            //event.preventDefault();
+            console.log(event);
+        });
+
+        this._inputField.addEventListener("mousedown", (event) => {
+            //event.preventDefault();
+            console.log(event);
+        });
+        this._inputField.addEventListener("mouseup", (event) => {
+            //event.preventDefault();
+            console.log(event);
+        });
+        this._inputField.addEventListener("mouseleave", (event) => {
+            //event.preventDefault();
+            console.log(event);
+        });
+
+        this._inputField.addEventListener("touchstart", (event) => {
+            //event.preventDefault();
+            console.log(event);
+        });
+        this._inputField.addEventListener("touchend", (event) => {
+            //event.preventDefault();
+            console.log(event);
+        });
+        this._inputField.addEventListener("touchcancel", (event) => {
+            //event.preventDefault();
+            console.log(event);
+        }); */
+
         this._startButtonContainer.addEventListener(
             "mouseup",
             async (event) => {

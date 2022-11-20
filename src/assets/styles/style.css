@@ -22,7 +22,6 @@ body {
     user-select: none;
     -webkit-user-select: none;
     background-color: #FFA72D;
-    pointer-events: none;
 }
 
 body::after {
@@ -217,7 +216,6 @@ body::after {
     align-items: center;
     justify-content: center;
     text-align: center;
-    pointer-events: auto;
 }
 
 .button-container,
@@ -231,7 +229,6 @@ body::after {
     height: 8vmin;
     line-height: 8vmin;
     clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
-    pointer-events: auto;
 }
 
 .button-container-small,
@@ -245,7 +242,6 @@ body::after {
     height: 6vmin;
     line-height: 6vmin;
     clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
-    pointer-events: auto;
 }
 
 .button-container {
@@ -326,12 +322,16 @@ body::after {
     align-items: center;
     justify-content: center;
     text-align: center;
-    pointer-events: auto;
-    width: 50vmin;
+    background-color: #767676;
+    width: 60vmin;
     height: 12vmin;
-    left: calc(50% - 25vmin);
+    left: calc(50% - 30vmin);
     bottom: calc(42%);
     clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
+}
+
+#input-field-container:hover {
+    background-color: #000000;
 }
 
 #input-field {
@@ -340,13 +340,22 @@ body::after {
     font-size: 10vmin;
     background-color: #FFFFFF;
     color: #000000;
-    width: 50vmin;
+    width: 60vmin;
     height: 12vmin;
     line-height: 12vmin;
+    outline: none;
+    appearance: none;
+    border: solid 0vmin;
+    clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
+    transform: scale(95%);
 }
 
-#input-field::selection{
+#input-field::selection {
     background-color: #FFFF00;
+}
+
+#input-field:focus::placeholder{
+    color: #FFFFFF;
 }
 
 #start-button-container {
