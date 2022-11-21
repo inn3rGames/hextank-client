@@ -271,6 +271,14 @@ export default class World {
     }
 
     private _setUICallbacks() {
+        if (localStorage.getItem("name") === null) {
+            localStorage.setItem("name", "");
+        }
+        this._inputField.value = localStorage.getItem("name")!;
+        this._inputField.addEventListener("keyup", () => {
+            localStorage.setItem("name", this._inputField.value);
+        });
+
         this._inputField.addEventListener("mousedown", (event) => {
             event.stopPropagation();
             this._inputFieldContainer.style.backgroundColor = "#000000";
