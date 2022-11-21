@@ -1378,7 +1378,7 @@ export default class World {
     }
 
     private async _connect() {
-        let serverAddress = "wss://coral-app-4pa5u.ondigitalocean.app";
+        let serverAddress = "wss://fra1.hextank.io";
         if (window.location.protocol === "http:") {
             serverAddress = "ws://localhost:2567";
             console.log("%c Development mode.", "background-color: #FFFF00");
