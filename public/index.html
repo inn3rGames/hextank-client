@@ -53,7 +53,7 @@
             </div>
             <div id="input-field-container">
                 <input type="text" id="input-field" placeholder="name" spellcheck="false"
-                    autocomplete="off" autocorrect="off" />
+                    autocomplete="off" autocorrect="off" maxlength="16" onkeypress="return /[0-9a-z]/gi.test(event.key)"/>
             </div>
             <div id="start-button-container" class="button-container">
                 <div id="start-button" class="button">START</div>

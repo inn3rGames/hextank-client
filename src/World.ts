@@ -543,6 +543,7 @@ export default class World {
             angle: 0,
             collisionBody: { radius: 0 },
             id: "abcde",
+            name: "guest",
         };
         this._fakeClientHexTank = new HexTank(
             fakeServerHexTank,

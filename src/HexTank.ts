@@ -167,11 +167,25 @@ export default class HexTank {
 
         const nameText = new TextBlock("name" + this.id, this._name);
         nameText.color = "#FFFFFF";
-        nameText.fontSize = 200;
-        nameText.fontFamily = "HexTank Font";
+        nameText.widthInPixels = 1024;
+        nameText.heightInPixels = 1024;
         nameText.topInPixels = -200;
+        nameText.fontSizeInPixels = 200;
+        nameText.fontFamily = "HexTank Font";
         nameText.outlineColor = "#000000";
         nameText.outlineWidth = 20;
+
+        let fontScale = 1024 / (this._name.length * 180);
+        if (fontScale >= 1) {
+            fontScale = 1;
+        }
+        if (fontScale <= 0.5) {
+            nameText.textWrapping = 2;
+            fontScale = 0.5;
+        }
+        nameText.fontSizeInPixels = 200 * fontScale;
+        nameText.outlineWidth = 20 * fontScale;
+
         this._healthUI.addControl(nameText);
 
         if (this._debug === true) {
