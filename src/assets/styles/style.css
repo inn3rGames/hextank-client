@@ -316,7 +316,7 @@ body::after {
     color: #FFFFFF;
 }
 
-#input-field-container {
+#form-container {
     position: fixed;
     display: flex;
     align-items: center;

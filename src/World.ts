@@ -93,7 +93,7 @@ export default class World {
     private _splashScreen: HTMLDivElement;
     private _splashScreenContent: HTMLDivElement;
     private _buttonsModal: HTMLDivElement;
-    private _inputFieldContainer: HTMLDivElement;
+    private _formContainer: HTMLFormElement;
     private _inputField: HTMLInputElement;
     private _startButtonContainer: HTMLDivElement;
     private _fullscreenButtonContainer: HTMLDivElement;
@@ -178,9 +178,9 @@ export default class World {
             "buttons-modal"
         ) as HTMLDivElement;
 
-        this._inputFieldContainer = document.getElementById(
-            "input-field-container"
-        ) as HTMLDivElement;
+        this._formContainer = document.getElementById(
+            "form-container"
+        ) as HTMLFormElement;
 
         this._inputField = document.getElementById(
             "input-field"
@@ -281,7 +281,7 @@ export default class World {
 
         this._inputField.addEventListener("mousedown", (event) => {
             event.stopPropagation();
-            this._inputFieldContainer.style.backgroundColor = "#000000";
+            this._formContainer.style.backgroundColor = "#000000";
         });
         this._inputField.addEventListener("mouseup", (event) => {
             event.stopPropagation();
@@ -291,7 +291,7 @@ export default class World {
         });
 
         this._inputField.addEventListener("touchstart", (event) => {
-            this._inputFieldContainer.style.backgroundColor = "#000000";
+            this._formContainer.style.backgroundColor = "#000000";
             event.stopPropagation();
         });
         this._inputField.addEventListener("touchend", (event) => {
@@ -303,7 +303,7 @@ export default class World {
 
         this._buttonsModal.addEventListener("mousedown", (event) => {
             event.stopPropagation();
-            this._inputFieldContainer.style.backgroundColor = "#767676";
+            this._formContainer.style.backgroundColor = "#767676";
         });
         this._buttonsModal.addEventListener("mouseup", (event) => {
             event.stopPropagation();
@@ -314,13 +314,19 @@ export default class World {
 
         this._buttonsModal.addEventListener("touchstart", (event) => {
             event.stopPropagation();
-            this._inputFieldContainer.style.backgroundColor = "#767676";
+            this._formContainer.style.backgroundColor = "#767676";
         });
         this._buttonsModal.addEventListener("touchend", (event) => {
             event.stopPropagation();
         });
         this._buttonsModal.addEventListener("touchcancel", (event) => {
             event.stopPropagation();
+        });
+
+        this._formContainer.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            await this._startSession();
         });
 
         this._startButtonContainer.addEventListener(
@@ -385,7 +391,7 @@ export default class World {
         });
 
         window.addEventListener("blur", () => {
-            this._inputFieldContainer.style.backgroundColor = "#767676";
+            this._formContainer.style.backgroundColor = "#767676";
         });
 
         this._input = new Input();
