@@ -92,7 +92,7 @@ export default class World {
     private _touchButtonsContainer: HTMLDivElement;
     private _splashScreen: HTMLDivElement;
     private _splashScreenContent: HTMLDivElement;
-    private _buttonsModal: HTMLDivElement;
+    private _homeUI: HTMLDivElement;
     private _formContainer: HTMLFormElement;
     private _inputField: HTMLInputElement;
     private _startButtonContainer: HTMLDivElement;
@@ -174,9 +174,7 @@ export default class World {
         ) as HTMLDivElement;
         this._splashScreenContent.textContent = "Loading...";
 
-        this._buttonsModal = document.getElementById(
-            "buttons-modal"
-        ) as HTMLDivElement;
+        this._homeUI = document.getElementById("home-ui") as HTMLDivElement;
 
         this._formContainer = document.getElementById(
             "form-container"
@@ -252,7 +250,7 @@ export default class World {
         this._optimizer.onFailureObservable.add(() => {
             this._shadowGenerator.dispose();
 
-            this._gameStart();
+            this._showHomeUI();
         });
 
         this._optimizer.onNewOptimizationAppliedObservable.add((event) => {
@@ -264,7 +262,7 @@ export default class World {
         });
 
         this._optimizer.onSuccessObservable.add(() => {
-            this._gameStart();
+            this._showHomeUI();
         });
 
         this._setUICallbacks();
@@ -301,32 +299,32 @@ export default class World {
             event.stopPropagation();
         });
 
-        this._buttonsModal.addEventListener("mousedown", (event) => {
+        this._homeUI.addEventListener("mousedown", (event) => {
             event.stopPropagation();
             this._formContainer.style.backgroundColor = "#767676";
         });
-        this._buttonsModal.addEventListener("mouseup", (event) => {
+        this._homeUI.addEventListener("mouseup", (event) => {
             event.stopPropagation();
         });
-        this._buttonsModal.addEventListener("mouseleave", (event) => {
+        this._homeUI.addEventListener("mouseleave", (event) => {
             event.stopPropagation();
         });
 
-        this._buttonsModal.addEventListener("touchstart", (event) => {
+        this._homeUI.addEventListener("touchstart", (event) => {
             event.stopPropagation();
             this._formContainer.style.backgroundColor = "#767676";
         });
-        this._buttonsModal.addEventListener("touchend", (event) => {
+        this._homeUI.addEventListener("touchend", (event) => {
             event.stopPropagation();
         });
-        this._buttonsModal.addEventListener("touchcancel", (event) => {
+        this._homeUI.addEventListener("touchcancel", (event) => {
             event.stopPropagation();
         });
 
         this._formContainer.addEventListener("submit", async (event) => {
             event.preventDefault();
 
-            await this._startSession();
+            await this._sessionStart();
         });
 
         this._startButtonContainer.addEventListener(
@@ -334,7 +332,7 @@ export default class World {
             async (event) => {
                 event.preventDefault();
 
-                await this._startSession();
+                await this._sessionStart();
             }
         );
 
@@ -343,7 +341,7 @@ export default class World {
             async (event) => {
                 event.preventDefault();
 
-                await this._startSession();
+                await this._sessionStart();
             }
         );
 
@@ -398,13 +396,13 @@ export default class World {
         this._input.enableInput();
     }
 
-    private _gameStart() {
+    private _showHomeUI() {
         this._splashScreenContent.textContent = "Game ready";
         this._splashScreen.style.display = "none";
-        this._buttonsModal.style.display = "flex";
+        this._homeUI.style.display = "flex";
     }
 
-    private _gameOver() {
+    private _sessionEnd() {
         this._room.removeAllListeners();
         this._room.leave();
 
@@ -420,7 +418,7 @@ export default class World {
         this._readyToConnect = true;
 
         this._touchButtonsContainer.style.display = "none";
-        this._buttonsModal.style.display = "flex";
+        this._homeUI.style.display = "flex";
 
         this._startButtonContainer.style.width = "35vmin";
         const child = this._startButtonContainer.children[0] as HTMLElement;
@@ -432,9 +430,9 @@ export default class World {
         }
     }
 
-    private async _startSession() {
+    private async _sessionStart() {
         if (this._readyToConnect === true) {
-            this._buttonsModal.style.display = "none";
+            this._homeUI.style.display = "none";
             this._splashScreenContent.textContent = "Connecting...";
             this._splashScreen.style.display = "flex";
 
@@ -1446,7 +1444,7 @@ export default class World {
                     this._hexTanks.delete(serverHexTank.id);
 
                     if (this._room.sessionId === serverHexTank.id) {
-                        this._gameOver();
+                        this._sessionEnd();
                     }
                 }
             }
