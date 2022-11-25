@@ -428,7 +428,6 @@ export default class World {
 
     private _sessionEnd() {
         this._readyToConnect = true;
-
         this._room.removeAllListeners();
         this._room.leave();
         this._clearItems();
@@ -441,9 +440,8 @@ export default class World {
 
     private async _sessionStart() {
         if (this._readyToConnect === true) {
-            this._readyToConnect = false;
-
             this._showSplashScreen("Connecting...");
+            this._readyToConnect = false;
             this._clearItems();
             await this._connectWorld();
         }
