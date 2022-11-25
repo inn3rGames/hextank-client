@@ -2,8 +2,37 @@ import World from "./World";
 import "./assets/styles/style.css";
 import pkg from "../package.json";
 
-const world = new World();
+window.addEventListener("mousedown", (event) => {
+    event.preventDefault();
+});
+window.addEventListener("mousemove", (event) => {
+    event.preventDefault();
+});
+window.addEventListener("mouseup", (event) => {
+    event.preventDefault();
+});
+window.addEventListener("mouseleave", (event) => {
+    event.preventDefault();
+});
 
+window.addEventListener("touchstart", (event) => {
+    event.preventDefault();
+});
+window.addEventListener("toucmove", (event) => {
+    event.preventDefault();
+});
+window.addEventListener("touchend", (event) => {
+    event.preventDefault();
+});
+window.addEventListener("touchcancel", (event) => {
+    event.preventDefault();
+});
+
+window.addEventListener("contextmenu", (event) => {
+    event.preventDefault();
+});
+
+const world = new World();
 async function loadGame() {
     const packageName = pkg.name;
     const packageVersion = pkg.version;
@@ -18,7 +47,6 @@ async function loadGame() {
         world.updateWorld();
     });
 }
-
 window.addEventListener("load", () => {
     loadGame();
 });

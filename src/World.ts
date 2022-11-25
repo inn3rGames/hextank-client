@@ -152,7 +152,7 @@ export default class World {
     private _lastWindowHeight = window.innerHeight;
     private _currentWindowHeight = window.innerHeight;
 
-    private _input!: Input;
+    private _input: Input;
 
     private _debug: boolean = false;
 
@@ -265,6 +265,8 @@ export default class World {
             this._showHomeUI();
         });
 
+        this._input = new Input();
+
         this._setUICallbacks();
     }
 
@@ -281,6 +283,9 @@ export default class World {
             event.stopPropagation();
             this._formContainer.style.backgroundColor = "#000000";
         });
+        this._inputField.addEventListener("mousemove", (event) => {
+            event.stopPropagation();
+        });
         this._inputField.addEventListener("mouseup", (event) => {
             event.stopPropagation();
         });
@@ -290,6 +295,9 @@ export default class World {
 
         this._inputField.addEventListener("touchstart", (event) => {
             this._formContainer.style.backgroundColor = "#000000";
+            event.stopPropagation();
+        });
+        this._inputField.addEventListener("touchmove", (event) => {
             event.stopPropagation();
         });
         this._inputField.addEventListener("touchend", (event) => {
@@ -392,7 +400,6 @@ export default class World {
             this._formContainer.style.backgroundColor = "#767676";
         });
 
-        this._input = new Input();
         this._input.enableInput();
     }
 
@@ -672,25 +679,12 @@ export default class World {
         this._ground.material = this._groundMaterial;
         this._ground.receiveShadows = true;
 
-        this._torus = MeshBuilder.CreateTorus("torus");
-        this._torus.position.y = 5;
-        this._torus.position.x = 0;
-        this._nodesWithShadow.set("torus", this._torus);
-
         this._shadowGenerator = new ShadowGenerator(
             1024,
             this._directionalLight
         );
         this._shadowGenerator.useExponentialShadowMap = true;
         this._shadowGenerator.usePoissonSampling = false;
-
-        this._canvas.addEventListener("mousemove", (e) => {
-            e.preventDefault();
-        });
-
-        this._canvas.addEventListener("touchmove", (e) => {
-            e.preventDefault();
-        });
 
         this._splashScreenContent.textContent = "Loading world finished...";
     }
@@ -1567,8 +1561,6 @@ export default class World {
         if (this._shadowGenerator.getShadowMap() !== null) {
             this._shadowGenerator.getShadowMap()!.renderList!.length = 0;
 
-            this._shadowGenerator.getShadowMap()!.renderList!.push(this._torus);
-
             this._nodesWithShadow.forEach((value) => {
                 const curentMesh = value;
 
@@ -1612,15 +1604,11 @@ export default class World {
     }
 
     private _fixedUpdate() {
-        this._torus.rotation.x += 0.01;
-        this._torus.rotation.z += 0.02;
-
         this._updateHexTanks();
         this._updateBullets();
         this._updateShadows();
         this._updateExplosions();
         this._scene.render();
-
         this._input.update();
     }
 
