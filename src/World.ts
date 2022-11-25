@@ -1645,8 +1645,6 @@ export default class World {
             }
         }
 
-        /* this._fpsText.text = `FPS: ${this._engine.getFps().toFixed().toString()}`; */
-
         this._currentFrame = performance.now();
         this._delta = this._currentFrame - this._lastFrame;
         this._lastFrame = this._currentFrame;
