@@ -165,7 +165,7 @@ export default class World {
         this._splashScreenContent = document.getElementById(
             "splash-screen-content"
         ) as HTMLDivElement;
-        this._showSplashScreen("Loading...");
+        this._setSplashScreenMessage("Loading...");
 
         this._homeUI = document.getElementById("home-ui") as HTMLDivElement;
         this._formContainer = document.getElementById(
