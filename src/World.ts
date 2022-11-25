@@ -256,6 +256,13 @@ export default class World {
             localStorage.setItem("name", this._inputField.value);
         });
 
+        this._inputField.addEventListener("keydown", (event) => {
+            event.stopPropagation();
+        });
+        this._inputField.addEventListener("keyup", (event) => {
+            event.stopPropagation();
+        });
+
         this._inputField.addEventListener("mousedown", (event) => {
             event.stopPropagation();
             this._formContainer.style.backgroundColor = "#000000";
@@ -308,7 +315,6 @@ export default class World {
 
         this._formContainer.addEventListener("submit", async (event) => {
             event.preventDefault();
-
             await this._sessionStart();
         });
 
@@ -316,7 +322,6 @@ export default class World {
             "mouseup",
             async (event) => {
                 event.preventDefault();
-
                 await this._sessionStart();
             }
         );
@@ -325,14 +330,12 @@ export default class World {
             "touchend",
             async (event) => {
                 event.preventDefault();
-
                 await this._sessionStart();
             }
         );
 
         this._fullscreenButtonContainer.addEventListener("mouseup", (event) => {
             event.preventDefault();
-
             if (screenfull.isEnabled === true) {
                 screenfull.toggle();
             }
@@ -342,7 +345,6 @@ export default class World {
             "touchend",
             (event) => {
                 event.preventDefault();
-
                 if (screenfull.isEnabled === true) {
                     screenfull.toggle();
                 }
@@ -413,10 +415,7 @@ export default class World {
         child.style.width = "35vmin";
     }
 
-    private _sessionEnd() {
-        this._room.removeAllListeners();
-        this._room.leave();
-
+    private _clearItems() {
         this._hexTanks.forEach((item) => {
             item.deleteMeshes();
         });
@@ -425,9 +424,14 @@ export default class World {
             item.deleteMeshes();
         });
         this._bullets.clear();
+    }
 
+    private _sessionEnd() {
         this._readyToConnect = true;
 
+        this._room.removeAllListeners();
+        this._room.leave();
+        this._clearItems();
         this._showRestartUI();
 
         if (this._debug === true) {
@@ -437,19 +441,10 @@ export default class World {
 
     private async _sessionStart() {
         if (this._readyToConnect === true) {
-            this._showSplashScreen("Connecting...");
-
             this._readyToConnect = false;
 
-            this._hexTanks.forEach((item) => {
-                item.deleteMeshes();
-            });
-            this._hexTanks.clear();
-            this._bullets.forEach((item) => {
-                item.deleteMeshes();
-            });
-            this._bullets.clear();
-
+            this._showSplashScreen("Connecting...");
+            this._clearItems();
             await this._connectWorld();
         }
     }
