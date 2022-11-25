@@ -89,7 +89,7 @@ export default class World {
     private _modelsMeshes: Map<string, Array<Mesh>> = new Map();
 
     private _canvas: HTMLCanvasElement;
-    private _touchButtonsContainer: HTMLDivElement;
+    private _inGameUI: HTMLDivElement;
     private _splashScreen: HTMLDivElement;
     private _splashScreenContent: HTMLDivElement;
     private _homeUI: HTMLDivElement;
@@ -125,8 +125,6 @@ export default class World {
     private _ground!: Mesh;
     private _worldSize: number = 500;
 
-    private _torus!: Mesh;
-
     private _shadowGenerator!: ShadowGenerator;
     private _nodesWithShadow: Map<string, AbstractMesh | Mesh> = new Map();
 
@@ -161,43 +159,36 @@ export default class World {
             "hextankgame"
         ) as HTMLCanvasElement;
 
-        this._touchButtonsContainer = document.getElementById(
-            "touch-buttons-container"
-        ) as HTMLDivElement;
-
         this._splashScreen = document.getElementById(
             "splash-screen"
         ) as HTMLDivElement;
-
         this._splashScreenContent = document.getElementById(
             "splash-screen-content"
         ) as HTMLDivElement;
-        this._splashScreenContent.textContent = "Loading...";
+        this._showSplashScreen("Loading...");
 
         this._homeUI = document.getElementById("home-ui") as HTMLDivElement;
-
         this._formContainer = document.getElementById(
             "form-container"
         ) as HTMLFormElement;
-
         this._inputField = document.getElementById(
             "input-field"
         ) as HTMLInputElement;
-
         this._startButtonContainer = document.getElementById(
             "start-button-container"
         ) as HTMLDivElement;
-
         this._fullscreenButtonContainer = document.getElementById(
             "fullscreen-button-container"
         ) as HTMLDivElement;
-
         this._twitterButtonContainer = document.getElementById(
             "twitter-button-container"
         ) as HTMLDivElement;
-
         this._discordButtonContainer = document.getElementById(
             "discord-button-container"
+        ) as HTMLDivElement;
+
+        this._inGameUI = document.getElementById(
+            "in-game-ui"
         ) as HTMLDivElement;
 
         const log = console.log;
@@ -214,59 +205,45 @@ export default class World {
         this._scene.blockMaterialDirtyMechanism = true;
         this._scene.skipPointerMovePicking = true;
         this._scene.freezeActiveMeshes(true);
-
         this._scene.performancePriority = ScenePerformancePriority.Intermediate;
         this._scene.skipFrustumClipping = true;
 
         this._options = new SceneOptimizerOptions(60, 500);
-
         this._options.optimizations.push(new ShadowsOptimization());
-
         this._options.optimizations.push(new MergeMeshesOptimization());
-
         this._options.optimizations.push(
             new TextureOptimization(undefined, 256)
         );
-
         this._options.optimizations.push(new PostProcessesOptimization());
-
         this._options.optimizations.push(new LensFlaresOptimization());
-
         this._options.optimizations.push(new ParticlesOptimization());
-
         this._options.optimizations.push(new RenderTargetsOptimization());
-
         this._options.optimizations.push(
             new HardwareScalingOptimization(undefined, 2, 0.25)
         );
-
         this._optimizer = new SceneOptimizer(
             this._scene,
             this._options,
             true,
             false
         );
-
         this._optimizer.onFailureObservable.add(() => {
             this._shadowGenerator.dispose();
-
             this._showHomeUI();
         });
-
         this._optimizer.onNewOptimizationAppliedObservable.add((event) => {
             if (event.priority >= 0) {
                 this._shadowGenerator.dispose();
             }
-
-            this._splashScreenContent.textContent = `Optimizing scene step ${event.priority}`;
+            this._setSplashScreenMessage(
+                `Optimizing scene step ${event.priority}`
+            );
         });
-
         this._optimizer.onSuccessObservable.add(() => {
             this._showHomeUI();
         });
 
         this._input = new Input();
-
         this._setUICallbacks();
     }
 
@@ -403,10 +380,37 @@ export default class World {
         this._input.enableInput();
     }
 
+    private _showSplashScreen(message: string) {
+        this._homeUI.style.display = "none";
+        this._inGameUI.style.display = "none";
+        this._splashScreen.style.display = "flex";
+        this._setSplashScreenMessage(message);
+    }
+
+    private _setSplashScreenMessage(message: string) {
+        this._splashScreenContent.textContent = message;
+    }
+
     private _showHomeUI() {
-        this._splashScreenContent.textContent = "Game ready";
         this._splashScreen.style.display = "none";
+        this._inGameUI.style.display = "none";
         this._homeUI.style.display = "flex";
+        this._setSplashScreenMessage("Game ready");
+    }
+
+    private _showInGameUI() {
+        this._splashScreen.style.display = "none";
+        this._homeUI.style.display = "none";
+        this._inGameUI.style.display = "flex";
+    }
+
+    private _showRestartUI() {
+        this._inGameUI.style.display = "none";
+        this._homeUI.style.display = "flex";
+        this._startButtonContainer.style.width = "35vmin";
+        const child = this._startButtonContainer.children[0] as HTMLElement;
+        child.textContent = "RESTART";
+        child.style.width = "35vmin";
     }
 
     private _sessionEnd() {
@@ -424,13 +428,7 @@ export default class World {
 
         this._readyToConnect = true;
 
-        this._touchButtonsContainer.style.display = "none";
-        this._homeUI.style.display = "flex";
-
-        this._startButtonContainer.style.width = "35vmin";
-        const child = this._startButtonContainer.children[0] as HTMLElement;
-        child.textContent = "RESTART";
-        child.style.width = "35vmin";
+        this._showRestartUI();
 
         if (this._debug === true) {
             console.clear();
@@ -439,9 +437,7 @@ export default class World {
 
     private async _sessionStart() {
         if (this._readyToConnect === true) {
-            this._homeUI.style.display = "none";
-            this._splashScreenContent.textContent = "Connecting...";
-            this._splashScreen.style.display = "flex";
+            this._showSplashScreen("Connecting...");
 
             this._readyToConnect = false;
 
@@ -479,81 +475,81 @@ export default class World {
         const maxLoad = 13;
 
         load++;
-        this._splashScreenContent.textContent = `Loading assets ${Math.round(
-            (load / maxLoad) * 100
-        )}%`;
+        this._setSplashScreenMessage(
+            `Loading assets ${Math.round((load / maxLoad) * 100)}%`
+        );
         await this._loadMesh(body, "body");
 
         load++;
-        this._splashScreenContent.textContent = `Loading assets ${Math.round(
-            (load / maxLoad) * 100
-        )}%`;
+        this._setSplashScreenMessage(
+            `Loading assets ${Math.round((load / maxLoad) * 100)}%`
+        );
         await this._loadMesh(jet, "jet");
 
         load++;
-        this._splashScreenContent.textContent = `Loading assets ${Math.round(
-            (load / maxLoad) * 100
-        )}%`;
+        this._setSplashScreenMessage(
+            `Loading assets ${Math.round((load / maxLoad) * 100)}%`
+        );
         await this._loadMesh(wall, "wall");
 
         load++;
-        this._splashScreenContent.textContent = `Loading assets ${Math.round(
-            (load / maxLoad) * 100
-        )}%`;
+        this._setSplashScreenMessage(
+            `Loading assets ${Math.round((load / maxLoad) * 100)}%`
+        );
         await this._loadMesh(pyramid, "pyramid");
 
         load++;
-        this._splashScreenContent.textContent = `Loading assets ${Math.round(
-            (load / maxLoad) * 100
-        )}%`;
+        this._setSplashScreenMessage(
+            `Loading assets ${Math.round((load / maxLoad) * 100)}%`
+        );
         await this._loadMesh(oasis, "oasis");
 
         load++;
-        this._splashScreenContent.textContent = `Loading assets ${Math.round(
-            (load / maxLoad) * 100
-        )}%`;
+        this._setSplashScreenMessage(
+            `Loading assets ${Math.round((load / maxLoad) * 100)}%`
+        );
         await this._loadMesh(building1, "building1");
 
         load++;
-        this._splashScreenContent.textContent = `Loading assets ${Math.round(
-            (load / maxLoad) * 100
-        )}%`;
+        this._setSplashScreenMessage(
+            `Loading assets ${Math.round((load / maxLoad) * 100)}%`
+        );
         await this._loadMesh(building2, "building2");
 
         load++;
-        this._splashScreenContent.textContent = `Loading assets ${Math.round(
-            (load / maxLoad) * 100
-        )}%`;
+        this._setSplashScreenMessage(
+            `Loading assets ${Math.round((load / maxLoad) * 100)}%`
+        );
         await this._loadMesh(rock1, "rock1");
 
         load++;
-        this._splashScreenContent.textContent = `Loading assets ${Math.round(
-            (load / maxLoad) * 100
-        )}%`;
+        this._setSplashScreenMessage(
+            `Loading assets ${Math.round((load / maxLoad) * 100)}%`
+        );
         await this._loadMesh(rock2, "rock2");
 
         load++;
-        this._splashScreenContent.textContent = `Loading assets ${Math.round(
-            (load / maxLoad) * 100
-        )}%`;
+        this._setSplashScreenMessage(
+            `Loading assets ${Math.round((load / maxLoad) * 100)}%`
+        );
         await this._loadMesh(rock3, "rock3");
 
         load++;
-        this._splashScreenContent.textContent = `Loading assets ${Math.round(
-            (load / maxLoad) * 100
-        )}%`;
+        this._setSplashScreenMessage(
+            `Loading assets ${Math.round((load / maxLoad) * 100)}%`
+        );
         await this._loadMesh(bullet, "bullet");
 
         load++;
-        this._splashScreenContent.textContent = `Loading assets ${Math.round(
-            (load / maxLoad) * 100
-        )}%`;
+        this._setSplashScreenMessage(
+            `Loading assets ${Math.round((load / maxLoad) * 100)}%`
+        );
         await this._loadMesh(bulletExplosion, "bulletExplosion");
 
         load++;
-        this._splashScreenContent.textContent = `Loading assets ${Math.round(
-            (load / maxLoad) * 100
-        )}%`;
+        this._setSplashScreenMessage(
+            `Loading assets ${Math.round((load / maxLoad) * 100)}%`
+        );
         await this._loadMesh(hexTankExplosion, "hexTankExplosion");
 
         const fakeServerHexTank = {
@@ -576,10 +572,10 @@ export default class World {
     }
 
     async loadWorld() {
-        this._splashScreenContent.textContent = "Loading assets...";
+        this._setSplashScreenMessage("Loading assets...");
         await this._loadMeshes();
-        this._splashScreenContent.textContent = "Loading assets finished...";
-        this._splashScreenContent.textContent = "Loading world...";
+        this._setSplashScreenMessage("Loading assets finished...");
+        this._setSplashScreenMessage("Loading world...");
 
         this._camera = new ArcRotateCamera(
             "Camera",
@@ -686,11 +682,11 @@ export default class World {
         this._shadowGenerator.useExponentialShadowMap = true;
         this._shadowGenerator.usePoissonSampling = false;
 
-        this._splashScreenContent.textContent = "Loading world finished...";
+        this._setSplashScreenMessage("Loading world finished...");
     }
 
     createWorldMap() {
-        this._splashScreenContent.textContent = "Creating world map..";
+        this._setSplashScreenMessage("Creating world map..");
         const collisionBodyOffset = 1.03;
 
         const wallWidth = this._worldSize / 5;
@@ -1386,6 +1382,8 @@ export default class World {
                 name: this._inputField.value,
             });
         } catch (e) {
+            this._showSplashScreen("Error...");
+
             if (this._debug === true) {
                 console.log(e);
             }
@@ -1408,8 +1406,7 @@ export default class World {
             this._hexTanks.set(serverHexTank.id, clientHexTank);
 
             if (clientHexTank.id === this._room.sessionId) {
-                this._touchButtonsContainer.style.display = "block";
-                this._splashScreen.style.display = "none";
+                this._showInGameUI();
 
                 if (typeof this._fakeClientHexTank !== "undefined") {
                     this._fakeClientHexTank.deleteMeshes();
@@ -1426,10 +1423,6 @@ export default class World {
         };
 
         this._room.state.hexTanks.onRemove = (serverHexTank: any) => {
-            if (this._debug === true) {
-                console.log(`HexTank ${serverHexTank.id} left!`);
-            }
-
             if (typeof serverHexTank !== "undefined") {
                 if (
                     typeof this._hexTanks.get(serverHexTank.id) !== "undefined"
@@ -1441,6 +1434,10 @@ export default class World {
                         this._sessionEnd();
                     }
                 }
+            }
+
+            if (this._debug === true) {
+                console.log(`HexTank ${serverHexTank.id} left!`);
             }
         };
 
@@ -1515,16 +1512,14 @@ export default class World {
 
     private async _connectWorld() {
         await this._connect();
+        this._setHexTanksCallbacks();
+        this._setBulletsCallbacks();
+        this._setBulletExplosions();
+        this._setHexTankExplosions();
 
         if (this._debug === true) {
             console.log(this._client);
         }
-
-        this._setHexTanksCallbacks();
-        this._setBulletsCallbacks();
-
-        this._setBulletExplosions();
-        this._setHexTankExplosions();
     }
 
     private _updateHexTanks() {
@@ -1634,14 +1629,16 @@ export default class World {
     updateWorld(): void {
         if (this._updateCyclesCount < this._fpsLimit) {
             this._updateCyclesCount += 1;
-            this._splashScreenContent.textContent = `Starting scene ${Math.round(
-                (this._updateCyclesCount / this._fpsLimit) * 100
-            )}%`;
+            this._setSplashScreenMessage(
+                `Starting scene ${Math.round(
+                    (this._updateCyclesCount / this._fpsLimit) * 100
+                )}%`
+            );
         } else {
             if (this._didOptimizerStart === false) {
                 this._didOptimizerStart = true;
                 this._optimizer.start();
-                this._splashScreenContent.textContent = "Optimizing scene...";
+                this._setSplashScreenMessage("Optimizing scene...");
             }
         }
 
