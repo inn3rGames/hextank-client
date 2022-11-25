@@ -1551,12 +1551,10 @@ export default class World {
 
             this._nodesWithShadow.forEach((value) => {
                 const curentMesh = value;
-
                 const dX = this._camera.target.x - curentMesh.position.x;
                 const dZ = this._camera.target.z - curentMesh.position.z;
 
                 const distance = Math.sqrt(dX * dX + dZ * dZ);
-
                 if (distance <= 100) {
                     const children = curentMesh.getChildMeshes();
                     for (let j = 0; j < children.length; j++) {
@@ -1572,16 +1570,13 @@ export default class World {
     private _updateExplosions() {
         this._explosions.forEach((value, key) => {
             const explosion = value;
-
             explosion.update();
-
             if (explosion.type === "bulletExplosion") {
                 if (explosion.age >= 52.5) {
                     explosion.deleteMeshes();
                     this._explosions.delete(key);
                 }
             }
-
             if (explosion.type === "hexTankExplosion") {
                 if (explosion.age >= 105) {
                     explosion.deleteMeshes();
@@ -1606,14 +1601,12 @@ export default class World {
 
         if (this._currentWindowWidth !== this._lastWindowWidth) {
             this._engine.resize(true);
-
             this._lastWindowWidth = this._currentWindowWidth;
             this._lastWindowHeight = this._currentWindowHeight;
         }
 
         if (this._currentWindowHeight !== this._lastWindowHeight) {
             this._engine.resize(true);
-
             this._lastWindowWidth = this._currentWindowWidth;
             this._lastWindowHeight = this._currentWindowHeight;
         }
@@ -1638,9 +1631,7 @@ export default class World {
         this._currentFrame = performance.now();
         this._delta = this._currentFrame - this._lastFrame;
         this._lastFrame = this._currentFrame;
-
         this._elapsedTime += this._delta;
-
         if (
             Math.abs(this._elapsedTime) >= 200 ||
             this._resetElapsedTime === true
@@ -1648,7 +1639,6 @@ export default class World {
             this._resetElapsedTime = false;
             this._elapsedTime = Math.round(this._fixedFrameDuration);
         }
-
         while (this._elapsedTime >= this._fixedFrameDuration) {
             this._elapsedTime -= this._fixedFrameDuration;
             this._fixedUpdate();
@@ -1656,10 +1646,8 @@ export default class World {
 
         window.requestAnimationFrame(() => {
             this._engine.beginFrame();
-
             this._handleResize();
             this.updateWorld();
-
             this._engine.endFrame();
         });
     }
