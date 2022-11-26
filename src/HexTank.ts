@@ -27,6 +27,10 @@ export default class HexTank {
     private _bodyNode!: TransformNode;
     private _jetNodes: Array<TransformNode> = [];
 
+    private _health: number;
+    private _damage: number;
+    private _kills: number;
+
     private _healthPlane!: Mesh;
     private _healthUI!: AdvancedDynamicTexture;
     private _healthBar!: Rectangle;
@@ -53,6 +57,9 @@ export default class HexTank {
         this._radius = serverHexTank.collisionBody.radius;
         this.id = serverHexTank.id;
         this._name = serverHexTank.name;
+        this._health = serverHexTank.health;
+        this._damage = serverHexTank.damage;
+        this._kills = serverHexTank.kills;
         this._scene = scene;
         this._camera = camera;
         this._nodesWithShadow = nodesWithShadow;
@@ -340,6 +347,16 @@ export default class HexTank {
     }
 
     syncWithServer(serverHexTank: any) {
+        this._health = serverHexTank.health;
+        this._damage = serverHexTank.damage;
+        this._kills = serverHexTank.kills;
+
+        this._healthBar.scaleX = this._linearInterpolation(
+            this._healthBar.scaleX,
+            this._health / 5,
+            this._linearInperpolationPercent
+        );
+
         this._x = this._linearInterpolation(
             this._x,
             serverHexTank.x,
@@ -383,12 +400,6 @@ export default class HexTank {
             flame.scaling.y = this._linearInterpolation(
                 flame.scaling.y,
                 serverHexTank.jetsFlameScale,
-                this._linearInperpolationPercent
-            );
-
-            this._healthBar.scaleX = this._linearInterpolation(
-                this._healthBar.scaleX,
-                serverHexTank.health / 5,
                 this._linearInperpolationPercent
             );
         }
