@@ -125,12 +125,12 @@ export default class Input {
             const buttonUp = document.createElement("div");
             container.appendChild(buttonUp);
             buttonUp.style.position = "fixed";
-            buttonUp.style.width = "18vmin";
-            buttonUp.style.height = "20vmin";
+            buttonUp.style.width = "72px";
+            buttonUp.style.height = "80px";
             buttonUp.style.left = "7.5vw";
-            buttonUp.style.bottom = "calc(5vw + 20vmin + 2vmin)";
+            buttonUp.style.bottom = "calc(5vw + 80px + 8px)";
             buttonUp.style.backgroundColor = upColor;
-            buttonUp.style.borderRadius = "10vmin 10vmin 3vmin 3vmin";
+            buttonUp.style.borderRadius = "40px 40px 12px 12px";
 
             buttonUp.addEventListener("touchstart", (event) => {
                 event.preventDefault();
@@ -177,12 +177,12 @@ export default class Input {
             const buttonDown = document.createElement("div");
             container.appendChild(buttonDown);
             buttonDown.style.position = "fixed";
-            buttonDown.style.width = "18vmin";
-            buttonDown.style.height = "20vmin";
+            buttonDown.style.width = "72px";
+            buttonDown.style.height = "80px";
             buttonDown.style.left = "7.5vw";
             buttonDown.style.bottom = "5vw";
             buttonDown.style.backgroundColor = upColor;
-            buttonDown.style.borderRadius = "3vmin 3vmin 10vmin 10vmin";
+            buttonDown.style.borderRadius = "12px 12px 40px 40px";
 
             buttonDown.addEventListener("touchstart", (event) => {
                 event.preventDefault();
@@ -229,12 +229,12 @@ export default class Input {
             const buttonLeft = document.createElement("div");
             container.appendChild(buttonLeft);
             buttonLeft.style.position = "fixed";
-            buttonLeft.style.width = "20vmin";
-            buttonLeft.style.height = "18vmin";
-            buttonLeft.style.right = "calc(7.5vw + 20vmin + 2vmin)";
-            buttonLeft.style.bottom = "calc(5vw + 2vmin)";
+            buttonLeft.style.width = "80px";
+            buttonLeft.style.height = "72px";
+            buttonLeft.style.right = "calc(7.5vw + 80px + 8px)";
+            buttonLeft.style.bottom = "calc(5vw + 8px)";
             buttonLeft.style.backgroundColor = upColor;
-            buttonLeft.style.borderRadius = "10vmin 3vmin 3vmin 10vmin";
+            buttonLeft.style.borderRadius = "40px 12px 12px 40px";
 
             buttonLeft.addEventListener("touchstart", (event) => {
                 event.preventDefault();
@@ -281,12 +281,12 @@ export default class Input {
             const buttonRight = document.createElement("div");
             container.appendChild(buttonRight);
             buttonRight.style.position = "fixed";
-            buttonRight.style.width = "20vmin";
-            buttonRight.style.height = "18vmin";
+            buttonRight.style.width = "80px";
+            buttonRight.style.height = "72px";
             buttonRight.style.right = "7.5vw";
-            buttonRight.style.bottom = "calc(5vw + 2vmin)";
+            buttonRight.style.bottom = "calc(5vw + 8px)";
             buttonRight.style.backgroundColor = upColor;
-            buttonRight.style.borderRadius = "3vmin 10vmin 10vmin 3vmin";
+            buttonRight.style.borderRadius = "12px 40px 40px 12px";
 
             buttonRight.addEventListener("touchstart", (event) => {
                 event.preventDefault();
@@ -336,12 +336,12 @@ export default class Input {
             const buttonShoot = document.createElement("div");
             container.appendChild(buttonShoot);
             buttonShoot.style.position = "fixed";
-            buttonShoot.style.width = "20vmin";
-            buttonShoot.style.height = "20vmin";
-            buttonShoot.style.right = "calc(7.5vw + 10vmin + 1vmin)";
-            buttonShoot.style.bottom = "calc(5vw + 20vmin + 2vmin)";
+            buttonShoot.style.width = "80px";
+            buttonShoot.style.height = "80px";
+            buttonShoot.style.right = "calc(7.5vw + 40px + 4px)";
+            buttonShoot.style.bottom = "calc(5vw + 80px + 8px)";
             buttonShoot.style.backgroundColor = shootUpColor;
-            buttonShoot.style.borderRadius = "10vmin 10vmin 10vmin 10vmin";
+            buttonShoot.style.borderRadius = "40px 40px 40px 40px";
 
             buttonShoot.addEventListener("touchstart", (event) => {
                 event.preventDefault();
