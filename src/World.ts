@@ -99,6 +99,7 @@ export default class World {
     private _fullscreenButtonContainer: HTMLDivElement;
     private _discordButtonContainer: HTMLDivElement;
     private _twitterButtonContainer: HTMLDivElement;
+    private _leaderboardContainer: HTMLDivElement;
 
     private _engine: Engine;
 
@@ -189,6 +190,9 @@ export default class World {
 
         this._inGameUI = document.getElementById(
             "in-game-ui"
+        ) as HTMLDivElement;
+        this._leaderboardContainer = document.getElementById(
+            "leaderboard-container"
         ) as HTMLDivElement;
 
         const log = console.log;
@@ -410,7 +414,7 @@ export default class World {
         this._inGameUI.style.display = "none";
         this._homeUI.style.display = "flex";
         this._startButtonContainer.style.width = "35vmin";
-        const child = this._startButtonContainer.children[0] as HTMLElement;
+        const child = this._startButtonContainer.children[0] as HTMLDivElement;
         child.textContent = "RESTART";
         child.style.width = "35vmin";
     }
@@ -1516,6 +1520,7 @@ export default class World {
     }
 
     private _updateHexTanks() {
+        let currentHexTanks: Array<HexTank> = [];
         this._hexTanks.forEach((value, key) => {
             const clientHexTank = value;
             const serverHexTank = this._room.state.hexTanks.get(key);
@@ -1528,6 +1533,38 @@ export default class World {
                 } else {
                     clientHexTank.update(serverHexTank);
                 }
+                currentHexTanks.push(clientHexTank);
+            }
+        });
+
+        currentHexTanks.sort((a, b) => {
+            return b.damage - a.damage;
+        });
+        const leaderboardRows = Array.from(this._leaderboardContainer.children);
+        leaderboardRows.forEach((value, index) => {
+            if (index >= 1) {
+                const leaderboardRow = value as HTMLDivElement;
+                leaderboardRow.style.display = "none";
+            }
+        });
+        currentHexTanks.forEach((value, index) => {
+            if (typeof leaderboardRows[index + 1] !== "undefined") {
+                const currentLeadboardRow = leaderboardRows[
+                    index + 1
+                ] as HTMLDivElement;
+                currentLeadboardRow.style.display = "flex";
+
+                const currentLeadboardName = currentLeadboardRow
+                    .children[1] as HTMLDivElement;
+                currentLeadboardName.textContent = value.name.toString();
+
+                const currentLeadboardDamage = currentLeadboardRow
+                    .children[2] as HTMLDivElement;
+                currentLeadboardDamage.textContent = value.damage.toString();
+
+                const currentLeadboardKills = currentLeadboardRow
+                    .children[3] as HTMLDivElement;
+                currentLeadboardKills.textContent = value.kills.toString();
             }
         });
     }

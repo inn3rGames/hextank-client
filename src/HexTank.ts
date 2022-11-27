@@ -16,7 +16,7 @@ export default class HexTank {
     private _angle: number;
     private _radius: number;
     id: string;
-    private _name: string;
+    name: string;
     private _scene: Scene;
     private _camera: ArcRotateCamera;
     private _nodesWithShadow: Map<string, TransformNode>;
@@ -28,8 +28,8 @@ export default class HexTank {
     private _jetNodes: Array<TransformNode> = [];
 
     private _health: number;
-    private _damage: number;
-    private _kills: number;
+    damage: number;
+    kills: number;
 
     private _healthPlane!: Mesh;
     private _healthUI!: AdvancedDynamicTexture;
@@ -56,10 +56,10 @@ export default class HexTank {
         this._angle = serverHexTank.angle;
         this._radius = serverHexTank.collisionBody.radius;
         this.id = serverHexTank.id;
-        this._name = serverHexTank.name;
+        this.name = serverHexTank.name;
         this._health = serverHexTank.health;
-        this._damage = serverHexTank.damage;
-        this._kills = serverHexTank.kills;
+        this.damage = serverHexTank.damage;
+        this.kills = serverHexTank.kills;
         this._scene = scene;
         this._camera = camera;
         this._nodesWithShadow = nodesWithShadow;
@@ -172,7 +172,7 @@ export default class HexTank {
         healthSeparator4.useBitmapCache = true;
         this._healthStroke.addControl(healthSeparator4);
 
-        const nameText = new TextBlock("name" + this.id, this._name);
+        const nameText = new TextBlock("name" + this.id, this.name);
         nameText.color = "#FFFFFF";
         nameText.widthInPixels = 1024;
         nameText.heightInPixels = 1024;
@@ -182,7 +182,7 @@ export default class HexTank {
         nameText.outlineColor = "#000000";
         nameText.outlineWidth = 20;
 
-        let fontScale = 1024 / (this._name.length * 180);
+        let fontScale = 1024 / (this.name.length * 180);
         if (fontScale >= 1) {
             fontScale = 1;
         }
@@ -348,8 +348,8 @@ export default class HexTank {
 
     syncWithServer(serverHexTank: any) {
         this._health = serverHexTank.health;
-        this._damage = serverHexTank.damage;
-        this._kills = serverHexTank.kills;
+        this.damage = serverHexTank.damage;
+        this.kills = serverHexTank.kills;
 
         this._healthBar.scaleX = this._linearInterpolation(
             this._healthBar.scaleX,
