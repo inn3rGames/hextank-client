@@ -433,7 +433,7 @@ body::after {
     width: 50vmin;
     height: 40vmin;
     left: calc(100% - 50vmin - 5vmin);
-    bottom: calc(100% - 40vmin - 5vmin);
+    bottom: calc(100% - 40vmin - 10vmin);
 }
 
 .leaderboard-row {
