@@ -1359,7 +1359,7 @@ export default class World {
     }
 
     private async _connect() {
-        let serverAddress = "wss://warsaw1.inn3r.website";
+        let serverAddress = "wss://wrbnqh.colyseus.de";
         if (window.location.protocol === "http:") {
             serverAddress = "ws://localhost:2567";
             console.log("%c Development mode.", "background-color: #FFFF00");
