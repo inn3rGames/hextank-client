@@ -469,7 +469,6 @@ body::after {
     width: 15%;
     height: 100%;
     line-height: 100%;
-
     text-shadow: 0.14vmin 0.14vmin 0vmin #000000, -0.14vmin -0.14vmin 0vmin #000000, -0.14vmin 0.14vmin 0vmin #000000, 0.14vmin -0.14vmin 0vmin #000000;
 }
 
