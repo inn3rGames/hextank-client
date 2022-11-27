@@ -432,8 +432,8 @@ body::after {
     flex-direction: column;
     width: 50vmin;
     height: 40vmin;
-    left: calc(100% - 50vmin - 0.5vmin);
-    bottom: calc(100% - 40vmin - 0.5vmin);
+    left: calc(100% - 50vmin - 5vmin);
+    bottom: calc(100% - 40vmin - 5vmin);
 }
 
 .leaderboard-row {
