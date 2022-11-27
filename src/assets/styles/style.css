@@ -430,10 +430,10 @@ body::after {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40vmin;
-    height: 50vmin;
-    left: calc(100% - 40vmin);
-    bottom: calc(100% - 50vmin);
+    width: 30vmin;
+    height: 40vmin;
+    left: calc(100% - 30vmin);
+    bottom: calc(100% - 40vmin);
     background-color:rgba(0, 0, 0, 0.25);
     clip-path: polygon(0 0, 100% 0, 100% 50%, 100% 100%, 15% 100%, 0 85%);
     /* clip-path: polygon(25% 0, 100% 0, 100% 50%, 100% 100%, 0 100%, 0 25%); */
