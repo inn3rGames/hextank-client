@@ -127,8 +127,8 @@ export default class Input {
             buttonUp.style.position = "fixed";
             buttonUp.style.width = "18vmin";
             buttonUp.style.height = "20vmin";
-            buttonUp.style.left = "7.5vmin";
-            buttonUp.style.bottom = "calc(5vmin + 20vmin + 2vmin)";
+            buttonUp.style.left = "10vmin";
+            buttonUp.style.bottom = "calc(1vmin + 20vmin + 1vmin)";
             buttonUp.style.backgroundColor = upColor;
             buttonUp.style.borderRadius = "10vmin 10vmin 3vmin 3vmin";
 
@@ -179,8 +179,8 @@ export default class Input {
             buttonDown.style.position = "fixed";
             buttonDown.style.width = "18vmin";
             buttonDown.style.height = "20vmin";
-            buttonDown.style.left = "7.5vmin";
-            buttonDown.style.bottom = "5vmin";
+            buttonDown.style.left = "10vmin";
+            buttonDown.style.bottom = "1vmin";
             buttonDown.style.backgroundColor = upColor;
             buttonDown.style.borderRadius = "3vmin 3vmin 10vmin 10vmin";
 
@@ -231,8 +231,8 @@ export default class Input {
             buttonLeft.style.position = "fixed";
             buttonLeft.style.width = "20vmin";
             buttonLeft.style.height = "18vmin";
-            buttonLeft.style.right = "calc(7.5vmin + 20vmin + 2vmin)";
-            buttonLeft.style.bottom = "calc(5vmin + 2vmin)";
+            buttonLeft.style.right = "calc(10vmin + 20vmin + 1vmin)";
+            buttonLeft.style.bottom = "1vmin";
             buttonLeft.style.backgroundColor = upColor;
             buttonLeft.style.borderRadius = "10vmin 3vmin 3vmin 10vmin";
 
@@ -283,8 +283,8 @@ export default class Input {
             buttonRight.style.position = "fixed";
             buttonRight.style.width = "20vmin";
             buttonRight.style.height = "18vmin";
-            buttonRight.style.right = "7.5vmin";
-            buttonRight.style.bottom = "calc(5vmin + 2vmin)";
+            buttonRight.style.right = "10vmin";
+            buttonRight.style.bottom = "1vmin";
             buttonRight.style.backgroundColor = upColor;
             buttonRight.style.borderRadius = "3vmin 10vmin 10vmin 3vmin";
 
@@ -338,8 +338,8 @@ export default class Input {
             buttonShoot.style.position = "fixed";
             buttonShoot.style.width = "20vmin";
             buttonShoot.style.height = "20vmin";
-            buttonShoot.style.right = "calc(7.5vmin + 10vmin + 1vmin)";
-            buttonShoot.style.bottom = "calc(5vmin + 20vmin + 2vmin)";
+            buttonShoot.style.right = "calc(10vmin + 10vmin + 1vmin)";
+            buttonShoot.style.bottom = "calc(19.5vmin)";
             buttonShoot.style.backgroundColor = shootUpColor;
             buttonShoot.style.borderRadius = "10vmin 10vmin 10vmin 10vmin";
 
