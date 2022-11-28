@@ -100,6 +100,7 @@ export default class World {
     private _discordButtonContainer: HTMLDivElement;
     private _twitterButtonContainer: HTMLDivElement;
     private _leaderboardContainer: HTMLDivElement;
+    private _hudContainer: HTMLDivElement;
 
     private _engine: Engine;
 
@@ -193,6 +194,9 @@ export default class World {
         ) as HTMLDivElement;
         this._leaderboardContainer = document.getElementById(
             "leaderboard-container"
+        ) as HTMLDivElement;
+        this._hudContainer = document.getElementById(
+            "hud-container"
         ) as HTMLDivElement;
 
         const log = console.log;
@@ -1558,6 +1562,22 @@ export default class World {
             }
         });
 
+        const currentNumber = this._hudContainer.children[0]
+            .children[1] as HTMLDivElement;
+        currentNumber.textContent = "";
+        const currentName = this._hudContainer.children[1]
+            .children[1] as HTMLDivElement;
+        currentName.textContent = "";
+        const currentDamage = this._hudContainer.children[2]
+            .children[1] as HTMLDivElement;
+        currentDamage.textContent = "";
+        const currentKills = this._hudContainer.children[3]
+            .children[1] as HTMLDivElement;
+        currentKills.textContent = "";
+        const currentHealth = this._hudContainer.children[4]
+            .children[1] as HTMLDivElement;
+        currentHealth.textContent = "";
+
         currentHexTanks.forEach((value, index) => {
             if (typeof leaderboardRows[index + 1] !== "undefined") {
                 const currentLeaderboardRow = leaderboardRows[
@@ -1573,6 +1593,13 @@ export default class World {
                 const currentLeaderboardKills = currentLeaderboardRow
                     .children[3] as HTMLDivElement;
                 currentLeaderboardKills.textContent = value.kills.toString();
+            }
+            if (value.id === this._room.sessionId) {
+                currentNumber.textContent = (index + 1).toString();
+                currentName.textContent = value.name.toString();
+                currentDamage.textContent = value.damage.toString();
+                currentKills.textContent = value.kills.toString();
+                currentHealth.textContent = value.health.toString() + " / 5";
             }
         });
     }

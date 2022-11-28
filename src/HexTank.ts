@@ -27,7 +27,7 @@ export default class HexTank {
     private _bodyNode!: TransformNode;
     private _jetNodes: Array<TransformNode> = [];
 
-    private _health: number;
+    health: number;
     damage: number;
     kills: number;
 
@@ -57,7 +57,7 @@ export default class HexTank {
         this._radius = serverHexTank.collisionBody.radius;
         this.id = serverHexTank.id;
         this.name = serverHexTank.name;
-        this._health = serverHexTank.health;
+        this.health = serverHexTank.health;
         this.damage = serverHexTank.damage;
         this.kills = serverHexTank.kills;
         this._scene = scene;
@@ -347,13 +347,13 @@ export default class HexTank {
     }
 
     syncWithServer(serverHexTank: any) {
-        this._health = serverHexTank.health;
+        this.health = serverHexTank.health;
         this.damage = serverHexTank.damage;
         this.kills = serverHexTank.kills;
 
         this._healthBar.scaleX = this._linearInterpolation(
             this._healthBar.scaleX,
-            this._health / 5,
+            this.health / 5,
             this._linearInperpolationPercent
         );
 
