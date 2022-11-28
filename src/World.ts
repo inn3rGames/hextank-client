@@ -1600,6 +1600,23 @@ export default class World {
                 currentDamage.textContent = value.damage.toString();
                 currentKills.textContent = value.kills.toString();
                 currentHealth.textContent = value.health.toString() + " / 5";
+                if (index + 1 <= 3) {
+                    if (index + 1 === 1) {
+                        currentNumber.style.background =
+                            "linear-gradient(135deg, #BF9A47 0%, #FFE233 25%, #FEFDE1 50%, #FFE233 75%, #BF9A47 100%)";
+                    }
+                    if (index + 1 === 2) {
+                        currentNumber.style.background =
+                            "linear-gradient(135deg, #787878 0%, #B5B5B5 25%, #FFFFFF 50%, #E3E3E3 75%, #787878 100%)";
+                    }
+                    if (index + 1 === 3) {
+                        currentNumber.style.background =
+                            "linear-gradient(135deg, #844414 0%, #CF7D52 25%, #FCD5BE 50%, #CF7D52 75%, #844414 100%)";
+                    }
+                } else {
+                    currentNumber.style.background =
+                        "linear-gradient(135deg, rgba(0, 0, 0, 0.5) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(0, 0, 0, 0.5) 100%)";
+                }
             }
         });
     }

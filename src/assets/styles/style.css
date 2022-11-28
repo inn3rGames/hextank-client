@@ -452,15 +452,15 @@ body::after {
 }
 
 #leaderboard-gold {
-    background: linear-gradient(90deg, #BF9A47 0%, #FFE233 25%, #FEFDE1 50%, #FFE233 75%, #BF9A47 100%);
+    background: linear-gradient(135deg, #BF9A47 0%, #FFE233 25%, #FEFDE1 50%, #FFE233 75%, #BF9A47 100%);
 }
 
 #leaderboard-silver {
-    background: linear-gradient(90deg, #787878 0%, #B5B5B5 25%, #FFFFFF 50%, #E3E3E3 75%, #787878 100%);
+    background: linear-gradient(135deg, #787878 0%, #B5B5B5 25%, #FFFFFF 50%, #E3E3E3 75%, #787878 100%);
 }
 
 #leaderboard-bronze {
-    background: linear-gradient(90deg, #844414 0%, #CF7D52 25%, #FCD5BE 50%, #CF7D52 75%, #844414 100%);
+    background: linear-gradient(135deg, #844414 0%, #CF7D52 25%, #FCD5BE 50%, #CF7D52 75%, #844414 100%);
 }
 
 .leaderboard-number,
