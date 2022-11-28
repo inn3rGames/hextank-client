@@ -1540,31 +1540,45 @@ export default class World {
         currentHexTanks.sort((a, b) => {
             return b.damage - a.damage;
         });
+
         const leaderboardRows = Array.from(this._leaderboardContainer.children);
         leaderboardRows.forEach((value, index) => {
             if (index >= 1) {
                 const leaderboardRow = value as HTMLDivElement;
                 leaderboardRow.style.display = "none";
+
+                const leaderboardName = leaderboardRow
+                    .children[1] as HTMLDivElement;
+                leaderboardName.textContent = "";
+
+                const leaderboardDamage = leaderboardRow
+                    .children[2] as HTMLDivElement;
+                leaderboardDamage.textContent = "";
+
+                const leaderboardKills = leaderboardRow
+                    .children[3] as HTMLDivElement;
+                leaderboardKills.textContent = "";
             }
         });
+
         currentHexTanks.forEach((value, index) => {
             if (typeof leaderboardRows[index + 1] !== "undefined") {
-                const currentLeadboardRow = leaderboardRows[
+                const currentLeaderboardRow = leaderboardRows[
                     index + 1
                 ] as HTMLDivElement;
-                currentLeadboardRow.style.display = "flex";
+                currentLeaderboardRow.style.display = "flex";
 
-                const currentLeadboardName = currentLeadboardRow
+                const currentLeaderboardName = currentLeaderboardRow
                     .children[1] as HTMLDivElement;
-                currentLeadboardName.textContent = value.name.toString();
+                currentLeaderboardName.textContent = value.name.toString();
 
-                const currentLeadboardDamage = currentLeadboardRow
+                const currentLeaderboardDamage = currentLeaderboardRow
                     .children[2] as HTMLDivElement;
-                currentLeadboardDamage.textContent = value.damage.toString();
+                currentLeaderboardDamage.textContent = value.damage.toString();
 
-                const currentLeadboardKills = currentLeadboardRow
+                const currentLeaderboardKills = currentLeaderboardRow
                     .children[3] as HTMLDivElement;
-                currentLeadboardKills.textContent = value.kills.toString();
+                currentLeaderboardKills.textContent = value.kills.toString();
             }
         });
     }
