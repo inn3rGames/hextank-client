@@ -1405,10 +1405,8 @@ export default class World {
                 this._debug
             );
             this._hexTanks.set(serverHexTank.id, clientHexTank);
-
             if (clientHexTank.id === this._room.sessionId) {
                 this._showInGameUI();
-
                 if (typeof this._fakeClientHexTank !== "undefined") {
                     this._fakeClientHexTank.deleteMeshes();
                     this._fakeClientHexTank = undefined;
@@ -1433,7 +1431,6 @@ export default class World {
                 ) {
                     this._hexTanks.get(serverHexTank.id)!.deleteMeshes();
                     this._hexTanks.delete(serverHexTank.id);
-
                     if (this._room.sessionId === serverHexTank.id) {
                         this._sessionEnd();
                     }
