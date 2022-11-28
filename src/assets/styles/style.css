@@ -501,16 +501,17 @@ body::after {
     justify-content: center;
     flex-direction: column;
     width: 40vmin;
-    height: 20vmin;
+    height: 25vmin;
     right: calc(100% - 40vmin - 0.5vmin);
-    bottom: calc(100% - 20vmin - 0.5vmin);
+    bottom: calc(100% - 25vmin - 0.5vmin);
     clip-path: polygon(10% 0, 100% 0, 100% 90%, 90% 100%, 0 100%, 0 10%);
 }
 
 #hud-number-container,
 #hud-name-container,
 #hud-damage-container,
-#hud-kills-container {
+#hud-kills-container,
+#hud-health-container {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -524,7 +525,9 @@ body::after {
 #hud-damage-title,
 #hud-damage,
 #hud-kills-title,
-#hud-kills {
+#hud-kills,
+#hud-health-title,
+#hud-health {
     font-size: 3.6vmin;
     text-align: center;
     overflow: hidden;
@@ -567,7 +570,7 @@ body::after {
 
 #hud-damage {
     width: 27vmin;
-    background-color: rgba(10, 199, 10, 0.75);
+    background-color: rgba(255, 255, 0, 0.75);
 }
 
 #hud-kills-title {
@@ -579,4 +582,15 @@ body::after {
 #hud-kills {
     width: 27vmin;
     background-color: rgba(255, 0, 0, 0.75);
+}
+
+#hud-health-title {
+    font-size: 2.8vmin;
+    width: 13vmin;
+    background-color: rgba(0, 0, 0, 0.25);
+}
+
+#hud-health {
+    width: 27vmin;
+    background-color: rgba(10, 199, 10, 0.75);
 }
