@@ -1546,15 +1546,12 @@ export default class World {
             if (index >= 1) {
                 const leaderboardRow = value as HTMLDivElement;
                 leaderboardRow.style.display = "none";
-
                 const leaderboardName = leaderboardRow
                     .children[1] as HTMLDivElement;
                 leaderboardName.textContent = "";
-
                 const leaderboardDamage = leaderboardRow
                     .children[2] as HTMLDivElement;
                 leaderboardDamage.textContent = "";
-
                 const leaderboardKills = leaderboardRow
                     .children[3] as HTMLDivElement;
                 leaderboardKills.textContent = "";
@@ -1567,15 +1564,12 @@ export default class World {
                     index + 1
                 ] as HTMLDivElement;
                 currentLeaderboardRow.style.display = "flex";
-
                 const currentLeaderboardName = currentLeaderboardRow
                     .children[1] as HTMLDivElement;
                 currentLeaderboardName.textContent = value.name.toString();
-
                 const currentLeaderboardDamage = currentLeaderboardRow
                     .children[2] as HTMLDivElement;
                 currentLeaderboardDamage.textContent = value.damage.toString();
-
                 const currentLeaderboardKills = currentLeaderboardRow
                     .children[3] as HTMLDivElement;
                 currentLeaderboardKills.textContent = value.kills.toString();
