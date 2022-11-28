@@ -1416,10 +1416,13 @@ export default class World {
             }
 
             if (this._debug === true) {
-                console.log(`HexTank ${serverHexTank.id} joined at: `, {
-                    x: serverHexTank.x,
-                    z: serverHexTank.z,
-                });
+                console.log(
+                    `HexTank ${serverHexTank.id} ${serverHexTank.name} joined at: `,
+                    {
+                        x: serverHexTank.x,
+                        z: serverHexTank.z,
+                    }
+                );
             }
         };
 
@@ -1438,7 +1441,9 @@ export default class World {
             }
 
             if (this._debug === true) {
-                console.log(`HexTank ${serverHexTank.id} left!`);
+                console.log(
+                    `HexTank ${serverHexTank.id} ${serverHexTank.name} left!`
+                );
             }
         };
 
