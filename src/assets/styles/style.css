@@ -216,12 +216,12 @@ body::after {
     position: fixed;
     text-align: center;
     font-size: 7vmin;
-    background-color: #FFFF00;
-    color: #000000;
     width: 25vmin;
     height: 8vmin;
     line-height: 8vmin;
     clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
+    color: #000000;
+    background-color: #FFFF00;
 }
 
 .button-container-small,
@@ -229,12 +229,12 @@ body::after {
     position: fixed;
     text-align: center;
     font-size: 5.25vmin;
-    background-color: #FFFF00;
-    color: #000000;
     width: 18.75vmin;
     height: 6vmin;
     line-height: 6vmin;
     clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
+    color: #000000;
+    background-color: #FFFF00;
 }
 
 .button-container {
@@ -281,12 +281,12 @@ body::after {
     position: fixed;
     width: 95vmin;
     height: 34vmin;
+    left: calc(50% - 47.5vmin);
+    bottom: calc(72% - 17vmin);
     background-image: url("../../assets/images/logo.png");
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
-    left: calc(50% - 47.5vmin);
-    bottom: calc(72% - 17vmin);
 }
 
 #beta-button-container {
@@ -295,9 +295,9 @@ body::after {
     width: 12.5vmin;
     height: 4vmin;
     line-height: 4vmin;
-    background-color: #FFFFFF;
     left: calc(100% - 12.5vmin - 1.5vmin);
     top: calc(50% - 2vmin + 6.5vmin);
+    background-color: #FFFFFF;
 }
 
 #beta-button {
@@ -305,8 +305,8 @@ body::after {
     width: 12.5vmin;
     height: 4vmin;
     line-height: 4vmin;
-    background-color: #0AC70A;
     color: #FFFFFF;
+    background-color: #0AC70A;
 }
 
 #form-container {
@@ -315,21 +315,18 @@ body::after {
     align-items: center;
     justify-content: center;
     text-align: center;
-    background-color: #767676;
     width: 60vmin;
     height: 12vmin;
     left: calc(50% - 30vmin);
     bottom: calc(42%);
     clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
+    background-color: #767676;
 }
 
 #input-field {
     position: fixed;
     text-align: center;
     font-size: 10vmin;
-    background-color: #FFFFFF;
-    color: #000000;
-    caret-color: #000000;
     width: 60vmin;
     height: 12vmin;
     line-height: 12vmin;
@@ -341,6 +338,9 @@ body::after {
     transform: scale(95%);
     margin: 0vmin;
     padding: 0vmin;
+    color: #000000;
+    caret-color: #000000;
+    background-color: #FFFFFF;
 }
 
 #input-field::selection {
@@ -443,8 +443,8 @@ body::after {
     width: 49.5vmin;
     height: 3.2vmin;
     margin: 0.25vmin;
-    background-color: rgba(0, 0, 0, 0.25);
     clip-path: polygon(4% 0, 100% 0, 100% 50%, 96% 100%, 0 100%, 0% 50%);
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.5) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(0, 0, 0, 0.5) 100%);
 }
 
 #leaderboard-title {
@@ -538,59 +538,53 @@ body::after {
     line-height: 4.5vmin;
     margin: 0.25vmin;
     text-shadow: 0.14vmin 0.14vmin 0vmin #000000, -0.14vmin -0.14vmin 0vmin #000000, -0.14vmin 0.14vmin 0vmin #000000, 0.14vmin -0.14vmin 0vmin #000000;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.5) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(0, 0, 0, 0.5) 100%);
 }
 
 #hud-number-title {
     font-size: 2.8vmin;
     width: 13vmin;
-    background-color: rgba(0, 0, 0, 0.25);
 }
 
 #hud-number {
     width: 27vmin;
-    background-color: rgba(0, 0, 0, 0.25);
 }
 
 #hud-name-title {
     font-size: 2.8vmin;
     width: 13vmin;
-    background-color: rgba(0, 0, 0, 0.25);
 }
 
 #hud-name {
     width: 27vmin;
-    background-color: rgba(0, 0, 0, 0.25);
 }
 
 #hud-damage-title {
     font-size: 2.8vmin;
     width: 13vmin;
-    background-color: rgba(0, 0, 0, 0.25);
 }
 
 #hud-damage {
     width: 27vmin;
-    background-color: rgba(255, 255, 0, 0.75);
+    background: linear-gradient(135deg, rgba(255, 255, 0, 0.75) 0%, rgba(255, 255, 255, 0.75) 50%, rgba(255, 255, 0, 0.75) 100%);
 }
 
 #hud-kills-title {
     font-size: 2.8vmin;
     width: 13vmin;
-    background-color: rgba(0, 0, 0, 0.25);
 }
 
 #hud-kills {
     width: 27vmin;
-    background-color: rgba(255, 0, 0, 0.75);
+    background: linear-gradient(135deg, rgba(255, 0, 0, 0.75) 0%, rgba(255, 255, 255, 0.75) 50%, rgba(255, 0, 0, 0.75) 100%);
 }
 
 #hud-health-title {
     font-size: 2.8vmin;
     width: 13vmin;
-    background-color: rgba(0, 0, 0, 0.25);
 }
 
 #hud-health {
     width: 27vmin;
-    background-color: rgba(10, 199, 10, 0.75);
+    background: linear-gradient(135deg, rgba(10, 199, 10, 0.75) 0%, rgba(255, 255, 255, 0.75) 50%, rgba(10, 199, 10, 0.75) 100%);
 }
