@@ -412,6 +412,7 @@ body::after {
     height: 100%;
     z-index: 999;
     filter: drop-shadow(0 0 3vmin #000000);
+    background-color: rgba(0, 0, 0, 0.25);
 }
 
 .modal-container,
