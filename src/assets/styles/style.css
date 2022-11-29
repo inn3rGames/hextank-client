@@ -408,10 +408,10 @@ body::after {
     visibility: hidden;
     align-items: center;
     justify-content: center;
-    width: 95%;
-    height: 95%;
+    width: 80%;
+    height: 80%;
     z-index: 999;
-    filter: drop-shadow(0 0 50vmin #000000);
+    filter: drop-shadow(0 0 3vmin #000000);
 }
 
 .modal-container,
