@@ -21,6 +21,11 @@ body {
     touch-action: none;
     user-select: none;
     -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-drag: none;
+    -moz-user-drag: none;
+    -ms-user-drag: none;
     background-color: #FFA72D;
 }
 
@@ -402,10 +407,11 @@ body::after {
     display: none;
     align-items: center;
     justify-content: center;
-    width: 95vmin;
-    height: 95vmin;
+    width: 95%;
+    height: 95%;
     z-index: 999;
-    background-color: rgba(0, 0, 0, 0.5);
+    box-shadow: #000000;
+    background-color: rgba(255, 255, 255, 1);
 }
 
 .button-container-close,
@@ -418,22 +424,30 @@ body::after {
     line-height: 5vmin;
     text-decoration: none;
     clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
-    color: #FFFFFF;
+    color: #000000;
     background-color: #FF0000;
 }
 
 .button-container-close {
     left: calc(100% - 5vmin);
     bottom: calc(100% - 5vmin);
-    background-color: #FFFFFF;
+    background-color: #000000;
 }
 
 .button-close {
     transform: scale(95%);
 }
 
+.button-close:hover {
+    background-color: #BB0000;
+}
+
 .modal:target {
     display: flex;
+}
+
+a {
+    cursor: default;
 }
 
 #version {
