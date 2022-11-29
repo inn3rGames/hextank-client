@@ -97,8 +97,8 @@ export default class World {
     private _inputField: HTMLInputElement;
     private _startButtonContainer: HTMLDivElement;
     private _fullscreenButtonContainer: HTMLDivElement;
-    private _discordButtonContainer: HTMLDivElement;
     private _twitterButtonContainer: HTMLDivElement;
+    private _discordButtonContainer: HTMLDivElement;
     private _leaderboardContainer: HTMLDivElement;
     private _hudContainer: HTMLDivElement;
 
