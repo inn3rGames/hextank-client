@@ -404,7 +404,8 @@ body::after {
 
 .modal-shadow {
     position: fixed;
-    display: none;
+    display: flex;
+    visibility: hidden;
     align-items: center;
     justify-content: center;
     width: 95%;
@@ -434,7 +435,7 @@ body::after {
 }
 
 .modal-shadow:target {
-    display: flex;
+    visibility: visible;
 }
 
 a {
