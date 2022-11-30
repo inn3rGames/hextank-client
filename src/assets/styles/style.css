@@ -442,6 +442,41 @@ a {
     cursor: default;
 }
 
+.text-content {
+    position: absolute;
+    width: 90%;
+    height: 90%;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.text-content::-webkit-scrollbar {
+    display: none;
+}
+
+h1,
+p,
+details {
+    word-break: break-word;
+}
+
+h1 {
+    text-align: center;
+}
+
+p,
+details {
+    text-align: left;
+    margin-left: 1vmin;
+    text-align: left;
+}
+
+details {
+    margin-left: 5vmin;
+}
+
+
 .button-container-close,
 .button-close {
     position: absolute;
