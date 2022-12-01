@@ -37,14 +37,6 @@ import "@babylonjs/core/Materials/Textures/Loaders/ktxTextureLoader";
 import { Client, Room } from "colyseus.js";
 import screenfull from "screenfull";
 
-import skyboxPx from "./assets/textures/skybox/skybox_px.jpg";
-import skyboxPy from "./assets/textures/skybox/skybox_py.jpg";
-import skyboxPz from "./assets/textures/skybox/skybox_pz.jpg";
-import skyboxNx from "./assets/textures/skybox/skybox_nx.jpg";
-import skyboxNy from "./assets/textures/skybox/skybox_ny.jpg";
-import skyboxNz from "./assets/textures/skybox/skybox_nz.jpg";
-import sand from "./assets/textures/sand.jpg";
-
 import body from "./assets/models/hexTankBody.glb";
 import jet from "./assets/models/hexTankJet.glb";
 import wall from "./assets/models/wall.glb";
@@ -58,6 +50,14 @@ import rock3 from "./assets/models/rock3.glb";
 import bullet from "./assets/models/bullet.glb";
 import bulletExplosion from "./assets/models/bulletExplosion.glb";
 import hexTankExplosion from "./assets/models/hexTankExplosion.glb";
+
+import skyboxPx from "./assets/textures/skybox/skybox_px.jpg";
+import skyboxPy from "./assets/textures/skybox/skybox_py.jpg";
+import skyboxPz from "./assets/textures/skybox/skybox_pz.jpg";
+import skyboxNx from "./assets/textures/skybox/skybox_nx.jpg";
+import skyboxNy from "./assets/textures/skybox/skybox_ny.jpg";
+import skyboxNz from "./assets/textures/skybox/skybox_nz.jpg";
+import sand from "./assets/textures/sand.jpg";
 
 import HexTank from "./HexTank";
 import StaticCircleEntity from "./StaticCircleEntity";
@@ -118,6 +118,14 @@ export default class World {
     private _wordlLight!: HemisphericLight;
     private _directionalLight!: DirectionalLight;
 
+    private _shadowGenerator!: ShadowGenerator;
+    private _nodesWithShadow: Map<string, AbstractMesh | Mesh> = new Map();
+
+    private _hexTanks: Map<string, HexTank> = new Map();
+    private _fakeClientHexTank!: HexTank | undefined;
+    private _bullets: Map<string, Bullet> = new Map();
+    private _explosions: Map<string, Explosion> = new Map();
+
     private _skyboxArray!: Array<string>;
     private _skybox!: Mesh;
     private _skyboxMaterial!: StandardMaterial;
@@ -126,14 +134,6 @@ export default class World {
     private _sandTexture!: Texture;
     private _ground!: Mesh;
     private _worldSize: number = 500;
-
-    private _shadowGenerator!: ShadowGenerator;
-    private _nodesWithShadow: Map<string, AbstractMesh | Mesh> = new Map();
-
-    private _hexTanks: Map<string, HexTank> = new Map();
-    private _fakeClientHexTank!: HexTank | undefined;
-    private _bullets: Map<string, Bullet> = new Map();
-    private _explosions: Map<string, Explosion> = new Map();
 
     private _client!: Client;
     private _room!: Room;
