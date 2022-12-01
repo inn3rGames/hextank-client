@@ -470,88 +470,149 @@ export default class World {
         this._modelsMeshes.set(name, meshesArray);
     }
 
-    private async _loadMeshes() {
+    private async _loadAssets() {
         Logger.LogLevels = Logger.NoneLogLevel;
         let load = 0;
-        const maxLoad = 13;
+        const maxLoad = 15;
 
-        load++;
-        this._setSplashScreenMessage(
-            `Loading assets ${Math.round((load / maxLoad) * 100)}%`
-        );
         await this._loadMesh(body, "body");
-
         load++;
         this._setSplashScreenMessage(
             `Loading assets ${Math.round((load / maxLoad) * 100)}%`
         );
+
         await this._loadMesh(jet, "jet");
-
         load++;
         this._setSplashScreenMessage(
             `Loading assets ${Math.round((load / maxLoad) * 100)}%`
         );
+
         await this._loadMesh(wall, "wall");
-
         load++;
         this._setSplashScreenMessage(
             `Loading assets ${Math.round((load / maxLoad) * 100)}%`
         );
+
         await this._loadMesh(pyramid, "pyramid");
-
         load++;
         this._setSplashScreenMessage(
             `Loading assets ${Math.round((load / maxLoad) * 100)}%`
         );
+
         await this._loadMesh(oasis, "oasis");
-
         load++;
         this._setSplashScreenMessage(
             `Loading assets ${Math.round((load / maxLoad) * 100)}%`
         );
+
         await this._loadMesh(building1, "building1");
-
         load++;
         this._setSplashScreenMessage(
             `Loading assets ${Math.round((load / maxLoad) * 100)}%`
         );
+
         await this._loadMesh(building2, "building2");
-
         load++;
         this._setSplashScreenMessage(
             `Loading assets ${Math.round((load / maxLoad) * 100)}%`
         );
+
         await this._loadMesh(rock1, "rock1");
-
         load++;
         this._setSplashScreenMessage(
             `Loading assets ${Math.round((load / maxLoad) * 100)}%`
         );
+
         await this._loadMesh(rock2, "rock2");
-
         load++;
         this._setSplashScreenMessage(
             `Loading assets ${Math.round((load / maxLoad) * 100)}%`
         );
+
         await this._loadMesh(rock3, "rock3");
-
         load++;
         this._setSplashScreenMessage(
             `Loading assets ${Math.round((load / maxLoad) * 100)}%`
         );
+
         await this._loadMesh(bullet, "bullet");
-
         load++;
         this._setSplashScreenMessage(
             `Loading assets ${Math.round((load / maxLoad) * 100)}%`
         );
+
         await this._loadMesh(bulletExplosion, "bulletExplosion");
-
         load++;
         this._setSplashScreenMessage(
             `Loading assets ${Math.round((load / maxLoad) * 100)}%`
         );
+
         await this._loadMesh(hexTankExplosion, "hexTankExplosion");
+        load++;
+        this._setSplashScreenMessage(
+            `Loading assets ${Math.round((load / maxLoad) * 100)}%`
+        );
+
+        this._skyboxArray = [
+            skyboxPx,
+            skyboxPy,
+            skyboxPz,
+            skyboxNx,
+            skyboxNy,
+            skyboxNz,
+        ];
+        this._skybox = MeshBuilder.CreateBox(
+            "skyBox",
+            {
+                size: 2500,
+            },
+            this._scene
+        );
+        this._skyboxMaterial = new StandardMaterial(
+            "skyBoxMaterial",
+            this._scene
+        );
+        this._skyboxMaterial.backFaceCulling = false;
+        this._skyboxMaterial.reflectionTexture = new CubeTexture(
+            "",
+            this._scene,
+            null,
+            undefined,
+            this._skyboxArray
+        );
+        this._scene.environmentTexture = this._skyboxMaterial.reflectionTexture;
+        this._skyboxMaterial.reflectionTexture.coordinatesMode =
+            Texture.SKYBOX_MODE;
+        this._skyboxMaterial.diffuseColor = Color3.FromHexString("#000000");
+        this._skyboxMaterial.specularColor = Color3.FromHexString("#000000");
+        this._skybox.material = this._skyboxMaterial;
+        load++;
+        this._setSplashScreenMessage(
+            `Loading assets ${Math.round((load / maxLoad) * 100)}%`
+        );
+
+        this._groundMaterial = new PBRMetallicRoughnessMaterial(
+            "groundMaterial",
+            this._scene
+        );
+        this._sandTexture = new Texture(sand, this._scene);
+        this._sandTexture.uScale = 10 * (this._worldSize / 200);
+        this._sandTexture.vScale = 10 * (this._worldSize / 200);
+        this._groundMaterial.baseTexture = this._sandTexture;
+        this._groundMaterial.metallic = 0.0;
+        this._groundMaterial.roughness = 1.0;
+        this._groundMaterial.baseColor = Color3.FromHexString("#D18212");
+        this._ground = MeshBuilder.CreateGround("ground", {
+            height: this._worldSize,
+            width: this._worldSize,
+            subdivisions: 0,
+        });
+        this._ground.material = this._groundMaterial;
+        this._ground.receiveShadows = true;
+        load++;
+        this._setSplashScreenMessage(
+            `Loading assets ${Math.round((load / maxLoad) * 100)}%`
+        );
 
         const fakeServerHexTank = {
             x: 0,
@@ -574,7 +635,7 @@ export default class World {
 
     async loadWorld() {
         this._setSplashScreenMessage("Loading assets...");
-        await this._loadMeshes();
+        await this._loadAssets();
         this._setSplashScreenMessage("Loading assets finished...");
         this._setSplashScreenMessage("Loading world...");
 
@@ -623,58 +684,6 @@ export default class World {
         this._directionalLight.diffuse = Color3.FromHexString("#FFFFFF");
         this._directionalLight.specular = Color3.FromHexString("#FFFFFF");
         this._directionalLight.intensity = 2.5;
-
-        this._skyboxArray = [
-            skyboxPx,
-            skyboxPy,
-            skyboxPz,
-            skyboxNx,
-            skyboxNy,
-            skyboxNz,
-        ];
-        this._skybox = MeshBuilder.CreateBox(
-            "skyBox",
-            {
-                size: 2500,
-            },
-            this._scene
-        );
-        this._skyboxMaterial = new StandardMaterial("skyBox", this._scene);
-        this._skyboxMaterial.backFaceCulling = false;
-        this._skyboxMaterial.reflectionTexture = new CubeTexture(
-            "",
-            this._scene,
-            null,
-            undefined,
-            this._skyboxArray
-        );
-
-        this._scene.environmentTexture = this._skyboxMaterial.reflectionTexture;
-
-        this._skyboxMaterial.reflectionTexture.coordinatesMode =
-            Texture.SKYBOX_MODE;
-        this._skyboxMaterial.diffuseColor = Color3.FromHexString("#000000");
-        this._skyboxMaterial.specularColor = Color3.FromHexString("#000000");
-        this._skybox.material = this._skyboxMaterial;
-
-        this._groundMaterial = new PBRMetallicRoughnessMaterial(
-            "groundMaterial",
-            this._scene
-        );
-        this._sandTexture = new Texture(sand, this._scene);
-        this._sandTexture.uScale = 10 * (this._worldSize / 200);
-        this._sandTexture.vScale = 10 * (this._worldSize / 200);
-        this._groundMaterial.baseTexture = this._sandTexture;
-        this._groundMaterial.metallic = 0.0;
-        this._groundMaterial.roughness = 1.0;
-        this._groundMaterial.baseColor = Color3.FromHexString("#D18212");
-        this._ground = MeshBuilder.CreateGround("ground", {
-            height: this._worldSize,
-            width: this._worldSize,
-            subdivisions: 0,
-        });
-        this._ground.material = this._groundMaterial;
-        this._ground.receiveShadows = true;
 
         this._shadowGenerator = new ShadowGenerator(
             1024,
