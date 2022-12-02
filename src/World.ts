@@ -1604,7 +1604,10 @@ export default class World {
                 currentLeaderboardKills.textContent = value.kills.toString();
             }
             if (value.id === this._room.sessionId) {
-                currentNumber.textContent = (index + 1).toString();
+                currentNumber.textContent =
+                    (index + 1).toString() +
+                    " / " +
+                    currentHexTanks.length.toString();
                 currentName.textContent = value.name.toString();
                 currentDamage.textContent = value.damage.toString();
                 currentKills.textContent = value.kills.toString();
