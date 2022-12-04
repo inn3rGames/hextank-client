@@ -90,9 +90,9 @@ body::after {
     position: absolute;
     width: 1.8vmin;
     height: 1.8vmin;
-    background: #FFFFFF;
     border-radius: 50%;
     animation: lds-default 1.2s linear infinite;
+    background-color: #FFFFFF;
 }
 
 .lds-default div:nth-child(1) {
@@ -193,8 +193,8 @@ body::after {
     margin: 6vmin;
     text-align: center;
     font-size: 12vmin;
-    color: #FFFFFF;
     word-break: break-word;
+    color: #FFFFFF;
 }
 
 #home-ui {
@@ -457,31 +457,48 @@ a {
 }
 
 .text-category-container {
-    display: block;
+    margin-left: 3vmin;
+    margin-right: 3vmin;
+    margin-top: 0vmin;
+    margin-bottom: 6vmin;
+
 }
 
 .text-category-title {
+    font-size: 6vmin;
     text-align: center;
     word-break: break-word;
+    text-shadow: 0.3vmin 0.3vmin 0vmin #000000, -0.3vmin -0.3vmin 0vmin #000000, -0.3vmin 0.3vmin 0vmin #000000, 0.3vmin -0.3vmin 0vmin #000000;
+    color: #FFFFFF;
 }
 
 .text-category-content {
+    font-size: 3vmin;
     text-align: left;
     word-break: break-word;
+    color: #000000;
 }
 
 .text-question-container {
-    display: block;
+    margin-left: 0vmin;
+    margin-right: 0vmin;
+    margin-top: 0vmin;
+    margin-bottom: 4.5vmin;
 }
 
 .text-question {
+    font-size: 4.5vmin;
     text-align: left;
     word-break: break-word;
+    text-shadow: 0.3vmin 0.3vmin 0vmin #000000, -0.3vmin -0.3vmin 0vmin #000000, -0.3vmin 0.3vmin 0vmin #000000, 0.3vmin -0.3vmin 0vmin #000000;
+    color: #FFFFFF;
 }
 
 .text-question-details {
+    font-size: 2.25vmin;
     text-align: left;
     word-break: break-word;
+    color: #000000;
 }
 
 
@@ -517,12 +534,12 @@ a {
     position: fixed;
     text-align: center;
     font-size: 2.5vmin;
-    color: #000000;
     width: 100vmin;
     height: 2.5vmin;
     line-height: 2.5vmin;
     top: calc(100% - 10vmin + 4vmin);
     opacity: 25%;
+    color: #000000;
 }
 
 #in-game-ui {
@@ -588,10 +605,10 @@ a {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    color: #FFFFFF;
     height: 3.2vmin;
     line-height: 3.2vmin;
     text-shadow: 0.14vmin 0.14vmin 0vmin #000000, -0.14vmin -0.14vmin 0vmin #000000, -0.14vmin 0.14vmin 0vmin #000000, 0.14vmin -0.14vmin 0vmin #000000;
+    color: #FFFFFF;
 }
 
 .leaderboard-number {
@@ -649,11 +666,11 @@ a {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    color: #FFFFFF;
     height: 4.5vmin;
     line-height: 4.5vmin;
     margin: 0.25vmin;
     text-shadow: 0.14vmin 0.14vmin 0vmin #000000, -0.14vmin -0.14vmin 0vmin #000000, -0.14vmin 0.14vmin 0vmin #000000, 0.14vmin -0.14vmin 0vmin #000000;
+    color: #FFFFFF;
     background: linear-gradient(135deg, rgba(0, 0, 0, 0.5) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(0, 0, 0, 0.5) 100%);
 }
 
