@@ -444,8 +444,9 @@ a {
 
 .text-content {
     position: absolute;
-    width: 90%;
-    height: 90%;
+    width: calc(100% - 12vmin);
+    height: calc(100% - 12vmin);
+    bottom: calc(0% + 6vmin);
     overflow-y: scroll;
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -455,25 +456,32 @@ a {
     display: none;
 }
 
-h1,
-p,
-details {
+.text-category-container {
+    display: block;
+}
+
+.text-category-title {
+    text-align: center;
     word-break: break-word;
 }
 
-h1 {
-    text-align: center;
+.text-category-content {
+    text-align: left;
+    word-break: break-word;
 }
 
-p,
-details {
-    text-align: left;
-    margin-left: 1vmin;
-    text-align: left;
+.text-question-container {
+    display: block;
 }
 
-details {
-    margin-left: 5vmin;
+.text-question {
+    text-align: left;
+    word-break: break-word;
+}
+
+.text-question-details {
+    text-align: left;
+    word-break: break-word;
 }
 
 
