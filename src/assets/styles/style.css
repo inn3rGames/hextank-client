@@ -451,6 +451,8 @@ a {
     overflow-y: scroll;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    border: 0.25vmin solid #B0B000;
+    border-radius: 1vmin;
 }
 
 .text-content::-webkit-scrollbar {
@@ -495,7 +497,7 @@ a {
     color: #FFFFFF;
 }
 
-.text-question-details {
+.text-answer {
     font-size: 2.25vmin;
     text-align: left;
     word-break: break-word;
