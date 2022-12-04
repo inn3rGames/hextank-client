@@ -26,6 +26,7 @@ body {
     -webkit-user-drag: none;
     -moz-user-drag: none;
     -ms-user-drag: none;
+    -webkit-text-size-adjust: none;
     background-color: #FFA72D;
 }
 
