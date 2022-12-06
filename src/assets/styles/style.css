@@ -479,8 +479,9 @@ a {
     overflow-y: scroll;
     scrollbar-width: none;
     -ms-overflow-style: none;
-    border: 0.25vmin solid #B0B000;
+    border: 0.25vmin solid #000000;
     border-radius: 1vmin;
+    background-color: #FFFFFF;
 }
 
 .text-content::-webkit-scrollbar {
@@ -500,7 +501,7 @@ a {
     text-align: center;
     word-break: break-word;
     text-shadow: 0.3vmin 0.3vmin 0vmin #000000, -0.3vmin -0.3vmin 0vmin #000000, -0.3vmin 0.3vmin 0vmin #000000, 0.3vmin -0.3vmin 0vmin #000000;
-    color: #FFFFFF;
+    color: #FFFF00;
 }
 
 .text-category-content {
@@ -539,7 +540,7 @@ a {
     text-align: left;
     word-break: break-word;
     text-shadow: 0.3vmin 0.3vmin 0vmin #000000, -0.3vmin -0.3vmin 0vmin #000000, -0.3vmin 0.3vmin 0vmin #000000, 0.3vmin -0.3vmin 0vmin #000000;
-    color: #FFFFFF;
+    color: #FFFF00;
 }
 
 .text-answer {
