@@ -283,6 +283,16 @@ body::after {
     bottom: calc(100% - 5vmin - 5vmin);
 }
 
+#regions-button {
+    width: 25vmin;
+}
+
+#regions-button-container {
+    width: 25vmin;
+    right: calc(100% - 25vmin - 5vmin);
+    bottom: calc(100% - 6vmin - 5vmin);
+}
+
 #logo {
     position: fixed;
     width: 95vmin;

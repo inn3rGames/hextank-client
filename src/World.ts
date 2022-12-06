@@ -93,10 +93,11 @@ export default class World {
     private _splashScreen: HTMLDivElement;
     private _splashScreenContent: HTMLDivElement;
     private _homeUI: HTMLDivElement;
+    private _regionsButtonContainer: HTMLDivElement;
+    private _fullscreenButtonContainer: HTMLDivElement;
     private _formContainer: HTMLFormElement;
     private _inputField: HTMLInputElement;
     private _startButtonContainer: HTMLDivElement;
-    private _fullscreenButtonContainer: HTMLDivElement;
     private _twitterButtonContainer: HTMLDivElement;
     private _discordButtonContainer: HTMLDivElement;
     private _leaderboardContainer: HTMLDivElement;
@@ -170,6 +171,12 @@ export default class World {
         this._setSplashScreenMessage("Loading...");
 
         this._homeUI = document.getElementById("home-ui") as HTMLDivElement;
+        this._regionsButtonContainer = document.getElementById(
+            "regions-button-container"
+        ) as HTMLDivElement;
+        this._fullscreenButtonContainer = document.getElementById(
+            "fullscreen-button-container"
+        ) as HTMLDivElement;
         this._formContainer = document.getElementById(
             "form-container"
         ) as HTMLFormElement;
@@ -178,9 +185,6 @@ export default class World {
         ) as HTMLInputElement;
         this._startButtonContainer = document.getElementById(
             "start-button-container"
-        ) as HTMLDivElement;
-        this._fullscreenButtonContainer = document.getElementById(
-            "fullscreen-button-container"
         ) as HTMLDivElement;
         this._twitterButtonContainer = document.getElementById(
             "twitter-button-container"
@@ -321,6 +325,31 @@ export default class World {
             event.stopPropagation();
         });
 
+        this._regionsButtonContainer.addEventListener("mouseup", (event) => {
+            event.preventDefault();
+        });
+
+        this._regionsButtonContainer.addEventListener("touchend", (event) => {
+            event.preventDefault();
+        });
+
+        this._fullscreenButtonContainer.addEventListener("mouseup", (event) => {
+            event.preventDefault();
+            if (screenfull.isEnabled === true) {
+                screenfull.toggle();
+            }
+        });
+
+        this._fullscreenButtonContainer.addEventListener(
+            "touchend",
+            (event) => {
+                event.preventDefault();
+                if (screenfull.isEnabled === true) {
+                    screenfull.toggle();
+                }
+            }
+        );
+
         this._formContainer.addEventListener("submit", async (event) => {
             event.preventDefault();
             await this._sessionStart();
@@ -339,23 +368,6 @@ export default class World {
             async (event) => {
                 event.preventDefault();
                 await this._sessionStart();
-            }
-        );
-
-        this._fullscreenButtonContainer.addEventListener("mouseup", (event) => {
-            event.preventDefault();
-            if (screenfull.isEnabled === true) {
-                screenfull.toggle();
-            }
-        });
-
-        this._fullscreenButtonContainer.addEventListener(
-            "touchend",
-            (event) => {
-                event.preventDefault();
-                if (screenfull.isEnabled === true) {
-                    screenfull.toggle();
-                }
             }
         );
 
