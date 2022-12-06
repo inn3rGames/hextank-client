@@ -382,7 +382,7 @@ body::after {
     top: calc(100% - 6vmin - 10vmin);
 }
 
-#about-button-container {
+#terms-button-container {
     left: calc(50% + 2.5vmin);
     top: calc(100% - 6vmin - 10vmin);
 }
