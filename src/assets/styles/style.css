@@ -513,14 +513,18 @@ a {
 }
 
 #help-text-gamepad {
-    margin-top: 1.5vmin;
+    margin-top: 1vmin;
     text-indent: 0vmin;
 }
 
 #help-text-keyboard,
 #help-text-touch {
-    margin-top: 1.5vmin;
+    margin-top: 1vmin;
     text-indent: 0vmin;
+}
+
+#contact-text-business {
+    margin-top: 1vmin;
 }
 
 .text-question-container {
