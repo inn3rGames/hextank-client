@@ -93,7 +93,6 @@ export default class World {
     private _splashScreen: HTMLDivElement;
     private _splashScreenContent: HTMLDivElement;
     private _homeUI: HTMLDivElement;
-    private _regionsButtonContainer: HTMLDivElement;
     private _fullscreenButtonContainer: HTMLDivElement;
     private _formContainer: HTMLFormElement;
     private _inputField: HTMLInputElement;
@@ -171,9 +170,6 @@ export default class World {
         this._setSplashScreenMessage("Loading...");
 
         this._homeUI = document.getElementById("home-ui") as HTMLDivElement;
-        this._regionsButtonContainer = document.getElementById(
-            "regions-button-container"
-        ) as HTMLDivElement;
         this._fullscreenButtonContainer = document.getElementById(
             "fullscreen-button-container"
         ) as HTMLDivElement;
@@ -323,14 +319,6 @@ export default class World {
         });
         this._homeUI.addEventListener("touchcancel", (event) => {
             event.stopPropagation();
-        });
-
-        this._regionsButtonContainer.addEventListener("mouseup", (event) => {
-            event.preventDefault();
-        });
-
-        this._regionsButtonContainer.addEventListener("touchend", (event) => {
-            event.preventDefault();
         });
 
         this._fullscreenButtonContainer.addEventListener("mouseup", (event) => {
