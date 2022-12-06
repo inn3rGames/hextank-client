@@ -512,6 +512,17 @@ a {
     color: #000000;
 }
 
+#help-text-gamepad {
+    margin-top: 1.5vmin;
+    text-indent: 0vmin;
+}
+
+#help-text-keyboard,
+#help-text-touch {
+    margin-top: 1.5vmin;
+    text-indent: 0vmin;
+}
+
 .text-question-container {
     margin-left: 0vmin;
     margin-right: 0vmin;
