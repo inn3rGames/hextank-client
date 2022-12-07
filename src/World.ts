@@ -125,6 +125,7 @@ export default class World {
     private _fakeClientHexTank!: HexTank | undefined;
     private _bullets: Map<string, Bullet> = new Map();
     private _explosions: Map<string, Explosion> = new Map();
+    private _enableExplosions: boolean = true;
 
     private _skyboxArray!: Array<string>;
     private _skybox!: Mesh;
@@ -384,7 +385,7 @@ export default class World {
         });
 
         window.addEventListener("blur", () => {
-            this._formContainer.style.backgroundColor = "#767676";
+            this._focusLost();
         });
 
         this._input.enableInput();
@@ -1479,31 +1480,36 @@ export default class World {
 
     private _setBulletExplosions() {
         this._room.onMessage("bulletExplosion", (serverMessage) => {
-            const currentBulletExplosion = new Explosion(
-                serverMessage,
-                this._scene,
-                this._modelsMeshes.get("bulletExplosion")!,
-                "bulletExplosion"
-            );
-            this._explosions.set(serverMessage.id, currentBulletExplosion);
+            if (this._enableExplosions === true) {
+                const currentBulletExplosion = new Explosion(
+                    serverMessage,
+                    this._scene,
+                    this._modelsMeshes.get("bulletExplosion")!,
+                    "bulletExplosion"
+                );
+                this._explosions.set(serverMessage.id, currentBulletExplosion);
+            }
         });
     }
 
     private _setHexTankExplosions() {
         this._room.onMessage("hexTankExplosion", (serverMessage) => {
-            const currenthexTankExplosion = new Explosion(
-                serverMessage,
-                this._scene,
-                this._modelsMeshes.get("hexTankExplosion")!,
-                "hexTankExplosion"
-            );
-            this._explosions.set(serverMessage.id, currenthexTankExplosion);
+            if (this._enableExplosions === true) {
+                const currenthexTankExplosion = new Explosion(
+                    serverMessage,
+                    this._scene,
+                    this._modelsMeshes.get("hexTankExplosion")!,
+                    "hexTankExplosion"
+                );
+                this._explosions.set(serverMessage.id, currenthexTankExplosion);
+            }
         });
     }
 
     private _focusRegained() {
-        this._resetElapsedTime = true;
+        this._enableExplosions = true;
 
+        this._resetElapsedTime = true;
         this._lastFrame = performance.now();
 
         if (typeof this._room !== undefined) {
@@ -1518,6 +1524,12 @@ export default class World {
                 }
             });
         }
+    }
+
+    private _focusLost() {
+        this._enableExplosions = false;
+
+        this._formContainer.style.backgroundColor = "#767676";
     }
 
     private async _connectWorld() {
