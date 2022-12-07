@@ -286,7 +286,8 @@ export default class Input {
             buttonRight.style.right = "10vmin";
             buttonRight.style.bottom = "5vmin";
             buttonRight.style.backgroundColor = upColor;
-            buttonRight.style.borderRadius = "2.25vmin 7.5vmin 7.5vmin 2.25vmin";
+            buttonRight.style.borderRadius =
+                "2.25vmin 7.5vmin 7.5vmin 2.25vmin";
 
             buttonRight.addEventListener("touchstart", (event) => {
                 event.preventDefault();
@@ -509,18 +510,18 @@ export default class Input {
                                 }
                             }
 
-                            for (
-                                let k = 0;
-                                k < currentGamepadList[i]!.buttons.length;
-                                k++
+                            if (
+                                currentGamepadList[i]!.buttons[4].pressed ===
+                                    true ||
+                                currentGamepadList[i]!.buttons[5].pressed ===
+                                    true ||
+                                currentGamepadList[i]!.buttons[6].pressed ===
+                                    true ||
+                                currentGamepadList[i]!.buttons[7].pressed ===
+                                    true
                             ) {
-                                if (
-                                    currentGamepadList[i]!.buttons[k]
-                                        .pressed === true
-                                ) {
-                                    this._gamepadDidRun = true;
-                                    currentGamepad = currentGamepadList[i]!;
-                                }
+                                this._gamepadDidRun = true;
+                                currentGamepad = currentGamepadList[i]!;
                             }
                         }
                     }
