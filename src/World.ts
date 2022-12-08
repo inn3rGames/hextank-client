@@ -1556,6 +1556,11 @@ export default class World {
         }
     }
 
+    private _computeFontStroke(fontSize: string): string {
+        const strokeSize = parseFloat(fontSize) / 20;
+        return `${strokeSize}vmin ${strokeSize}vmin 0vmin #000000, -${strokeSize}vmin -${strokeSize}vmin 0vmin #000000, -${strokeSize}vmin ${strokeSize}vmin 0vmin #000000, ${strokeSize}vmin -${strokeSize}vmin 0vmin #000000`;
+    }
+
     private _updateHexTanks() {
         let currentHexTanks: Array<HexTank> = [];
         this._hexTanks.forEach((value, key) => {
@@ -1595,21 +1600,21 @@ export default class World {
             }
         });
 
-        const hudNumber = this._hudContainer.children[0]
+        const hudNumberElement = this._hudContainer.children[0]
             .children[1] as HTMLDivElement;
-        hudNumber.textContent = "";
-        const hudName = this._hudContainer.children[1]
+        hudNumberElement.textContent = "";
+        const hudNameElement = this._hudContainer.children[1]
             .children[1] as HTMLDivElement;
-        hudName.textContent = "";
-        const hudDamage = this._hudContainer.children[2]
+        hudNameElement.textContent = "";
+        const hudDamageElement = this._hudContainer.children[2]
             .children[1] as HTMLDivElement;
-        hudDamage.textContent = "";
-        const hudKills = this._hudContainer.children[3]
+        hudDamageElement.textContent = "";
+        const hudKillsElement = this._hudContainer.children[3]
             .children[1] as HTMLDivElement;
-        hudKills.textContent = "";
-        const hudHealth = this._hudContainer.children[4]
+        hudKillsElement.textContent = "";
+        const hudHealthElement = this._hudContainer.children[4]
             .children[1] as HTMLDivElement;
-        hudHealth.textContent = "";
+        hudHealthElement.textContent = "";
 
         currentHexTanks.forEach((value, index) => {
             if (typeof leaderboardRows[index + 1] !== "undefined") {
@@ -1624,6 +1629,9 @@ export default class World {
                     5,
                     2.8
                 );
+                rowNameElement.style.textShadow = this._computeFontStroke(
+                    rowNameElement.style.fontSize
+                );
 
                 const rowDamageValue = value.damage.toString();
                 const rowDamageElement = currentRow
@@ -1633,6 +1641,9 @@ export default class World {
                     rowDamageValue.length,
                     5,
                     2.8
+                );
+                rowDamageElement.style.textShadow = this._computeFontStroke(
+                    rowDamageElement.style.fontSize
                 );
 
                 const rowKillsValue = value.kills.toString();
@@ -1644,60 +1655,75 @@ export default class World {
                     5,
                     2.8
                 );
+                rowKillsElement.style.textShadow = this._computeFontStroke(
+                    rowKillsElement.style.fontSize
+                );
             }
             if (value.id === this._room.sessionId) {
-                hudNumber.textContent =
+                hudNumberElement.textContent =
                     (index + 1).toString() +
                     " / " +
                     currentHexTanks.length.toString();
 
-                const nameValue = value.name.toString();
-                hudName.textContent = nameValue;
-                hudName.style.fontSize = this._computeFontSize(
-                    nameValue.length,
+                const hudNameValue = value.name.toString();
+                hudNameElement.textContent = hudNameValue;
+                hudNameElement.style.fontSize = this._computeFontSize(
+                    hudNameValue.length,
                     8,
                     3.6
                 );
+                hudNameElement.style.textShadow = this._computeFontStroke(
+                    hudNameElement.style.fontSize
+                );
 
-                const damageValue = value.damage.toString();
-                hudDamage.textContent = damageValue;
-                hudDamage.style.fontSize = this._computeFontSize(
-                    damageValue.length,
+                const hudDamageValue = value.damage.toString();
+                hudDamageElement.textContent = hudDamageValue;
+                hudDamageElement.style.fontSize = this._computeFontSize(
+                    hudDamageValue.length,
                     10,
                     3.6
                 );
+                hudDamageElement.style.textShadow = this._computeFontStroke(
+                    hudDamageElement.style.fontSize
+                );
 
-                const killsValue = value.kills.toString();
-                hudKills.textContent = killsValue;
-                hudKills.style.fontSize = this._computeFontSize(
-                    killsValue.length,
+                const hudKillsValue = value.kills.toString();
+                hudKillsElement.textContent = hudKillsValue;
+                hudKillsElement.style.fontSize = this._computeFontSize(
+                    hudKillsValue.length,
                     10,
                     3.6
                 );
+                hudKillsElement.style.textShadow = this._computeFontStroke(
+                    hudKillsElement.style.fontSize
+                );
 
-                const healthValue = value.health.toString() + " / 5";
-                hudHealth.textContent = healthValue;
-                hudHealth.style.fontSize = this._computeFontSize(
-                    healthValue.length,
+                const hudHealthValue = value.health.toString() + " / 5";
+                hudHealthElement.textContent = hudHealthValue;
+                hudHealthElement.style.fontSize = this._computeFontSize(
+                    hudHealthValue.length,
                     10,
                     3.6
+                );
+                hudHealthElement.style.textShadow = this._computeFontStroke(
+                    hudHealthElement.style.fontSize
                 );
 
                 if (index + 1 <= 3) {
                     if (index + 1 === 1) {
-                        hudNumber.style.background =
+                        hudNumberElement.style.background =
                             "linear-gradient(135deg, #BF9A47 0%, #FFE233 25%, #FEFDE1 50%, #FFE233 75%, #BF9A47 100%)";
                     }
                     if (index + 1 === 2) {
-                        hudNumber.style.background =
+                        hudNumberElement.style.background =
                             "linear-gradient(135deg, #787878 0%, #B5B5B5 25%, #FFFFFF 50%, #E3E3E3 75%, #787878 100%)";
                     }
                     if (index + 1 === 3) {
-                        hudNumber.style.background =
+                        hudNumberElement.style.background =
                             "linear-gradient(135deg, #844414 0%, #CF7D52 25%, #FCD5BE 50%, #CF7D52 75%, #844414 100%)";
                     }
                 } else {
-                    hudNumber.style.background =
+                    hudNumberElement.style.background =
                         "linear-gradient(135deg, rgba(0, 0, 0, 0.5) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(0, 0, 0, 0.5) 100%)";
                 }
             }
