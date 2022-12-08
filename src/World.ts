@@ -1659,6 +1659,7 @@ export default class World {
                     rowKillsElement.style.fontSize
                 );
             }
+
             if (value.id === this._room.sessionId) {
                 hudNumberElement.textContent =
                     (index + 1).toString() +
