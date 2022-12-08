@@ -1544,6 +1544,18 @@ export default class World {
         }
     }
 
+    private _computeFontSize(
+        stringLength: number,
+        lengthLimit: number,
+        defaultSize: number
+    ): string {
+        if (stringLength > lengthLimit) {
+            return `${(lengthLimit / stringLength) * defaultSize}vmin`;
+        } else {
+            return `${defaultSize}vmin`;
+        }
+    }
+
     private _updateHexTanks() {
         let currentHexTanks: Array<HexTank> = [];
         this._hexTanks.forEach((value, key) => {
@@ -1583,62 +1595,109 @@ export default class World {
             }
         });
 
-        const currentNumber = this._hudContainer.children[0]
+        const hudNumber = this._hudContainer.children[0]
             .children[1] as HTMLDivElement;
-        currentNumber.textContent = "";
-        const currentName = this._hudContainer.children[1]
+        hudNumber.textContent = "";
+        const hudName = this._hudContainer.children[1]
             .children[1] as HTMLDivElement;
-        currentName.textContent = "";
-        const currentDamage = this._hudContainer.children[2]
+        hudName.textContent = "";
+        const hudDamage = this._hudContainer.children[2]
             .children[1] as HTMLDivElement;
-        currentDamage.textContent = "";
-        const currentKills = this._hudContainer.children[3]
+        hudDamage.textContent = "";
+        const hudKills = this._hudContainer.children[3]
             .children[1] as HTMLDivElement;
-        currentKills.textContent = "";
-        const currentHealth = this._hudContainer.children[4]
+        hudKills.textContent = "";
+        const hudHealth = this._hudContainer.children[4]
             .children[1] as HTMLDivElement;
-        currentHealth.textContent = "";
+        hudHealth.textContent = "";
 
         currentHexTanks.forEach((value, index) => {
             if (typeof leaderboardRows[index + 1] !== "undefined") {
-                const currentLeaderboardRow = leaderboardRows[
-                    index + 1
-                ] as HTMLDivElement;
-                currentLeaderboardRow.style.display = "flex";
-                const currentLeaderboardName = currentLeaderboardRow
-                    .children[1] as HTMLDivElement;
-                currentLeaderboardName.textContent = value.name.toString();
-                const currentLeaderboardDamage = currentLeaderboardRow
+                const currentRow = leaderboardRows[index + 1] as HTMLDivElement;
+                currentRow.style.display = "flex";
+
+                const rowNameValue = value.name.toString();
+                const rowNameElement = currentRow.children[1] as HTMLDivElement;
+                rowNameElement.textContent = rowNameValue;
+                rowNameElement.style.fontSize = this._computeFontSize(
+                    rowNameValue.length,
+                    5,
+                    2.8
+                );
+
+                const rowDamageValue = value.damage.toString();
+                const rowDamageElement = currentRow
                     .children[2] as HTMLDivElement;
-                currentLeaderboardDamage.textContent = value.damage.toString();
-                const currentLeaderboardKills = currentLeaderboardRow
+                rowDamageElement.textContent = rowDamageValue;
+                rowDamageElement.style.fontSize = this._computeFontSize(
+                    rowDamageValue.length,
+                    5,
+                    2.8
+                );
+
+                const rowKillsValue = value.kills.toString();
+                const rowKillsElement = currentRow
                     .children[3] as HTMLDivElement;
-                currentLeaderboardKills.textContent = value.kills.toString();
+                rowKillsElement.textContent = rowKillsValue;
+                rowKillsElement.style.fontSize = this._computeFontSize(
+                    rowKillsValue.length,
+                    5,
+                    2.8
+                );
             }
             if (value.id === this._room.sessionId) {
-                currentNumber.textContent =
+                hudNumber.textContent =
                     (index + 1).toString() +
                     " / " +
                     currentHexTanks.length.toString();
-                currentName.textContent = value.name.toString();
-                currentDamage.textContent = value.damage.toString();
-                currentKills.textContent = value.kills.toString();
-                currentHealth.textContent = value.health.toString() + " / 5";
+
+                const nameValue = value.name.toString();
+                hudName.textContent = nameValue;
+                hudName.style.fontSize = this._computeFontSize(
+                    nameValue.length,
+                    8,
+                    3.6
+                );
+
+                const damageValue = value.damage.toString();
+                hudDamage.textContent = damageValue;
+                hudDamage.style.fontSize = this._computeFontSize(
+                    damageValue.length,
+                    10,
+                    3.6
+                );
+
+                const killsValue = value.kills.toString();
+                hudKills.textContent = killsValue;
+                hudKills.style.fontSize = this._computeFontSize(
+                    killsValue.length,
+                    10,
+                    3.6
+                );
+
+                const healthValue = value.health.toString() + " / 5";
+                hudHealth.textContent = healthValue;
+                hudHealth.style.fontSize = this._computeFontSize(
+                    healthValue.length,
+                    10,
+                    3.6
+                );
+
                 if (index + 1 <= 3) {
                     if (index + 1 === 1) {
-                        currentNumber.style.background =
+                        hudNumber.style.background =
                             "linear-gradient(135deg, #BF9A47 0%, #FFE233 25%, #FEFDE1 50%, #FFE233 75%, #BF9A47 100%)";
                     }
                     if (index + 1 === 2) {
-                        currentNumber.style.background =
+                        hudNumber.style.background =
                             "linear-gradient(135deg, #787878 0%, #B5B5B5 25%, #FFFFFF 50%, #E3E3E3 75%, #787878 100%)";
                     }
                     if (index + 1 === 3) {
-                        currentNumber.style.background =
+                        hudNumber.style.background =
                             "linear-gradient(135deg, #844414 0%, #CF7D52 25%, #FCD5BE 50%, #CF7D52 75%, #844414 100%)";
                     }
                 } else {
-                    currentNumber.style.background =
+                    hudNumber.style.background =
                         "linear-gradient(135deg, rgba(0, 0, 0, 0.5) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(0, 0, 0, 0.5) 100%)";
                 }
             }

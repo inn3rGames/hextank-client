@@ -186,10 +186,6 @@ export default class HexTank {
         if (fontScale >= 1) {
             fontScale = 1;
         }
-        if (fontScale <= 0.5) {
-            nameText.textWrapping = 2;
-            fontScale = 0.5;
-        }
         nameText.fontSizeInPixels = 200 * fontScale;
         nameText.outlineWidth = 20 * fontScale;
 
