@@ -1820,6 +1820,24 @@ export default class World {
                     "calc(100% - 50vmin - 0.5vmin - 10vmin)";
                 this._leaderboardContainer.style.bottom =
                     "calc(100% - 40vmin - 0.5vmin)";
+
+                if (typeof this._input.buttonUp !== "undefined") {
+                    this._input.buttonUp.style.left = "20vmin";
+                }
+                if (typeof this._input.buttonDown !== "undefined") {
+                    this._input.buttonDown.style.left = "20vmin";
+                }
+                if (typeof this._input.buttonLeft !== "undefined") {
+                    this._input.buttonLeft.style.right =
+                        "calc(20vmin + 15vmin + 1vmin)";
+                }
+                if (typeof this._input.buttonRight !== "undefined") {
+                    this._input.buttonRight.style.right = "20vmin";
+                }
+                if (typeof this._input.buttonShoot !== "undefined") {
+                    this._input.buttonShoot.style.right =
+                        "calc(20vmin + 7.5vmin + 0.75vmin";
+                }
             } else {
                 this._regionsButtonContainer.style.right =
                     "calc(100% - 25vmin - 5vmin)";
@@ -1840,6 +1858,24 @@ export default class World {
                     "calc(100% - 50vmin - 0.5vmin)";
                 this._leaderboardContainer.style.bottom =
                     "calc(100% - 40vmin - 0.5vmin - 10vmin)";
+
+                if (typeof this._input.buttonUp !== "undefined") {
+                    this._input.buttonUp.style.left = "10vmin";
+                }
+                if (typeof this._input.buttonDown !== "undefined") {
+                    this._input.buttonDown.style.left = "10vmin";
+                }
+                if (typeof this._input.buttonLeft !== "undefined") {
+                    this._input.buttonLeft.style.right =
+                        "calc(10vmin + 15vmin + 1vmin)";
+                }
+                if (typeof this._input.buttonRight !== "undefined") {
+                    this._input.buttonRight.style.right = "10vmin";
+                }
+                if (typeof this._input.buttonShoot !== "undefined") {
+                    this._input.buttonShoot.style.right =
+                        "calc(10vmin + 7.5vmin + 0.75vmin";
+                }
             }
         }
     }

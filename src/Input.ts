@@ -12,6 +12,12 @@ export default class Input {
     private _right: number = 0;
     private _shoot: number = 0;
 
+    buttonUp!: HTMLDivElement;
+    buttonDown!: HTMLDivElement;
+    buttonLeft!: HTMLDivElement;
+    buttonRight!: HTMLDivElement;
+    buttonShoot!: HTMLDivElement;
+
     private _commands: Array<string> = [];
 
     private _defaultControls: boolean = true;
@@ -123,268 +129,272 @@ export default class Input {
             const upColor = "rgba(255, 255, 255, 0.25)";
             const downColor = "rgba(0, 0, 0, 0.25)";
 
-            const buttonUp = document.createElement("div");
-            container.appendChild(buttonUp);
-            buttonUp.style.position = "fixed";
-            buttonUp.style.width = "13.5vmin";
-            buttonUp.style.height = "15vmin";
-            buttonUp.style.left = "20vmin";
-            buttonUp.style.bottom = "calc(5vmin + 15vmin + 1vmin)";
-            buttonUp.style.backgroundColor = upColor;
-            buttonUp.style.borderRadius = "7.5vmin 7.5vmin 2.25vmin 2.25vmin";
+            this.buttonUp = document.createElement("div");
+            container.appendChild(this.buttonUp);
+            this.buttonUp.style.position = "fixed";
+            this.buttonUp.style.width = "13.5vmin";
+            this.buttonUp.style.height = "15vmin";
+            this.buttonUp.style.left = "20vmin";
+            this.buttonUp.style.bottom = "calc(5vmin + 15vmin + 1vmin)";
+            this.buttonUp.style.backgroundColor = upColor;
+            this.buttonUp.style.borderRadius =
+                "7.5vmin 7.5vmin 2.25vmin 2.25vmin";
 
-            buttonUp.addEventListener("touchstart", (event) => {
+            this.buttonUp.addEventListener("touchstart", (event) => {
                 event.preventDefault();
                 this._resetGamepadButtons();
                 this._defaultControls = true;
                 this._touchDidRun = true;
                 this._up = 1;
-                buttonUp.style.backgroundColor = downColor;
+                this.buttonUp.style.backgroundColor = downColor;
             });
-            buttonUp.addEventListener("touchend", (event) => {
+            this.buttonUp.addEventListener("touchend", (event) => {
                 event.preventDefault();
                 this._defaultControls = false;
                 this._up = 2;
-                buttonUp.style.backgroundColor = upColor;
+                this.buttonUp.style.backgroundColor = upColor;
             });
-            buttonUp.addEventListener("touchcancel", (event) => {
+            this.buttonUp.addEventListener("touchcancel", (event) => {
                 event.preventDefault();
                 this._defaultControls = false;
                 this._up = 2;
-                buttonUp.style.backgroundColor = upColor;
+                this.buttonUp.style.backgroundColor = upColor;
             });
 
-            buttonUp.addEventListener("mousedown", (event) => {
+            this.buttonUp.addEventListener("mousedown", (event) => {
                 event.preventDefault();
                 this._resetGamepadButtons();
                 this._defaultControls = true;
                 this._touchDidRun = true;
                 this._up = 1;
-                buttonUp.style.backgroundColor = downColor;
+                this.buttonUp.style.backgroundColor = downColor;
             });
-            buttonUp.addEventListener("mouseup", (event) => {
+            this.buttonUp.addEventListener("mouseup", (event) => {
                 event.preventDefault();
                 this._defaultControls = false;
                 this._up = 2;
-                buttonUp.style.backgroundColor = upColor;
+                this.buttonUp.style.backgroundColor = upColor;
             });
-            buttonUp.addEventListener("mouseleave", (event) => {
+            this.buttonUp.addEventListener("mouseleave", (event) => {
                 event.preventDefault();
                 this._defaultControls = false;
                 this._up = 2;
-                buttonUp.style.backgroundColor = upColor;
+                this.buttonUp.style.backgroundColor = upColor;
             });
 
-            const buttonDown = document.createElement("div");
-            container.appendChild(buttonDown);
-            buttonDown.style.position = "fixed";
-            buttonDown.style.width = "13.5vmin";
-            buttonDown.style.height = "15vmin";
-            buttonDown.style.left = "20vmin";
-            buttonDown.style.bottom = "5vmin";
-            buttonDown.style.backgroundColor = upColor;
-            buttonDown.style.borderRadius = "2.25vmin 2.25vmin 7.5vmin 7.5vmin";
+            this.buttonDown = document.createElement("div");
+            container.appendChild(this.buttonDown);
+            this.buttonDown.style.position = "fixed";
+            this.buttonDown.style.width = "13.5vmin";
+            this.buttonDown.style.height = "15vmin";
+            this.buttonDown.style.left = "20vmin";
+            this.buttonDown.style.bottom = "5vmin";
+            this.buttonDown.style.backgroundColor = upColor;
+            this.buttonDown.style.borderRadius =
+                "2.25vmin 2.25vmin 7.5vmin 7.5vmin";
 
-            buttonDown.addEventListener("touchstart", (event) => {
+            this.buttonDown.addEventListener("touchstart", (event) => {
                 event.preventDefault();
                 this._resetGamepadButtons();
                 this._defaultControls = true;
                 this._touchDidRun = true;
                 this._down = 1;
-                buttonDown.style.backgroundColor = downColor;
+                this.buttonDown.style.backgroundColor = downColor;
             });
-            buttonDown.addEventListener("touchend", (event) => {
+            this.buttonDown.addEventListener("touchend", (event) => {
                 event.preventDefault();
                 this._defaultControls = false;
                 this._down = 2;
-                buttonDown.style.backgroundColor = upColor;
+                this.buttonDown.style.backgroundColor = upColor;
             });
-            buttonDown.addEventListener("touchcancel", (event) => {
+            this.buttonDown.addEventListener("touchcancel", (event) => {
                 event.preventDefault();
                 this._defaultControls = false;
                 this._down = 2;
-                buttonDown.style.backgroundColor = upColor;
+                this.buttonDown.style.backgroundColor = upColor;
             });
 
-            buttonDown.addEventListener("mousedown", (event) => {
+            this.buttonDown.addEventListener("mousedown", (event) => {
                 event.preventDefault();
                 this._resetGamepadButtons();
                 this._defaultControls = true;
                 this._touchDidRun = true;
                 this._down = 1;
-                buttonDown.style.backgroundColor = downColor;
+                this.buttonDown.style.backgroundColor = downColor;
             });
-            buttonDown.addEventListener("mouseup", (event) => {
+            this.buttonDown.addEventListener("mouseup", (event) => {
                 event.preventDefault();
                 this._defaultControls = false;
                 this._down = 2;
-                buttonDown.style.backgroundColor = upColor;
+                this.buttonDown.style.backgroundColor = upColor;
             });
-            buttonDown.addEventListener("mouseleave", (event) => {
+            this.buttonDown.addEventListener("mouseleave", (event) => {
                 event.preventDefault();
                 this._defaultControls = false;
                 this._down = 2;
-                buttonDown.style.backgroundColor = upColor;
+                this.buttonDown.style.backgroundColor = upColor;
             });
 
-            const buttonLeft = document.createElement("div");
-            container.appendChild(buttonLeft);
-            buttonLeft.style.position = "fixed";
-            buttonLeft.style.width = "15vmin";
-            buttonLeft.style.height = "13.5vmin";
-            buttonLeft.style.right = "calc(20vmin + 15vmin + 1vmin)";
-            buttonLeft.style.bottom = "5vmin";
-            buttonLeft.style.backgroundColor = upColor;
-            buttonLeft.style.borderRadius = "7.5vmin 2.25vmin 2.25vmin 7.5vmin";
+            this.buttonLeft = document.createElement("div");
+            container.appendChild(this.buttonLeft);
+            this.buttonLeft.style.position = "fixed";
+            this.buttonLeft.style.width = "15vmin";
+            this.buttonLeft.style.height = "13.5vmin";
+            this.buttonLeft.style.right = "calc(20vmin + 15vmin + 1vmin)";
+            this.buttonLeft.style.bottom = "5vmin";
+            this.buttonLeft.style.backgroundColor = upColor;
+            this.buttonLeft.style.borderRadius =
+                "7.5vmin 2.25vmin 2.25vmin 7.5vmin";
 
-            buttonLeft.addEventListener("touchstart", (event) => {
+            this.buttonLeft.addEventListener("touchstart", (event) => {
                 event.preventDefault();
                 this._resetGamepadButtons();
                 this._defaultControls = true;
                 this._touchDidRun = true;
                 this._left = 1;
-                buttonLeft.style.backgroundColor = downColor;
+                this.buttonLeft.style.backgroundColor = downColor;
             });
-            buttonLeft.addEventListener("touchend", (event) => {
+            this.buttonLeft.addEventListener("touchend", (event) => {
                 event.preventDefault();
                 this._defaultControls = false;
                 this._left = 2;
-                buttonLeft.style.backgroundColor = upColor;
+                this.buttonLeft.style.backgroundColor = upColor;
             });
-            buttonLeft.addEventListener("touchcancel", (event) => {
+            this.buttonLeft.addEventListener("touchcancel", (event) => {
                 event.preventDefault();
                 this._defaultControls = false;
                 this._left = 2;
-                buttonLeft.style.backgroundColor = upColor;
+                this.buttonLeft.style.backgroundColor = upColor;
             });
 
-            buttonLeft.addEventListener("mousedown", (event) => {
+            this.buttonLeft.addEventListener("mousedown", (event) => {
                 event.preventDefault();
                 this._resetGamepadButtons();
                 this._defaultControls = true;
                 this._touchDidRun = true;
                 this._left = 1;
-                buttonLeft.style.backgroundColor = downColor;
+                this.buttonLeft.style.backgroundColor = downColor;
             });
-            buttonLeft.addEventListener("mouseup", (event) => {
+            this.buttonLeft.addEventListener("mouseup", (event) => {
                 event.preventDefault();
                 this._defaultControls = false;
                 this._left = 2;
-                buttonLeft.style.backgroundColor = upColor;
+                this.buttonLeft.style.backgroundColor = upColor;
             });
-            buttonLeft.addEventListener("mouseleave", (event) => {
+            this.buttonLeft.addEventListener("mouseleave", (event) => {
                 event.preventDefault();
                 this._defaultControls = false;
                 this._left = 2;
-                buttonLeft.style.backgroundColor = upColor;
+                this.buttonLeft.style.backgroundColor = upColor;
             });
 
-            const buttonRight = document.createElement("div");
-            container.appendChild(buttonRight);
-            buttonRight.style.position = "fixed";
-            buttonRight.style.width = "15vmin";
-            buttonRight.style.height = "13.5vmin";
-            buttonRight.style.right = "20vmin";
-            buttonRight.style.bottom = "5vmin";
-            buttonRight.style.backgroundColor = upColor;
-            buttonRight.style.borderRadius =
+            this.buttonRight = document.createElement("div");
+            container.appendChild(this.buttonRight);
+            this.buttonRight.style.position = "fixed";
+            this.buttonRight.style.width = "15vmin";
+            this.buttonRight.style.height = "13.5vmin";
+            this.buttonRight.style.right = "20vmin";
+            this.buttonRight.style.bottom = "5vmin";
+            this.buttonRight.style.backgroundColor = upColor;
+            this.buttonRight.style.borderRadius =
                 "2.25vmin 7.5vmin 7.5vmin 2.25vmin";
 
-            buttonRight.addEventListener("touchstart", (event) => {
+            this.buttonRight.addEventListener("touchstart", (event) => {
                 event.preventDefault();
                 this._resetGamepadButtons();
                 this._defaultControls = true;
                 this._touchDidRun = true;
                 this._right = 1;
-                buttonRight.style.backgroundColor = downColor;
+                this.buttonRight.style.backgroundColor = downColor;
             });
-            buttonRight.addEventListener("touchend", (event) => {
+            this.buttonRight.addEventListener("touchend", (event) => {
                 event.preventDefault();
                 this._defaultControls = false;
                 this._right = 2;
-                buttonRight.style.backgroundColor = upColor;
+                this.buttonRight.style.backgroundColor = upColor;
             });
-            buttonRight.addEventListener("touchcancel", (event) => {
+            this.buttonRight.addEventListener("touchcancel", (event) => {
                 event.preventDefault();
                 this._defaultControls = false;
                 this._right = 2;
-                buttonRight.style.backgroundColor = upColor;
+                this.buttonRight.style.backgroundColor = upColor;
             });
 
-            buttonRight.addEventListener("mousedown", (event) => {
+            this.buttonRight.addEventListener("mousedown", (event) => {
                 event.preventDefault();
                 this._resetGamepadButtons();
                 this._defaultControls = true;
                 this._touchDidRun = true;
                 this._right = 1;
-                buttonRight.style.backgroundColor = downColor;
+                this.buttonRight.style.backgroundColor = downColor;
             });
-            buttonRight.addEventListener("mouseup", (event) => {
+            this.buttonRight.addEventListener("mouseup", (event) => {
                 event.preventDefault();
                 this._defaultControls = false;
                 this._right = 2;
-                buttonRight.style.backgroundColor = upColor;
+                this.buttonRight.style.backgroundColor = upColor;
             });
-            buttonRight.addEventListener("mouseleave", (event) => {
+            this.buttonRight.addEventListener("mouseleave", (event) => {
                 event.preventDefault();
                 this._defaultControls = false;
                 this._right = 2;
-                buttonRight.style.backgroundColor = upColor;
+                this.buttonRight.style.backgroundColor = upColor;
             });
 
             const shootUpColor = "rgba(255, 0, 0, 0.25)";
             const shootDownColor = "rgba(63, 0, 0, 0.25)";
 
-            const buttonShoot = document.createElement("div");
-            container.appendChild(buttonShoot);
-            buttonShoot.style.position = "fixed";
-            buttonShoot.style.width = "15vmin";
-            buttonShoot.style.height = "15vmin";
-            buttonShoot.style.right = "calc(20vmin + 7.5vmin + 0.75vmin)";
-            buttonShoot.style.bottom = "calc(19.5vmin)";
-            buttonShoot.style.backgroundColor = shootUpColor;
-            buttonShoot.style.borderRadius = "7.5vmin 7.5vmin 7.5vmin 7.5vmin";
+            this.buttonShoot = document.createElement("div");
+            container.appendChild(this.buttonShoot);
+            this.buttonShoot.style.position = "fixed";
+            this.buttonShoot.style.width = "15vmin";
+            this.buttonShoot.style.height = "15vmin";
+            this.buttonShoot.style.right = "calc(20vmin + 7.5vmin + 0.75vmin)";
+            this.buttonShoot.style.bottom = "calc(19.5vmin)";
+            this.buttonShoot.style.backgroundColor = shootUpColor;
+            this.buttonShoot.style.borderRadius =
+                "7.5vmin 7.5vmin 7.5vmin 7.5vmin";
 
-            buttonShoot.addEventListener("touchstart", (event) => {
+            this.buttonShoot.addEventListener("touchstart", (event) => {
                 event.preventDefault();
                 this._resetGamepadButtons();
                 this._defaultControls = true;
                 this._touchDidRun = true;
                 this._shoot = 1;
-                buttonShoot.style.backgroundColor = shootDownColor;
+                this.buttonShoot.style.backgroundColor = shootDownColor;
             });
-            buttonShoot.addEventListener("touchend", (event) => {
+            this.buttonShoot.addEventListener("touchend", (event) => {
                 event.preventDefault();
                 this._defaultControls = false;
                 this._shoot = 2;
-                buttonShoot.style.backgroundColor = shootUpColor;
+                this.buttonShoot.style.backgroundColor = shootUpColor;
             });
-            buttonShoot.addEventListener("touchcancel", (event) => {
+            this.buttonShoot.addEventListener("touchcancel", (event) => {
                 event.preventDefault();
                 this._defaultControls = false;
                 this._shoot = 2;
-                buttonShoot.style.backgroundColor = shootUpColor;
+                this.buttonShoot.style.backgroundColor = shootUpColor;
             });
 
-            buttonShoot.addEventListener("mousedown", (event) => {
+            this.buttonShoot.addEventListener("mousedown", (event) => {
                 event.preventDefault();
                 this._resetGamepadButtons();
                 this._defaultControls = true;
                 this._touchDidRun = true;
                 this._shoot = 1;
-                buttonShoot.style.backgroundColor = shootDownColor;
+                this.buttonShoot.style.backgroundColor = shootDownColor;
             });
-            buttonShoot.addEventListener("mouseup", (event) => {
+            this.buttonShoot.addEventListener("mouseup", (event) => {
                 event.preventDefault();
                 this._defaultControls = false;
                 this._shoot = 2;
-                buttonShoot.style.backgroundColor = shootUpColor;
+                this.buttonShoot.style.backgroundColor = shootUpColor;
             });
-            buttonShoot.addEventListener("mouseleave", (event) => {
+            this.buttonShoot.addEventListener("mouseleave", (event) => {
                 event.preventDefault();
                 this._defaultControls = false;
                 this._shoot = 2;
-                buttonShoot.style.backgroundColor = shootUpColor;
+                this.buttonShoot.style.backgroundColor = shootUpColor;
             });
         }
 
