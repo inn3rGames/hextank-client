@@ -93,14 +93,15 @@ export default class World {
     private _splashScreen: HTMLDivElement;
     private _splashScreenContent: HTMLDivElement;
     private _homeUI: HTMLDivElement;
+    private _regionsButtonContainer: HTMLDivElement;
     private _fullscreenButtonContainer: HTMLDivElement;
     private _formContainer: HTMLFormElement;
     private _inputField: HTMLInputElement;
     private _startButtonContainer: HTMLDivElement;
     private _twitterButtonContainer: HTMLDivElement;
     private _discordButtonContainer: HTMLDivElement;
-    private _leaderboardContainer: HTMLDivElement;
     private _hudContainer: HTMLDivElement;
+    private _leaderboardContainer: HTMLDivElement;
 
     private _engine: Engine;
 
@@ -171,6 +172,9 @@ export default class World {
         this._setSplashScreenMessage("Loading...");
 
         this._homeUI = document.getElementById("home-ui") as HTMLDivElement;
+        this._regionsButtonContainer = document.getElementById(
+            "regions-button-container"
+        ) as HTMLDivElement;
         this._fullscreenButtonContainer = document.getElementById(
             "fullscreen-button-container"
         ) as HTMLDivElement;
@@ -193,11 +197,11 @@ export default class World {
         this._inGameUI = document.getElementById(
             "in-game-ui"
         ) as HTMLDivElement;
-        this._leaderboardContainer = document.getElementById(
-            "leaderboard-container"
-        ) as HTMLDivElement;
         this._hudContainer = document.getElementById(
             "hud-container"
+        ) as HTMLDivElement;
+        this._leaderboardContainer = document.getElementById(
+            "leaderboard-container"
         ) as HTMLDivElement;
 
         const log = console.log;
@@ -1583,6 +1587,22 @@ export default class World {
             return b.damage - a.damage;
         });
 
+        const hudNumberElement = this._hudContainer.children[0]
+            .children[1] as HTMLDivElement;
+        hudNumberElement.textContent = "";
+        const hudNameElement = this._hudContainer.children[1]
+            .children[1] as HTMLDivElement;
+        hudNameElement.textContent = "";
+        const hudDamageElement = this._hudContainer.children[2]
+            .children[1] as HTMLDivElement;
+        hudDamageElement.textContent = "";
+        const hudKillsElement = this._hudContainer.children[3]
+            .children[1] as HTMLDivElement;
+        hudKillsElement.textContent = "";
+        const hudHealthElement = this._hudContainer.children[4]
+            .children[1] as HTMLDivElement;
+        hudHealthElement.textContent = "";
+
         const leaderboardRows = Array.from(this._leaderboardContainer.children);
         leaderboardRows.forEach((value, index) => {
             if (index >= 1) {
@@ -1600,66 +1620,7 @@ export default class World {
             }
         });
 
-        const hudNumberElement = this._hudContainer.children[0]
-            .children[1] as HTMLDivElement;
-        hudNumberElement.textContent = "";
-        const hudNameElement = this._hudContainer.children[1]
-            .children[1] as HTMLDivElement;
-        hudNameElement.textContent = "";
-        const hudDamageElement = this._hudContainer.children[2]
-            .children[1] as HTMLDivElement;
-        hudDamageElement.textContent = "";
-        const hudKillsElement = this._hudContainer.children[3]
-            .children[1] as HTMLDivElement;
-        hudKillsElement.textContent = "";
-        const hudHealthElement = this._hudContainer.children[4]
-            .children[1] as HTMLDivElement;
-        hudHealthElement.textContent = "";
-
         currentHexTanks.forEach((value, index) => {
-            if (typeof leaderboardRows[index + 1] !== "undefined") {
-                const currentRow = leaderboardRows[index + 1] as HTMLDivElement;
-                currentRow.style.display = "flex";
-
-                const rowNameValue = value.name.toString();
-                const rowNameElement = currentRow.children[1] as HTMLDivElement;
-                rowNameElement.textContent = rowNameValue;
-                rowNameElement.style.fontSize = this._computeFontSize(
-                    rowNameValue.length,
-                    5,
-                    2.8
-                );
-                rowNameElement.style.textShadow = this._computeFontStroke(
-                    rowNameElement.style.fontSize
-                );
-
-                const rowDamageValue = value.damage.toString();
-                const rowDamageElement = currentRow
-                    .children[2] as HTMLDivElement;
-                rowDamageElement.textContent = rowDamageValue;
-                rowDamageElement.style.fontSize = this._computeFontSize(
-                    rowDamageValue.length,
-                    5,
-                    2.8
-                );
-                rowDamageElement.style.textShadow = this._computeFontStroke(
-                    rowDamageElement.style.fontSize
-                );
-
-                const rowKillsValue = value.kills.toString();
-                const rowKillsElement = currentRow
-                    .children[3] as HTMLDivElement;
-                rowKillsElement.textContent = rowKillsValue;
-                rowKillsElement.style.fontSize = this._computeFontSize(
-                    rowKillsValue.length,
-                    5,
-                    2.8
-                );
-                rowKillsElement.style.textShadow = this._computeFontStroke(
-                    rowKillsElement.style.fontSize
-                );
-            }
-
             if (value.id === this._room.sessionId) {
                 hudNumberElement.textContent =
                     (index + 1).toString() +
@@ -1728,6 +1689,49 @@ export default class World {
                         "linear-gradient(135deg, rgba(0, 0, 0, 0.5) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(0, 0, 0, 0.5) 100%)";
                 }
             }
+
+            if (typeof leaderboardRows[index + 1] !== "undefined") {
+                const currentRow = leaderboardRows[index + 1] as HTMLDivElement;
+                currentRow.style.display = "flex";
+
+                const rowNameValue = value.name.toString();
+                const rowNameElement = currentRow.children[1] as HTMLDivElement;
+                rowNameElement.textContent = rowNameValue;
+                rowNameElement.style.fontSize = this._computeFontSize(
+                    rowNameValue.length,
+                    5,
+                    2.8
+                );
+                rowNameElement.style.textShadow = this._computeFontStroke(
+                    rowNameElement.style.fontSize
+                );
+
+                const rowDamageValue = value.damage.toString();
+                const rowDamageElement = currentRow
+                    .children[2] as HTMLDivElement;
+                rowDamageElement.textContent = rowDamageValue;
+                rowDamageElement.style.fontSize = this._computeFontSize(
+                    rowDamageValue.length,
+                    5,
+                    2.8
+                );
+                rowDamageElement.style.textShadow = this._computeFontStroke(
+                    rowDamageElement.style.fontSize
+                );
+
+                const rowKillsValue = value.kills.toString();
+                const rowKillsElement = currentRow
+                    .children[3] as HTMLDivElement;
+                rowKillsElement.textContent = rowKillsValue;
+                rowKillsElement.style.fontSize = this._computeFontSize(
+                    rowKillsValue.length,
+                    5,
+                    2.8
+                );
+                rowKillsElement.style.textShadow = this._computeFontStroke(
+                    rowKillsElement.style.fontSize
+                );
+            }
         });
     }
 
@@ -1794,9 +1798,60 @@ export default class World {
         this._input.update();
     }
 
+    private _resizeInGameUI(width: number, height: number) {
+        if (this._input.currentDeviceIsMobile === true) {
+            if (width >= height) {
+                this._regionsButtonContainer.style.right =
+                    "calc(100% - 25vmin - 10vmin)";
+                this._regionsButtonContainer.style.bottom =
+                    "calc(100% - 6vmin - 5vmin)";
+
+                this._fullscreenButtonContainer.style.left =
+                    "calc(100% - 5vmin - 10vmin)";
+                this._fullscreenButtonContainer.style.bottom =
+                    "calc(100% - 5vmin - 5vmin)";
+
+                this._hudContainer.style.right =
+                    "calc(100% - 40vmin - 0.5vmin - 10vmin)";
+                this._hudContainer.style.bottom =
+                    "calc(100% - 25vmin - 0.5vmin)";
+
+                this._leaderboardContainer.style.left =
+                    "calc(100% - 50vmin - 0.5vmin - 10vmin)";
+                this._leaderboardContainer.style.bottom =
+                    "calc(100% - 40vmin - 0.5vmin);";
+            } else {
+                this._regionsButtonContainer.style.right =
+                    "calc(100% - 25vmin - 5vmin)";
+                this._regionsButtonContainer.style.bottom =
+                    "calc(100% - 6vmin - 10vmin)";
+
+                this._fullscreenButtonContainer.style.left =
+                    "calc(100% - 5vmin - 5vmin)";
+                this._fullscreenButtonContainer.style.bottom =
+                    "calc(100% - 5vmin - 10vmin)";
+
+                this._hudContainer.style.right =
+                    "calc(100% - 40vmin - 0.5vmin)";
+                this._hudContainer.style.bottom =
+                    "calc(100% - 25vmin - 0.5vmin - 10vmin)";
+
+                this._leaderboardContainer.style.left =
+                    "calc(100% - 50vmin - 0.5vmin)";
+                this._leaderboardContainer.style.bottom =
+                    "calc(100% - 40vmin - 0.5vmin - 10vmin)";
+            }
+        }
+    }
+
     private _handleResize() {
         this._currentWindowWidth = this._canvas.clientWidth;
         this._currentWindowHeight = this._canvas.clientHeight;
+
+        this._resizeInGameUI(
+            this._currentWindowWidth,
+            this._currentWindowHeight
+        );
 
         if (this._currentWindowWidth !== this._lastWindowWidth) {
             this._engine.resize(true);

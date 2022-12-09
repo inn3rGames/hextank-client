@@ -267,13 +267,14 @@ body::after {
     background-color: #B0B000;
 }
 
-#fullscreen-button {
-    width: 5vmin;
-    height: 5vmin;
-    background-image: url("../../assets/images/fullscreen.png");
-    background-size: 4vmin 4vmin;
-    background-repeat: no-repeat;
-    background-position: center center;
+#regions-button-container {
+    width: 25vmin;
+    right: calc(100% - 25vmin - 5vmin);
+    bottom: calc(100% - 6vmin - 5vmin);
+}
+
+#regions-button {
+    width: 25vmin;
 }
 
 #fullscreen-button-container {
@@ -283,14 +284,13 @@ body::after {
     bottom: calc(100% - 5vmin - 5vmin);
 }
 
-#regions-button {
-    width: 25vmin;
-}
-
-#regions-button-container {
-    width: 25vmin;
-    right: calc(100% - 25vmin - 5vmin);
-    bottom: calc(100% - 6vmin - 5vmin);
+#fullscreen-button {
+    width: 5vmin;
+    height: 5vmin;
+    background-image: url("../../assets/images/fullscreen.png");
+    background-size: 4vmin 4vmin;
+    background-repeat: no-repeat;
+    background-position: center center;
 }
 
 #logo {
@@ -588,75 +588,6 @@ a {
     height: 100%;
 }
 
-#leaderboard-container {
-    position: fixed;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    width: 50vmin;
-    height: 40vmin;
-    left: calc(100% - 50vmin - 0.5vmin);
-    bottom: calc(100% - 40vmin - 0.5vmin);
-}
-
-.leaderboard-row {
-    display: none;
-    align-items: center;
-    justify-content: space-evenly;
-    width: 49.5vmin;
-    height: 3.2vmin;
-    margin: 0.25vmin;
-    clip-path: polygon(4% 0, 100% 0, 100% 50%, 96% 100%, 0 100%, 0% 50%);
-    background: linear-gradient(135deg, rgba(0, 0, 0, 0.5) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(0, 0, 0, 0.5) 100%);
-}
-
-#leaderboard-title {
-    display: flex;
-}
-
-#leaderboard-gold {
-    background: linear-gradient(135deg, #BF9A47 0%, #FFE233 25%, #FEFDE1 50%, #FFE233 75%, #BF9A47 100%);
-}
-
-#leaderboard-silver {
-    background: linear-gradient(135deg, #787878 0%, #B5B5B5 25%, #FFFFFF 50%, #E3E3E3 75%, #787878 100%);
-}
-
-#leaderboard-bronze {
-    background: linear-gradient(135deg, #844414 0%, #CF7D52 25%, #FCD5BE 50%, #CF7D52 75%, #844414 100%);
-}
-
-.leaderboard-number,
-.leaderboard-name,
-.leaderboard-damage,
-.leaderboard-kills {
-    font-size: 2.8vmin;
-    text-align: center;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    height: 3.2vmin;
-    line-height: 3.2vmin;
-    text-shadow: 0.14vmin 0.14vmin 0vmin #000000, -0.14vmin -0.14vmin 0vmin #000000, -0.14vmin 0.14vmin 0vmin #000000, 0.14vmin -0.14vmin 0vmin #000000;
-    color: #FFFFFF;
-}
-
-.leaderboard-number {
-    width: 15%;
-}
-
-.leaderboard-name {
-    width: 28%;
-}
-
-.leaderboard-damage {
-    width: 28%;
-}
-
-.leaderboard-kills {
-    width: 28%;
-}
-
 #hud-container {
     position: fixed;
     display: flex;
@@ -750,4 +681,73 @@ a {
 #hud-health {
     width: 27vmin;
     background: linear-gradient(135deg, rgba(10, 199, 10, 0.75) 0%, rgba(255, 255, 255, 0.75) 50%, rgba(10, 199, 10, 0.75) 100%);
+}
+
+#leaderboard-container {
+    position: fixed;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width: 50vmin;
+    height: 40vmin;
+    left: calc(100% - 50vmin - 0.5vmin);
+    bottom: calc(100% - 40vmin - 0.5vmin);
+}
+
+.leaderboard-row {
+    display: none;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 49.5vmin;
+    height: 3.2vmin;
+    margin: 0.25vmin;
+    clip-path: polygon(4% 0, 100% 0, 100% 50%, 96% 100%, 0 100%, 0% 50%);
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.5) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(0, 0, 0, 0.5) 100%);
+}
+
+#leaderboard-title {
+    display: flex;
+}
+
+#leaderboard-gold {
+    background: linear-gradient(135deg, #BF9A47 0%, #FFE233 25%, #FEFDE1 50%, #FFE233 75%, #BF9A47 100%);
+}
+
+#leaderboard-silver {
+    background: linear-gradient(135deg, #787878 0%, #B5B5B5 25%, #FFFFFF 50%, #E3E3E3 75%, #787878 100%);
+}
+
+#leaderboard-bronze {
+    background: linear-gradient(135deg, #844414 0%, #CF7D52 25%, #FCD5BE 50%, #CF7D52 75%, #844414 100%);
+}
+
+.leaderboard-number,
+.leaderboard-name,
+.leaderboard-damage,
+.leaderboard-kills {
+    font-size: 2.8vmin;
+    text-align: center;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    height: 3.2vmin;
+    line-height: 3.2vmin;
+    text-shadow: 0.14vmin 0.14vmin 0vmin #000000, -0.14vmin -0.14vmin 0vmin #000000, -0.14vmin 0.14vmin 0vmin #000000, 0.14vmin -0.14vmin 0vmin #000000;
+    color: #FFFFFF;
+}
+
+.leaderboard-number {
+    width: 15%;
+}
+
+.leaderboard-name {
+    width: 28%;
+}
+
+.leaderboard-damage {
+    width: 28%;
+}
+
+.leaderboard-kills {
+    width: 28%;
 }

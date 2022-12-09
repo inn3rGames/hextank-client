@@ -18,6 +18,7 @@ export default class Input {
     private _gamepadDidRun: boolean = false;
     private _touchDidRun: boolean = false;
     private _windowActive: boolean = true;
+    currentDeviceIsMobile: boolean = false;
 
     private _debug!: boolean;
 
@@ -108,11 +109,11 @@ export default class Input {
             opera?: string;
         }
         const customWindow: CustomWindow = window;
-        const currentDeviceIsMobile = isMobile(
+        this.currentDeviceIsMobile = isMobile(
             navigator.userAgent || navigator.vendor || customWindow.opera
         );
 
-        if (currentDeviceIsMobile === true) {
+        if (this.currentDeviceIsMobile === true) {
             document.body.addEventListener("touchstart", () => {}, false);
 
             const container = document.getElementById(
