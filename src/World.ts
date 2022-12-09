@@ -1819,7 +1819,7 @@ export default class World {
                 this._leaderboardContainer.style.left =
                     "calc(100% - 50vmin - 0.5vmin - 10vmin)";
                 this._leaderboardContainer.style.bottom =
-                    "calc(100% - 40vmin - 0.5vmin);";
+                    "calc(100% - 40vmin - 0.5vmin)";
             } else {
                 this._regionsButtonContainer.style.right =
                     "calc(100% - 25vmin - 5vmin)";
