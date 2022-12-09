@@ -1857,6 +1857,15 @@ export default class World {
                         "calc(100% - 25vmin - 0.5vmin - 10vmin)";
                     this._leaderboardContainer.style.bottom =
                         "calc(100% - 40vmin - 0.5vmin - 10vmin)";
+                } else {
+                    this._regionsButtonContainer.style.bottom =
+                        "calc(100% - 6vmin - 5vmin)";
+                    this._fullscreenButtonContainer.style.bottom =
+                        "calc(100% - 5vmin - 5vmin)";
+                    this._hudContainer.style.bottom =
+                        "calc(100% - 25vmin - 0.5vmin)";
+                    this._leaderboardContainer.style.bottom =
+                        "calc(100% - 40vmin - 0.5vmin)";
                 }
 
                 if (typeof this._input.buttonUp !== "undefined") {
