@@ -36,6 +36,10 @@ export default class HexTank {
     private _healthBar!: Rectangle;
     private _healthStroke!: Rectangle;
 
+    private _didInvincibilityEffectRun: boolean = false;
+    private _nodeEnabled: boolean = true;
+    private _nodeStateCounter: number = 0;
+
     private _linearInperpolationPercent: number = 0.2;
 
     private _debug: boolean;
@@ -324,6 +328,22 @@ export default class HexTank {
         this._bodyNode.rotation.y = this._angle;
     }
 
+    private _invinciblityEffect(serverHexTank: any) {
+        if (this._didInvincibilityEffectRun === false) {
+            if (serverHexTank.invincibility === true) {
+                this._nodeStateCounter += 1;
+                if (this._nodeStateCounter >= 2) {
+                    this._nodeStateCounter = 0;
+                    this._nodeEnabled = !this._nodeEnabled;
+                }
+                this._bodyNode.setEnabled(this._nodeEnabled);
+            } else {
+                this._didInvincibilityEffectRun = true;
+                this._bodyNode.setEnabled(true);
+            }
+        }
+    }
+
     private _debugBodyCollision(serverHexTank: any) {
         if (
             this._debug === true &&
@@ -400,9 +420,9 @@ export default class HexTank {
             );
         }
 
-        this._debugBodyCollision(serverHexTank);
-
         this._updateMesh();
+        this._invinciblityEffect(serverHexTank);
+        this._debugBodyCollision(serverHexTank);
     }
 
     private _updateCamera() {

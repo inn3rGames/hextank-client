@@ -17,6 +17,9 @@ export default class Bullet {
 
     private _node!: TransformNode;
 
+    private _nodeEnabled: boolean = true;
+    private _nodeStateCounter: number = 0;
+
     constructor(
         serverBullet: any,
         scene: Scene,
@@ -127,6 +130,17 @@ export default class Bullet {
         this._node.rotation.y = this._angle;
     }
 
+    private _invinciblityEffect(serverBullet: any) {
+        if (serverBullet.invincibility === true) {
+            this._nodeStateCounter += 1;
+            if (this._nodeStateCounter >= 2) {
+                this._nodeStateCounter = 0;
+                this._nodeEnabled = !this._nodeEnabled;
+            }
+            this._node.setEnabled(this._nodeEnabled);
+        }
+    }
+
     syncWithServer(serverBullet: any) {
         this._x = this._linearInterpolation(
             this._x,
@@ -148,5 +162,6 @@ export default class Bullet {
         );
 
         this._updateMesh();
+        this._invinciblityEffect(serverBullet);
     }
 }
