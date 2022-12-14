@@ -1397,7 +1397,7 @@ export default class World {
                 name: this._inputField.value,
             });
         } catch (e) {
-            this._showSplashScreen("Error...");
+            this._showSplashScreen("Room error...");
 
             if (this._debug === true) {
                 console.log(e);
@@ -1456,8 +1456,16 @@ export default class World {
             }
         };
 
-        this._room.onLeave(() => {
+        this._room.onLeave((code) => {
             this._input.setRoom(undefined, false);
+            console.log(code);
+            if (code >= 1000) {
+                this._showSplashScreen("Room disconnected unexpectedly...");
+            }
+        });
+
+        this._room.onError(() => {
+            this._showSplashScreen("Room error...");
         });
     }
 
@@ -1538,10 +1546,15 @@ export default class World {
 
     private async _connectWorld() {
         await this._connect();
-        this._setHexTanksCallbacks();
-        this._setBulletsCallbacks();
-        this._setBulletExplosions();
-        this._setHexTankExplosions();
+
+        if (typeof this._room !== "undefined") {
+            this._setHexTanksCallbacks();
+            this._setBulletsCallbacks();
+            this._setBulletExplosions();
+            this._setHexTankExplosions();
+        } else {
+            this._showSplashScreen("Room error...");
+        }
 
         if (this._debug === true) {
             console.log(this._client);
