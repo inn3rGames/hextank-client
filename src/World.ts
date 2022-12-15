@@ -376,12 +376,12 @@ export default class World {
 
         this._discordButtonContainer.addEventListener("mouseup", (event) => {
             event.preventDefault();
-            window.open("https://discord.gg/PgW9BVysqH");
+            window.open("https://discord.gg/mStb7HEnbq");
         });
 
         this._discordButtonContainer.addEventListener("touchend", (event) => {
             event.preventDefault();
-            window.open("https://discord.gg/PgW9BVysqH");
+            window.open("https://discord.gg/mStb7HEnbq");
         });
 
         window.addEventListener("focus", () => {
