@@ -36,6 +36,7 @@ import "@babylonjs/core/Materials/Textures/Loaders/ktxTextureLoader";
 
 import { Client, Room } from "colyseus.js";
 import screenfull from "screenfull";
+import HubApi from "@nimiq/hub-api";
 
 import body from "./assets/models/hexTankBody.glb";
 import jet from "./assets/models/hexTankJet.glb";
@@ -140,6 +141,8 @@ export default class World {
     private _client!: Client;
     private _room!: Room;
     private _readyToConnect: boolean = true;
+
+    private _hubApi!: HubApi;
 
     private _fpsLimit: number = 60;
     private _lastFrame: number = 0;
@@ -258,6 +261,26 @@ export default class World {
 
         this._input = new Input();
         this._setUICallbacks();
+
+        this._hubApi = new HubApi("https://hub.nimiq-testnet.com");
+    }
+
+    private async _sendNim() {
+        const options = {
+            appName: "HexTank.io",
+            recipient: "NQ31 T9EV J5KN KR79 RR3R MNYB D7D0 XCPN 9LCQ",
+            value: 500 * 1e5 + 5 * 500,
+            shopLogoUrl: window.location.href + "smallLogo.png",
+            fee: 500,
+            extraData: "HexTank.io entry fee",
+        };
+
+        try {
+            const signedTransaction = await this._hubApi.checkout(options);
+            console.log(signedTransaction);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     private _setUICallbacks() {
@@ -352,6 +375,8 @@ export default class World {
             "mouseup",
             async (event) => {
                 event.preventDefault();
+
+                await this._sendNim();
                 await this._sessionStart();
             }
         );
@@ -360,6 +385,8 @@ export default class World {
             "touchend",
             async (event) => {
                 event.preventDefault();
+
+                await this._sendNim();
                 await this._sessionStart();
             }
         );

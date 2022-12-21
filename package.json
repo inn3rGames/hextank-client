@@ -22,6 +22,7 @@
     "@babylonjs/core": "^5.31.0",
     "@babylonjs/gui": "^5.31.0",
     "@babylonjs/loaders": "^5.31.0",
+    "@nimiq/hub-api": "^1.6.1",
     "colyseus.js": "^0.14.13",
     "screenfull": "^6.0.2"
   },
