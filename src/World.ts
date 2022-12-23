@@ -36,7 +36,7 @@ import "@babylonjs/core/Materials/Textures/Loaders/ktxTextureLoader";
 
 import { Client, Room } from "colyseus.js";
 import screenfull from "screenfull";
-import HubApi from "@nimiq/hub-api";
+import HubApi, { SignedTransaction } from "@nimiq/hub-api";
 
 import body from "./assets/models/hexTankBody.glb";
 import jet from "./assets/models/hexTankJet.glb";
@@ -278,6 +278,7 @@ export default class World {
         try {
             const signedTransaction = await this._hubApi.checkout(options);
             console.log(signedTransaction);
+            await this._sessionStart(signedTransaction);
         } catch (error) {
             console.log(error);
         }
@@ -368,7 +369,7 @@ export default class World {
 
         this._formContainer.addEventListener("submit", async (event) => {
             event.preventDefault();
-            await this._sessionStart();
+            //await this._sessionStart();
         });
 
         this._startButtonContainer.addEventListener(
@@ -377,7 +378,6 @@ export default class World {
                 event.preventDefault();
 
                 await this._sendNim();
-                await this._sessionStart();
             }
         );
 
@@ -387,7 +387,6 @@ export default class World {
                 event.preventDefault();
 
                 await this._sendNim();
-                await this._sessionStart();
             }
         );
 
@@ -478,12 +477,12 @@ export default class World {
         }
     }
 
-    private async _sessionStart() {
+    private async _sessionStart(signedTransaction: SignedTransaction) {
         if (this._readyToConnect === true) {
             this._showSplashScreen("Connecting...");
             this._readyToConnect = false;
             this._clearItems();
-            await this._connectWorld();
+            await this._connectWorld(signedTransaction);
         }
     }
 
@@ -1407,7 +1406,7 @@ export default class World {
             "Creating world map finished...";
     }
 
-    private async _connect() {
+    private async _connect(signedTransaction: SignedTransaction) {
         let serverAddress = "wss://wrbnqh.colyseus.de";
         if (window.location.protocol === "http:") {
             serverAddress = "ws://localhost:2567";
@@ -1422,6 +1421,7 @@ export default class World {
         try {
             this._room = await this._client.join("world_room", {
                 name: this._inputField.value,
+                signedTransaction: signedTransaction,
             });
         } catch (e) {
             this._showSplashScreen("Room error...");
@@ -1571,8 +1571,8 @@ export default class World {
         this._formContainer.style.backgroundColor = "#767676";
     }
 
-    private async _connectWorld() {
-        await this._connect();
+    private async _connectWorld(signedTransaction: SignedTransaction) {
+        await this._connect(signedTransaction);
 
         if (typeof this._room !== "undefined") {
             this._setHexTanksCallbacks();
