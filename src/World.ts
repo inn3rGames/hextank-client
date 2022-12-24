@@ -1456,7 +1456,7 @@ export default class World {
 
             if (this._debug === true) {
                 console.log(
-                    `${serverHexTank.id} ${serverHexTank.name} joined at: `,
+                    `${serverHexTank.id} ${serverHexTank.name} ${serverHexTank.userFriendlyAddress} joined at: `,
                     {
                         x: serverHexTank.x,
                         z: serverHexTank.z,
@@ -1479,7 +1479,9 @@ export default class World {
             }
 
             if (this._debug === true) {
-                console.log(`${serverHexTank.id} ${serverHexTank.name} left!`);
+                console.log(
+                    `${serverHexTank.id} ${serverHexTank.name} ${serverHexTank.userFriendlyAddress} left!`
+                );
             }
         };
 
