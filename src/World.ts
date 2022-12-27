@@ -479,7 +479,7 @@ export default class World {
 
     private async _sessionStart(signedTransaction: SignedTransaction) {
         if (this._readyToConnect === true) {
-            this._showSplashScreen("Connecting...");
+            this._showSplashScreen("Connecting. Allow up to 5 minutes...");
             this._readyToConnect = false;
             this._clearItems();
             await this._connectWorld(signedTransaction);
