@@ -37,6 +37,7 @@ import "@babylonjs/core/Materials/Textures/Loaders/ktxTextureLoader";
 import { Client, Room } from "colyseus.js";
 import screenfull from "screenfull";
 import HubApi, { SignedTransaction } from "@nimiq/hub-api";
+import { v1 as uuidv1 } from "uuid";
 
 import body from "./assets/models/hexTankBody.glb";
 import jet from "./assets/models/hexTankJet.glb";
@@ -272,7 +273,7 @@ export default class World {
             value: 500 * 1e5 + 7 * 500,
             shopLogoUrl: window.location.href + "smallLogo.png",
             fee: 500,
-            extraData: "HexTank.io entry fee",
+            extraData: `HexTank.io entry fee tx-${uuidv1()}`,
         };
 
         try {
