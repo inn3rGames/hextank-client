@@ -270,7 +270,7 @@ export default class World {
         const options = {
             appName: "HexTank.io",
             recipient: "NQ31 T9EV J5KN KR79 RR3R MNYB D7D0 XCPN 9LCQ",
-            value: 500 * 1e5 + 7 * 500,
+            value: 500 * 1e5 + 6 * 500,
             shopLogoUrl: window.location.href + "smallLogo.png",
             fee: 500,
             extraData: `HexTank.io entry fee tx-${uuidv1()}`,
