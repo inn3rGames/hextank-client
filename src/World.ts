@@ -85,6 +85,8 @@ KhronosTextureContainer2.URLConfig = {
     jsMSCTranscoder: "./ktx2/msc_basis_transcoder.js",
     wasmMSCTranscoder: "./ktx2/msc_basis_transcoder.wasm",
     wasmZSTDDecoder: "./ktx2/zstddec.wasm",
+    wasmUASTCToR8_UNORM: null,
+    wasmUASTCToRG8_UNORM: null,
 };
 
 export default class World {
