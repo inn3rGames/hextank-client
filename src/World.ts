@@ -143,6 +143,9 @@ export default class World {
     private _room!: Room;
     private _readyToConnect: boolean = true;
 
+    private _debugRooms: Map<string, string> = new Map();
+    private _productionRooms: Map<string, string> = new Map();
+
     private _hubApi!: HubApi;
 
     private _fpsLimit: number = 60;
@@ -263,7 +266,35 @@ export default class World {
         this._input = new Input();
         this._setUICallbacks();
 
-        this._hubApi = new HubApi("https://hub.nimiq-testnet.com");
+        this._setDebugMode();
+        this._setServerRooms();
+        this._setNimiqNetwork();
+    }
+
+    private _setDebugMode() {
+        if (window.location.protocol === "http:") {
+            console.log("%c Development mode.", "background-color: #FFFF00");
+            this._debug = true;
+        } else {
+            console.log("%c Production mode.", "background-color: #00FF00");
+            this._debug = false;
+        }
+    }
+
+    private _setNimiqNetwork() {
+        if (this._debug === true) {
+            this._hubApi = new HubApi("https://hub.nimiq-testnet.com");
+        } else {
+            this._hubApi = new HubApi("https://hub.nimiq.com");
+        }
+    }
+
+    private _setServerRooms() {
+        if (this._debug === true) {
+            this._debugRooms.set("DEVELOPMENT", "ws://localhost:2567");
+        } else {
+            this._productionRooms.set("GERMANY", "wss://wrbnqh.colyseus.de");
+        }
     }
 
     private async _sendNim() {
@@ -1408,17 +1439,12 @@ export default class World {
     }
 
     private async _connect(signedTransaction: SignedTransaction) {
-        let serverAddress = "wss://wrbnqh.colyseus.de";
-        if (window.location.protocol === "http:") {
-            serverAddress = "ws://localhost:2567";
-            console.log("%c Development mode.", "background-color: #FFFF00");
-            this._debug = true;
+        if (this._debug === true) {
+            this._client = new Client(this._debugRooms.get("DEVELOPMENT"));
         } else {
-            console.log("%c Production mode.", "background-color: #00FF00");
-            this._debug = false;
+            this._client = new Client(this._productionRooms.get("GERMANY"));
         }
 
-        this._client = new Client(serverAddress);
         try {
             this._room = await this._client.join("world_room", {
                 name: this._inputField.value,
@@ -1426,7 +1452,6 @@ export default class World {
             });
         } catch (e) {
             this._showSplashScreen("Room error...");
-
             if (this._debug === true) {
                 console.log(e);
             }
