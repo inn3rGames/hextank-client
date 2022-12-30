@@ -143,8 +143,11 @@ export default class World {
     private _room!: Room;
     private _readyToConnect: boolean = true;
 
-    private _debugRooms: Map<string, string> = new Map();
-    private _productionRooms: Map<string, string> = new Map();
+    private _roomData!: { address: string; type: string };
+    private _debugRooms: Map<string, { address: string; type: string }> =
+        new Map();
+    private _productionRooms: Map<string, { address: string; type: string }> =
+        new Map();
 
     private _hubApi!: HubApi;
 
@@ -268,6 +271,7 @@ export default class World {
 
         this._setDebugMode();
         this._setServerRooms();
+        this._setRoomData();
         this._setNimiqNetwork();
     }
 
@@ -289,30 +293,54 @@ export default class World {
         }
     }
 
+    private _setRoomData() {
+        if (this._debug === true) {
+            this._roomData = this._debugRooms.get("DEVELOPMENT") as {
+                address: string;
+                type: string;
+            };
+        } else {
+            this._roomData = this._productionRooms.get("GERMANY") as {
+                address: string;
+                type: string;
+            };
+        }
+    }
+
     private _setServerRooms() {
         if (this._debug === true) {
-            this._debugRooms.set("DEVELOPMENT", "ws://localhost:2567");
+            this._debugRooms.set("DEVELOPMENT", {
+                address: "ws://localhost:2567",
+                type: "FREE",
+            });
         } else {
-            this._productionRooms.set("GERMANY", "wss://wrbnqh.colyseus.de");
+            this._productionRooms.set("GERMANY", {
+                address: "wss://wrbnqh.colyseus.de",
+                type: "PAID",
+            });
         }
     }
 
     private async _sendNim() {
-        const options = {
-            appName: "HexTank.io",
-            recipient: "NQ31 T9EV J5KN KR79 RR3R MNYB D7D0 XCPN 9LCQ",
-            value: 500 * 1e5 + 6 * 500,
-            shopLogoUrl: window.location.href + "smallLogo.png",
-            fee: 500,
-            extraData: `HexTank.io entry fee tx-${uuidv1()}`,
-        };
+        if (this._roomData.type === "PAID") {
+            const options = {
+                appName: "HexTank.io",
+                recipient: "NQ31 T9EV J5KN KR79 RR3R MNYB D7D0 XCPN 9LCQ",
+                value: 500 * 1e5 + 6 * 500,
+                shopLogoUrl: window.location.href + "smallLogo.png",
+                fee: 500,
+                extraData: `HexTank.io entry fee tx-${uuidv1()}`,
+            };
 
-        try {
-            const signedTransaction = await this._hubApi.checkout(options);
-            console.log(signedTransaction);
-            await this._sessionStart(signedTransaction);
-        } catch (error) {
-            console.log(error);
+            try {
+                const signedTransaction = await this._hubApi.checkout(options);
+                console.log(signedTransaction);
+                await this._sessionStart(signedTransaction);
+            } catch (error) {
+                console.log(error);
+            }
+        } else {
+            await this._sessionStart();
         }
     }
 
@@ -509,7 +537,7 @@ export default class World {
         }
     }
 
-    private async _sessionStart(signedTransaction: SignedTransaction) {
+    private async _sessionStart(signedTransaction?: SignedTransaction) {
         if (this._readyToConnect === true) {
             this._showSplashScreen("Connecting. Allow up to 5 minutes...");
             this._readyToConnect = false;
@@ -1438,12 +1466,8 @@ export default class World {
             "Creating world map finished...";
     }
 
-    private async _connect(signedTransaction: SignedTransaction) {
-        if (this._debug === true) {
-            this._client = new Client(this._debugRooms.get("DEVELOPMENT"));
-        } else {
-            this._client = new Client(this._productionRooms.get("GERMANY"));
-        }
+    private async _connect(signedTransaction?: SignedTransaction) {
+        this._client = new Client(this._roomData.address);
 
         try {
             this._room = await this._client.join("world_room", {
@@ -1599,7 +1623,7 @@ export default class World {
         this._formContainer.style.backgroundColor = "#767676";
     }
 
-    private async _connectWorld(signedTransaction: SignedTransaction) {
+    private async _connectWorld(signedTransaction?: SignedTransaction) {
         await this._connect(signedTransaction);
 
         if (typeof this._room !== "undefined") {
