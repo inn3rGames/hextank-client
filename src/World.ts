@@ -321,7 +321,7 @@ export default class World {
         }
     }
 
-    private async _sendNim() {
+    private async _entryRoom() {
         if (this._roomData.type === "PAID") {
             const options = {
                 appName: "HexTank.io",
@@ -437,7 +437,7 @@ export default class World {
             async (event) => {
                 event.preventDefault();
 
-                await this._sendNim();
+                await this._entryRoom();
             }
         );
 
@@ -446,7 +446,7 @@ export default class World {
             async (event) => {
                 event.preventDefault();
 
-                await this._sendNim();
+                await this._entryRoom();
             }
         );
 
