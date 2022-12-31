@@ -26,11 +26,11 @@ export default class Input {
     private _windowActive: boolean = true;
     currentDeviceIsMobile: boolean = false;
 
-    private _debug!: boolean;
+    private _production!: boolean;
 
     enableInput() {
         window.addEventListener("keydown", (event) => {
-            if (this._debug === false) {
+            if (this._production === true) {
                 event.preventDefault();
             }
 
@@ -72,7 +72,7 @@ export default class Input {
         });
 
         window.addEventListener("keyup", (event) => {
-            if (this._debug === false) {
+            if (this._production === true) {
                 event.preventDefault();
             }
 
@@ -401,14 +401,14 @@ export default class Input {
         window.addEventListener("gamepadconnected", (event) => {
             event.preventDefault();
             this._defaultControls = false;
-            if (this._debug === true) {
+            if (this._production === false) {
                 console.log("Gamepad connected.");
             }
         });
 
         window.addEventListener("gamepaddisconnected", (event) => {
             event.preventDefault();
-            if (this._debug === true) {
+            if (this._production === false) {
                 console.log("Gamepad disconnected.");
             }
         });
@@ -656,9 +656,9 @@ export default class Input {
         }
     }
 
-    setRoom(room: Room | undefined, debug: boolean) {
+    setRoom(room: Room | undefined, production: boolean) {
         this._room = room;
-        this._debug = debug;
+        this._production = production;
     }
 
     update() {

@@ -168,7 +168,7 @@ export default class World {
 
     private _input: Input;
 
-    private _debug: boolean = false;
+    private _production: boolean = false;
 
     constructor() {
         this._canvas = document.getElementById(
@@ -278,31 +278,31 @@ export default class World {
     }
 
     private _setDebugMode() {
-        if (window.location.protocol === "http:") {
-            console.log("%c Development mode.", "background-color: #FFFF00");
-            this._debug = true;
-        } else {
+        if (window.location.protocol === "https:") {
             console.log("%c Production mode.", "background-color: #00FF00");
-            this._debug = false;
+            this._production = true;
+        } else {
+            console.log("%c Development mode.", "background-color: #FFFF00");
+            this._production = false;
         }
     }
 
     private _setNimiqNetwork() {
-        if (this._debug === true) {
-            this._hubApi = new HubApi("https://hub.nimiq-testnet.com");
-        } else {
+        if (this._production === true) {
             this._hubApi = new HubApi("https://hub.nimiq.com");
+        } else {
+            this._hubApi = new HubApi("https://hub.nimiq-testnet.com");
         }
     }
 
     private _setRoomData() {
-        if (this._debug === true) {
-            this._roomData = this._debugRooms.get("DEVELOPMENT") as {
+        if (this._production === true) {
+            this._roomData = this._productionRooms.get("GERMANY") as {
                 address: string;
                 type: string;
             };
         } else {
-            this._roomData = this._productionRooms.get("GERMANY") as {
+            this._roomData = this._debugRooms.get("DEVELOPMENT") as {
                 address: string;
                 type: string;
             };
@@ -310,15 +310,15 @@ export default class World {
     }
 
     private _setServerRooms() {
-        if (this._debug === true) {
-            this._debugRooms.set("DEVELOPMENT", {
-                address: "ws://localhost:2567",
-                type: "FREE",
-            });
-        } else {
+        if (this._production === true) {
             this._productionRooms.set("GERMANY", {
                 address: "wss://wrbnqh.colyseus.de",
                 type: "PAID",
+            });
+        } else {
+            this._debugRooms.set("DEVELOPMENT", {
+                address: "ws://localhost:2567",
+                type: "FREE",
             });
         }
     }
@@ -534,7 +534,7 @@ export default class World {
         this._clearItems();
         this._showRestartUI();
 
-        if (this._debug === true) {
+        if (this._production === false) {
             console.clear();
         }
     }
@@ -722,7 +722,7 @@ export default class World {
             this._nodesWithShadow,
             this._modelsMeshes.get("body")!,
             this._modelsMeshes.get("jet")!,
-            this._debug
+            this._production
         );
     }
 
@@ -1478,12 +1478,12 @@ export default class World {
             });
         } catch (e) {
             this._showSplashScreen("Room error...");
-            if (this._debug === true) {
+            if (this._production === false) {
                 console.log(e);
             }
         }
 
-        this._input.setRoom(this._room, this._debug);
+        this._input.setRoom(this._room, this._production);
     }
 
     private _setHexTanksCallbacks() {
@@ -1495,7 +1495,7 @@ export default class World {
                 this._nodesWithShadow,
                 this._modelsMeshes.get("body")!,
                 this._modelsMeshes.get("jet")!,
-                this._debug
+                this._production
             );
             this._hexTanks.set(serverHexTank.id, clientHexTank);
             if (clientHexTank.id === this._room.sessionId) {
@@ -1506,7 +1506,7 @@ export default class World {
                 }
             }
 
-            if (this._debug === true) {
+            if (this._production === false) {
                 console.log(
                     `${serverHexTank.id} ${serverHexTank.name} ${serverHexTank.userFriendlyAddress} joined at: `,
                     {
@@ -1530,7 +1530,7 @@ export default class World {
                 }
             }
 
-            if (this._debug === true) {
+            if (this._production === false) {
                 console.log(
                     `${serverHexTank.id} ${serverHexTank.name} ${serverHexTank.userFriendlyAddress} left!`
                 );
@@ -1637,7 +1637,7 @@ export default class World {
             this._showSplashScreen("Room error...");
         }
 
-        if (this._debug === true) {
+        if (this._production === false) {
             console.log(this._client);
         }
     }

@@ -42,7 +42,7 @@ export default class HexTank {
 
     private _linearInperpolationPercent: number = 0.2;
 
-    private _debug: boolean;
+    private _production: boolean;
     private _debugBody?: Mesh;
     private _debugMaterial?: StandardMaterial;
 
@@ -53,7 +53,7 @@ export default class HexTank {
         nodesWithShadow: Map<string, TransformNode>,
         bodyMesh: Array<Mesh>,
         jetMesh: Array<Mesh>,
-        debug: boolean
+        production: boolean
     ) {
         this._x = serverHexTank.x;
         this._z = serverHexTank.z;
@@ -69,7 +69,7 @@ export default class HexTank {
         this._nodesWithShadow = nodesWithShadow;
         this._bodyMesh = bodyMesh;
         this._jetMesh = jetMesh;
-        this._debug = debug;
+        this._production = production;
 
         this._loadMeshes();
     }
@@ -195,7 +195,7 @@ export default class HexTank {
 
         this._healthUI.addControl(nameText);
 
-        if (this._debug === true) {
+        if (this._production === false) {
             this._debugBody = MeshBuilder.CreateCylinder("debugBody", {
                 height: 0.01,
                 diameter: 2 * this._radius,
@@ -346,7 +346,7 @@ export default class HexTank {
 
     private _debugBodyCollision(serverHexTank: any) {
         if (
-            this._debug === true &&
+            this._production === false &&
             typeof this._debugBody !== "undefined" &&
             this._debugBody !== null &&
             typeof this._debugMaterial !== "undefined" &&
