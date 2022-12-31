@@ -287,11 +287,17 @@ export default class World {
         }
     }
 
-    private _setNimiqNetwork() {
+    private _setServerRooms() {
         if (this._production === true) {
-            this._hubApi = new HubApi("https://hub.nimiq.com");
+            this._productionRooms.set("GERMANY", {
+                address: "wss://wrbnqh.colyseus.de",
+                type: "PAID",
+            });
         } else {
-            this._hubApi = new HubApi("https://hub.nimiq-testnet.com");
+            this._debugRooms.set("DEVELOPMENT", {
+                address: "ws://localhost:2567",
+                type: "FREE",
+            });
         }
     }
 
@@ -309,18 +315,44 @@ export default class World {
         }
     }
 
-    private _setServerRooms() {
+    private _setNimiqNetwork() {
         if (this._production === true) {
-            this._productionRooms.set("GERMANY", {
-                address: "wss://wrbnqh.colyseus.de",
-                type: "PAID",
-            });
+            this._hubApi = new HubApi("https://hub.nimiq.com");
         } else {
-            this._debugRooms.set("DEVELOPMENT", {
-                address: "ws://localhost:2567",
-                type: "FREE",
-            });
+            this._hubApi = new HubApi("https://hub.nimiq-testnet.com");
         }
+    }
+
+    private async _getLatency(
+        roomsList: Map<string, { address: string; type: string }>
+    ): Promise<number> {
+        let pings: Array<{ roomKey: string; ping: number }> = [];
+        let roomsArray = Array.from(roomsList.entries());
+
+        await Promise.all(
+            roomsArray.map(async (roomData) => {
+                const client = new Client(roomData[1].address);
+                const oldTime = performance.now();
+
+                try {
+                    await client.getAvailableRooms();
+                    const presentTime = performance.now();
+                    const currentPing = presentTime - oldTime;
+                    pings.push({ roomKey: roomData[0], ping: currentPing });
+                } catch (error) {
+                    if (this._production === false) {
+                        console.log(error);
+                    }
+                }
+            })
+        );
+
+        pings.sort((a, b) => {
+            return a.ping - b.ping;
+        });
+
+        console.log(pings[0].ping);
+        return pings[0].ping;
     }
 
     private async _entryRoom() {
@@ -730,6 +762,9 @@ export default class World {
         this._setSplashScreenMessage("Loading assets...");
         await this._loadAssets();
         this._setSplashScreenMessage("Loading assets finished...");
+        this._setSplashScreenMessage("Loading rooms...");
+        await this._getLatency(this._debugRooms);
+        this._setSplashScreenMessage("Loading rooms finished...");
         this._setSplashScreenMessage("Loading world...");
 
         this._camera = new ArcRotateCamera(
