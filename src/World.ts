@@ -146,9 +146,11 @@ export default class World {
     private _readyToConnect: boolean = true;
 
     private _roomData!: { address: string; type: string };
-    private _debugRooms: Map<string, { address: string; type: string }> =
+    private _developmentRooms: Map<string, { address: string; type: string }> =
         new Map();
-    private _productionRooms: Map<string, { address: string; type: string }> =
+    private _freeRooms: Map<string, { address: string; type: string }> =
+        new Map();
+    private _paidRooms: Map<string, { address: string; type: string }> =
         new Map();
 
     private _hubApi!: HubApi;
@@ -289,12 +291,12 @@ export default class World {
 
     private _setServerRooms() {
         if (this._production === true) {
-            this._productionRooms.set("GERMANY", {
+            this._freeRooms.set("GERMANY", {
                 address: "wss://wrbnqh.colyseus.de",
-                type: "PAID",
+                type: "FREE",
             });
         } else {
-            this._debugRooms.set("DEVELOPMENT", {
+            this._developmentRooms.set("DEVELOPMENT", {
                 address: "ws://localhost:2567",
                 type: "FREE",
             });
@@ -303,12 +305,12 @@ export default class World {
 
     private _setRoomData() {
         if (this._production === true) {
-            this._roomData = this._productionRooms.get("GERMANY") as {
+            this._roomData = this._freeRooms.get("GERMANY") as {
                 address: string;
                 type: string;
             };
         } else {
-            this._roomData = this._debugRooms.get("DEVELOPMENT") as {
+            this._roomData = this._developmentRooms.get("DEVELOPMENT") as {
                 address: string;
                 type: string;
             };
@@ -323,11 +325,35 @@ export default class World {
         }
     }
 
+    private async _getNearestRoom(
+        roomsList: Map<string, { address: string; type: string }>
+    ): Promise<string> {
+        let roomKey = "NONE";
+        const roomsArray = Array.from(roomsList.entries());
+
+        await Promise.race(
+            roomsArray.map(async (roomData) => {
+                const client = new Client(roomData[1].address);
+
+                try {
+                    await client.getAvailableRooms();
+                    roomKey = roomData[0];
+                } catch (error) {
+                    if (this._production === false) {
+                        console.log(error);
+                    }
+                }
+            })
+        );
+
+        return roomKey;
+    }
+
     private async _getLatency(
         roomsList: Map<string, { address: string; type: string }>
     ): Promise<number> {
         let pings: Array<{ roomKey: string; ping: number }> = [];
-        let roomsArray = Array.from(roomsList.entries());
+        const roomsArray = Array.from(roomsList.entries());
 
         await Promise.all(
             roomsArray.map(async (roomData) => {
@@ -762,9 +788,10 @@ export default class World {
         this._setSplashScreenMessage("Loading assets...");
         await this._loadAssets();
         this._setSplashScreenMessage("Loading assets finished...");
-        this._setSplashScreenMessage("Loading rooms...");
-        await this._getLatency(this._debugRooms);
-        this._setSplashScreenMessage("Loading rooms finished...");
+        this._setSplashScreenMessage("Finding nearest rooms...");
+        this._getNearestRoom(this._developmentRooms);
+        this._getNearestRoom(this._freeRooms);
+        this._setSplashScreenMessage("Finding nearest finished...");
         this._setSplashScreenMessage("Loading world...");
 
         this._camera = new ArcRotateCamera(
