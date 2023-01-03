@@ -334,9 +334,14 @@ export default class World {
         let roomKey = "NONE";
         const roomsArray = Array.from(roomsList.entries());
 
+        console.log(roomsArray);
+
         await Promise.any(
             roomsArray.map(async (roomData) => {
+                console.log(roomData);
                 const client = new Client(roomData[1].address);
+
+                console.log(client);
 
                 try {
                     await client.getAvailableRooms();
