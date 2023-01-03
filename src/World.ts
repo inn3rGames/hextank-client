@@ -295,6 +295,10 @@ export default class World {
                 address: "wss://wrbnqh.colyseus.de",
                 type: "FREE",
             });
+            this._freeRooms.set("USA", {
+                address: "wss://aq4lds.us-east-vin.colyseus.net",
+                type: "FREE",
+            });
         } else {
             this._developmentRooms.set("DEVELOPMENT", {
                 address: "ws://localhost:2567",
