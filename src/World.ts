@@ -1605,9 +1605,12 @@ export default class World {
 
         this._room.onLeave((code) => {
             this._input.setRoom(undefined, false);
-            console.log(code);
             if (code >= 1000) {
                 this._showSplashScreen("Room disconnected unexpectedly...");
+            }
+
+            if (this._production === false) {
+                console.log(code);
             }
         });
 
