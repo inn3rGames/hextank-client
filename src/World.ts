@@ -294,6 +294,10 @@ export default class World {
             type: "FREE",
         });
 
+        this._freeRooms.set("NONE", {
+            address: "wss://wrbnqh.colyseus.de",
+            type: "FREE",
+        });
         this._freeRooms.set("GERMANY", {
             address: "wss://wrbnqh.colyseus.de",
             type: "FREE",
@@ -326,9 +330,9 @@ export default class World {
         }
     }
 
-    private async _getNearestRoom(
+    private async _setNearestRoom(
         roomsList: Map<string, { address: string; type: string }>
-    ): Promise<string> {
+    ): Promise<void> {
         let roomKey = "NONE";
         const roomsArray = Array.from(roomsList.entries());
 
@@ -347,7 +351,7 @@ export default class World {
             }
         }
 
-        return roomKey;
+        this._setRoomData(roomKey);
     }
 
     private async _getLatency(
@@ -790,7 +794,7 @@ export default class World {
         await this._loadAssets();
         this._setSplashScreenMessage("Loading assets finished...");
         this._setSplashScreenMessage("Finding nearest room...");
-        this._setRoomData(await this._getNearestRoom(this._freeRooms));
+        this._setNearestRoom(this._freeRooms);
         this._setSplashScreenMessage("Finding nearest finished...");
         this._setSplashScreenMessage("Loading world...");
 
