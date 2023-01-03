@@ -275,7 +275,6 @@ export default class World {
 
         this._setDebugMode();
         this._setServerRooms();
-        this._setRoomData();
         this._setNimiqNetwork();
     }
 
@@ -307,9 +306,9 @@ export default class World {
         }
     }
 
-    private _setRoomData() {
+    private _setRoomData(roomKey: string) {
         if (this._production === true) {
-            this._roomData = this._freeRooms.get("GERMANY") as {
+            this._roomData = this._freeRooms.get(roomKey) as {
                 address: string;
                 type: string;
             };
@@ -350,6 +349,7 @@ export default class World {
             })
         );
 
+        this._setRoomData(roomKey);
         return roomKey;
     }
 
