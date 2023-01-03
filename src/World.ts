@@ -349,6 +349,7 @@ export default class World {
             })
         );
 
+        console.log(roomKey);
         return roomKey;
     }
 
