@@ -289,21 +289,19 @@ export default class World {
     }
 
     private _setServerRooms() {
-        if (this._production === true) {
-            this._freeRooms.set("GERMANY", {
-                address: "wss://wrbnqh.colyseus.de",
-                type: "FREE",
-            });
-            this._freeRooms.set("USA", {
-                address: "wss://aq4lds.us-east-vin.colyseus.net",
-                type: "FREE",
-            });
-        } else {
-            this._developmentRooms.set("DEVELOPMENT", {
-                address: "ws://localhost:2567",
-                type: "FREE",
-            });
-        }
+        this._developmentRooms.set("DEVELOPMENT", {
+            address: "ws://localhost:2567",
+            type: "FREE",
+        });
+
+        this._freeRooms.set("GERMANY", {
+            address: "wss://wrbnqh.colyseus.de",
+            type: "FREE",
+        });
+        this._freeRooms.set("USA", {
+            address: "wss://aq4lds.us-east-vin.colyseus.net",
+            type: "FREE",
+        });
     }
 
     private _setRoomData(roomKey: string) {
@@ -336,23 +334,25 @@ export default class World {
 
         console.log(roomsArray);
 
-        await Promise.any(
-            roomsArray.map(async (roomData) => {
-                console.log(roomData);
-                const client = new Client(roomData[1].address);
+        try {
+            await Promise.any(
+                roomsArray.map(async (roomData) => {
+                    console.log(roomData);
+                    const client = new Client(roomData[1].address);
 
-                console.log(client);
+                    console.log(client);
 
-                try {
                     await client.getAvailableRooms();
                     roomKey = roomData[0];
-                } catch (error) {
-                    if (this._production === false) {
-                        console.log(error);
-                    }
-                }
-            })
-        );
+
+                    return roomKey;
+                })
+            );
+        } catch (error) {
+            if (this._production === false) {
+                console.log(error);
+            }
+        }
 
         console.log(roomKey);
         return roomKey;
