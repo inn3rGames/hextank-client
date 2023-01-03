@@ -304,6 +304,14 @@ export default class World {
         });
     }
 
+    private _setNimiqNetwork() {
+        if (this._production === true) {
+            this._hubApi = new HubApi("https://hub.nimiq.com");
+        } else {
+            this._hubApi = new HubApi("https://hub.nimiq-testnet.com");
+        }
+    }
+
     private _setRoomData(roomKey: string) {
         if (this._production === true) {
             this._roomData = this._freeRooms.get(roomKey) as {
@@ -318,33 +326,18 @@ export default class World {
         }
     }
 
-    private _setNimiqNetwork() {
-        if (this._production === true) {
-            this._hubApi = new HubApi("https://hub.nimiq.com");
-        } else {
-            this._hubApi = new HubApi("https://hub.nimiq-testnet.com");
-        }
-    }
-
     private async _getNearestRoom(
         roomsList: Map<string, { address: string; type: string }>
     ): Promise<string> {
         let roomKey = "NONE";
         const roomsArray = Array.from(roomsList.entries());
 
-        console.log(roomsArray);
-
         try {
             await Promise.any(
                 roomsArray.map(async (roomData) => {
-                    console.log(roomData);
                     const client = new Client(roomData[1].address);
-
-                    console.log(client);
-
                     await client.getAvailableRooms();
                     roomKey = roomData[0];
-
                     return roomKey;
                 })
             );
@@ -354,7 +347,6 @@ export default class World {
             }
         }
 
-        console.log(roomKey);
         return roomKey;
     }
 
@@ -797,8 +789,7 @@ export default class World {
         this._setSplashScreenMessage("Loading assets...");
         await this._loadAssets();
         this._setSplashScreenMessage("Loading assets finished...");
-        this._setSplashScreenMessage("Finding nearest rooms...");
-        this._getNearestRoom(this._developmentRooms);
+        this._setSplashScreenMessage("Finding nearest room...");
         this._setRoomData(await this._getNearestRoom(this._freeRooms));
         this._setSplashScreenMessage("Finding nearest finished...");
         this._setSplashScreenMessage("Loading world...");
