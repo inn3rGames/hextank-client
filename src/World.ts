@@ -101,7 +101,7 @@ export default class World {
     private _fullscreenButtonContainer: HTMLDivElement;
     private _formContainer: HTMLFormElement;
     private _inputField: HTMLInputElement;
-    private _startButtonContainer: HTMLDivElement;
+    private _freeButtonContainer: HTMLDivElement;
     private _twitterButtonContainer: HTMLDivElement;
     private _discordButtonContainer: HTMLDivElement;
     private _hudContainer: HTMLDivElement;
@@ -198,8 +198,8 @@ export default class World {
         this._inputField = document.getElementById(
             "input-field"
         ) as HTMLInputElement;
-        this._startButtonContainer = document.getElementById(
-            "start-button-container"
+        this._freeButtonContainer = document.getElementById(
+            "free-button-container"
         ) as HTMLDivElement;
         this._twitterButtonContainer = document.getElementById(
             "twitter-button-container"
@@ -497,7 +497,7 @@ export default class World {
             //await this._sessionStart();
         });
 
-        this._startButtonContainer.addEventListener(
+        this._freeButtonContainer.addEventListener(
             "mouseup",
             async (event) => {
                 event.preventDefault();
@@ -506,7 +506,7 @@ export default class World {
             }
         );
 
-        this._startButtonContainer.addEventListener(
+        this._freeButtonContainer.addEventListener(
             "touchend",
             async (event) => {
                 event.preventDefault();
@@ -573,10 +573,10 @@ export default class World {
     private _showRestartUI() {
         this._inGameUI.style.display = "none";
         this._homeUI.style.display = "flex";
-        this._startButtonContainer.style.width = "35vmin";
-        const child = this._startButtonContainer.children[0] as HTMLDivElement;
+        this._freeButtonContainer.style.width = "35vmin";
+        /* const child = this._freeButtonContainer.children[0] as HTMLDivElement;
         child.textContent = "RESTART";
-        child.style.width = "35vmin";
+        child.style.width = "35vmin"; */
     }
 
     private _clearItems() {

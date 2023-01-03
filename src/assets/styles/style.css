@@ -367,8 +367,18 @@ body::after {
     color: #FFFFFF;
 }
 
-#start-button-container {
+#pay-button-container {
+    left: calc(50% - 25vmin - 0.5vmin);
     bottom: calc(42% - 8vmin - 1vmin);
+}
+
+#free-button-container {
+    right: calc(50% - 25vmin - 0.5vmin);
+    bottom: calc(42% - 8vmin - 1vmin);
+}
+
+#dev-button-container {
+    bottom: calc(42% - 16vmin - 2vmin);
 }
 
 #twitter-button {
