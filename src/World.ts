@@ -334,7 +334,7 @@ export default class World {
         let roomKey = "NONE";
         const roomsArray = Array.from(roomsList.entries());
 
-        await Promise.race(
+        await Promise.any(
             roomsArray.map(async (roomData) => {
                 const client = new Client(roomData[1].address);
 
