@@ -349,7 +349,6 @@ export default class World {
             })
         );
 
-        this._setRoomData(roomKey);
         return roomKey;
     }
 
@@ -794,7 +793,7 @@ export default class World {
         this._setSplashScreenMessage("Loading assets finished...");
         this._setSplashScreenMessage("Finding nearest rooms...");
         this._getNearestRoom(this._developmentRooms);
-        this._getNearestRoom(this._freeRooms);
+        this._setRoomData(await this._getNearestRoom(this._freeRooms));
         this._setSplashScreenMessage("Finding nearest finished...");
         this._setSplashScreenMessage("Loading world...");
 
