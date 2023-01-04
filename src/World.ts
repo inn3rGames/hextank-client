@@ -96,6 +96,7 @@ export default class World {
     private _inGameUI: HTMLDivElement;
     private _splashScreen: HTMLDivElement;
     private _splashScreenContent: HTMLDivElement;
+    private _splashScreenTimeout: number = 3000;
     private _homeUI: HTMLDivElement;
     private _regionsButtonContainer: HTMLDivElement;
     private _fullscreenButtonContainer: HTMLDivElement;
@@ -406,7 +407,7 @@ export default class World {
             );
             setTimeout(() => {
                 this._showHomeUI();
-            }, 3000);
+            }, this._splashScreenTimeout);
 
             return;
         }
@@ -648,6 +649,7 @@ export default class World {
     }
 
     private _showRestartUI() {
+        this._splashScreen.style.display = "none";
         this._inGameUI.style.display = "none";
         this._homeUI.style.display = "flex";
         /* this._freeButtonContainer.style.width = "35vmin";
@@ -669,8 +671,10 @@ export default class World {
 
     private _sessionEnd() {
         this._readyToConnect = true;
-        this._room.removeAllListeners();
-        this._room.leave();
+        if (typeof this._room !== "undefined") {
+            this._room.removeAllListeners();
+            this._room.leave();
+        }
         this._clearItems();
         this._showRestartUI();
 
@@ -1616,10 +1620,13 @@ export default class World {
                 name: this._inputField.value,
                 signedTransaction: signedTransaction,
             });
-        } catch (e) {
+        } catch (error) {
             this._showSplashScreen("Room error...");
+            setTimeout(() => {
+                this._sessionEnd();
+            }, this._splashScreenTimeout);
             if (this._production === false) {
-                console.log(e);
+                console.log(error);
             }
         }
 
@@ -1681,6 +1688,9 @@ export default class World {
             this._input.setRoom(undefined, false);
             if (code >= 1000) {
                 this._showSplashScreen("Room disconnected unexpectedly...");
+                setTimeout(() => {
+                    this._sessionEnd();
+                }, this._splashScreenTimeout);
             }
 
             if (this._production === false) {
@@ -1688,8 +1698,11 @@ export default class World {
             }
         });
 
-        this._room.onError(() => {
-            this._showSplashScreen("Room error...");
+        this._room.onError((code, message) => {
+            this._showSplashScreen(`Room error ${code} ${message}`);
+            setTimeout(() => {
+                this._sessionEnd();
+            }, this._splashScreenTimeout);
         });
     }
 
@@ -1778,6 +1791,9 @@ export default class World {
             this._setHexTankExplosions();
         } else {
             this._showSplashScreen("Room error...");
+            setTimeout(() => {
+                this._sessionEnd();
+            }, this._splashScreenTimeout);
         }
 
         if (this._production === false) {
