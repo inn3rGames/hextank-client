@@ -428,12 +428,13 @@ export default class World {
 
             try {
                 const signedTransaction = await this._hubApi.checkout(options);
-                this._plausible.trackEvent("Payment");
+                this._plausible.trackEvent("PAYMENT");
                 await this._sessionStart(signedTransaction);
             } catch (error) {
                 console.log(error);
             }
         } else {
+            this._plausible.trackEvent("FREE_PLAY");
             await this._sessionStart();
         }
     }
