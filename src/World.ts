@@ -2061,7 +2061,7 @@ export default class World {
         if (this._input.currentDeviceIsMobile === true) {
             if (width >= height) {
                 this._roomsButtonContainer.style.right =
-                    "calc(100% - 25vmin - 10vmin)";
+                    "calc(100% - 18.75vmin - 10vmin)";
                 this._roomsButtonContainer.style.bottom =
                     "calc(100% - 6vmin - 5vmin)";
 
@@ -2099,7 +2099,7 @@ export default class World {
                 }
             } else {
                 this._roomsButtonContainer.style.right =
-                    "calc(100% - 25vmin - 5vmin)";
+                    "calc(100% - 18.75vmin - 5vmin)";
                 this._fullscreenButtonContainer.style.left =
                     "calc(100% - 5vmin - 5vmin)";
                 this._hudContainer.style.right =
