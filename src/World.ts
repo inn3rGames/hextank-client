@@ -282,12 +282,12 @@ export default class World {
             this._showHomeUI();
         });
 
-        this._input = new Input();
-        this._setUICallbacks();
-
         this._setDebugMode();
         this._setServerRooms();
         this._setNimiqNetwork();
+
+        this._input = new Input();
+        this._setUICallbacks();
 
         this._plausible.enableAutoPageviews();
     }
