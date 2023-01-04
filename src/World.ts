@@ -101,7 +101,9 @@ export default class World {
     private _fullscreenButtonContainer: HTMLDivElement;
     private _formContainer: HTMLFormElement;
     private _inputField: HTMLInputElement;
+    private _payButtonContainer: HTMLDivElement;
     private _freeButtonContainer: HTMLDivElement;
+    private _devButtonContainer: HTMLDivElement;
     private _twitterButtonContainer: HTMLDivElement;
     private _discordButtonContainer: HTMLDivElement;
     private _hudContainer: HTMLDivElement;
@@ -198,8 +200,14 @@ export default class World {
         this._inputField = document.getElementById(
             "input-field"
         ) as HTMLInputElement;
+        this._payButtonContainer = document.getElementById(
+            "pay-button-container"
+        ) as HTMLDivElement;
         this._freeButtonContainer = document.getElementById(
             "free-button-container"
+        ) as HTMLDivElement;
+        this._devButtonContainer = document.getElementById(
+            "dev-button-container"
         ) as HTMLDivElement;
         this._twitterButtonContainer = document.getElementById(
             "twitter-button-container"
@@ -291,7 +299,7 @@ export default class World {
     private _setServerRooms() {
         this._developmentRooms.set("DEVELOPMENT", {
             address: "ws://localhost:2567",
-            type: "FREE",
+            type: "DEV",
         });
 
         this._freeRooms.set("NONE", {
@@ -316,24 +324,32 @@ export default class World {
         }
     }
 
-    private _setRoomData(roomKey: string) {
-        if (this._production === true) {
+    private _setRoomData(roomKey: string, type: string) {
+        if (type === "PAID") {
+            this._roomData = this._paidRooms.get(roomKey) as {
+                address: string;
+                type: string;
+            };
+        }
+        if (type === "FREE") {
             this._roomData = this._freeRooms.get(roomKey) as {
                 address: string;
                 type: string;
             };
-        } else {
-            this._roomData = this._developmentRooms.get("DEVELOPMENT") as {
+        }
+        if (type === "DEV") {
+            this._roomData = this._developmentRooms.get(roomKey) as {
                 address: string;
                 type: string;
             };
         }
     }
 
-    private async _setNearestRoom(
+    private async _fetchNearestRoom(
         roomsList: Map<string, { address: string; type: string }>
     ): Promise<void> {
         let roomKey = "NONE";
+        let roomType = "DEV";
         const roomsArray = Array.from(roomsList.entries());
 
         try {
@@ -342,6 +358,7 @@ export default class World {
                     const client = new Client(roomData[1].address);
                     await client.getAvailableRooms();
                     roomKey = roomData[0];
+                    roomType = roomData[1].type;
                     return roomKey;
                 })
             );
@@ -351,7 +368,7 @@ export default class World {
             }
         }
 
-        this._setRoomData(roomKey);
+        this._setRoomData(roomKey, roomType);
     }
 
     private async _getLatency(
@@ -387,6 +404,16 @@ export default class World {
     }
 
     private async _entryRoom() {
+        if (typeof this._roomData === "undefined") {
+            this._setSplashScreenMessage(
+                "No room found based on your criteria..."
+            );
+            setTimeout(() => {
+                this._showHomeUI();
+            }, 3000);
+
+            return;
+        }
         if (this._roomData.type === "PAID") {
             const options = {
                 appName: "HexTank.io",
@@ -494,26 +521,80 @@ export default class World {
 
         this._formContainer.addEventListener("submit", async (event) => {
             event.preventDefault();
-            //await this._sessionStart();
         });
 
-        this._freeButtonContainer.addEventListener(
-            "mouseup",
-            async (event) => {
-                event.preventDefault();
+        this._payButtonContainer.addEventListener("mouseup", async (event) => {
+            event.preventDefault();
 
-                await this._entryRoom();
-            }
-        );
+            this._showSplashScreen("Finding nearest paid room...");
+            await this._fetchNearestRoom(this._paidRooms);
+            this._setSplashScreenMessage(
+                "Finding nearest paid room finished..."
+            );
+            await this._entryRoom();
+        });
+
+        this._payButtonContainer.addEventListener("touchend", async (event) => {
+            event.preventDefault();
+
+            this._showSplashScreen("Finding nearest paid room...");
+            await this._fetchNearestRoom(this._paidRooms);
+            this._setSplashScreenMessage(
+                "Finding nearest paid room finished..."
+            );
+            await this._entryRoom();
+        });
+
+        this._freeButtonContainer.addEventListener("mouseup", async (event) => {
+            event.preventDefault();
+
+            this._showSplashScreen("Finding nearest free room...");
+            await this._fetchNearestRoom(this._freeRooms);
+            this._setSplashScreenMessage(
+                "Finding nearest free room finished..."
+            );
+            await this._entryRoom();
+        });
 
         this._freeButtonContainer.addEventListener(
             "touchend",
             async (event) => {
                 event.preventDefault();
 
+                this._showSplashScreen("Finding nearest free room...");
+                await this._fetchNearestRoom(this._freeRooms);
+                this._setSplashScreenMessage(
+                    "Finding nearest free room finished..."
+                );
                 await this._entryRoom();
             }
         );
+
+        if (this._production === true) {
+            this._devButtonContainer.style.display = "none";
+        }
+
+        this._devButtonContainer.addEventListener("mouseup", async (event) => {
+            event.preventDefault();
+
+            this._showSplashScreen("Finding nearest dev room...");
+            await this._fetchNearestRoom(this._developmentRooms);
+            this._setSplashScreenMessage(
+                "Finding nearest dev room finished..."
+            );
+            await this._entryRoom();
+        });
+
+        this._devButtonContainer.addEventListener("touchend", async (event) => {
+            event.preventDefault();
+
+            this._showSplashScreen("Finding nearest dev room...");
+            await this._fetchNearestRoom(this._developmentRooms);
+            this._setSplashScreenMessage(
+                "Finding nearest dev room finished..."
+            );
+            await this._entryRoom();
+        });
 
         this._twitterButtonContainer.addEventListener("mouseup", (event) => {
             event.preventDefault();
@@ -573,8 +654,8 @@ export default class World {
     private _showRestartUI() {
         this._inGameUI.style.display = "none";
         this._homeUI.style.display = "flex";
-        this._freeButtonContainer.style.width = "35vmin";
-        /* const child = this._freeButtonContainer.children[0] as HTMLDivElement;
+        /* this._freeButtonContainer.style.width = "35vmin";
+        const child = this._freeButtonContainer.children[0] as HTMLDivElement;
         child.textContent = "RESTART";
         child.style.width = "35vmin"; */
     }
@@ -793,9 +874,6 @@ export default class World {
         this._setSplashScreenMessage("Loading assets...");
         await this._loadAssets();
         this._setSplashScreenMessage("Loading assets finished...");
-        this._setSplashScreenMessage("Finding nearest room...");
-        this._setNearestRoom(this._freeRooms);
-        this._setSplashScreenMessage("Finding nearest finished...");
         this._setSplashScreenMessage("Loading world...");
 
         this._camera = new ArcRotateCamera(
