@@ -297,15 +297,6 @@ export default class World {
     }
 
     private _setServerRooms() {
-        this._developmentRooms.set("DEVELOPMENT", {
-            address: "ws://localhost:2567",
-            type: "DEV",
-        });
-
-        this._freeRooms.set("NONE", {
-            address: "wss://wrbnqh.colyseus.de",
-            type: "FREE",
-        });
         this._freeRooms.set("GERMANY", {
             address: "wss://wrbnqh.colyseus.de",
             type: "FREE",
@@ -313,6 +304,11 @@ export default class World {
         this._freeRooms.set("USA", {
             address: "wss://aq4lds.us-east-vin.colyseus.net",
             type: "FREE",
+        });
+
+        this._developmentRooms.set("DEVELOPMENT", {
+            address: "ws://localhost:2567",
+            type: "DEV",
         });
     }
 
