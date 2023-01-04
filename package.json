@@ -24,6 +24,7 @@
     "@babylonjs/loaders": "^5.40.0",
     "@nimiq/hub-api": "^1.6.1",
     "colyseus.js": "^0.14.13",
+    "plausible-tracker": "^0.3.8",
     "screenfull": "^6.0.2",
     "uuid": "^9.0.0"
   },

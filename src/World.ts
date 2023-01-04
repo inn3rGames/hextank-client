@@ -38,6 +38,7 @@ import { Client, Room } from "colyseus.js";
 import screenfull from "screenfull";
 import HubApi, { SignedTransaction } from "@nimiq/hub-api";
 import { v1 as uuidv1 } from "uuid";
+import Plausible from "plausible-tracker";
 
 import body from "./assets/models/hexTankBody.glb";
 import jet from "./assets/models/hexTankJet.glb";
@@ -175,6 +176,8 @@ export default class World {
 
     private _production: boolean = false;
 
+    private _plausible = Plausible({ domain: "hextank.io", hashMode: true });
+
     constructor() {
         this._canvas = document.getElementById(
             "hextankgame"
@@ -285,6 +288,8 @@ export default class World {
         this._setDebugMode();
         this._setServerRooms();
         this._setNimiqNetwork();
+
+        this._plausible.enableAutoPageviews();
     }
 
     private _setDebugMode() {
@@ -423,7 +428,7 @@ export default class World {
 
             try {
                 const signedTransaction = await this._hubApi.checkout(options);
-                console.log(signedTransaction);
+                this._plausible.trackEvent("Payment");
                 await this._sessionStart(signedTransaction);
             } catch (error) {
                 console.log(error);
