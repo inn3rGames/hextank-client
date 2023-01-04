@@ -99,7 +99,7 @@ export default class World {
     private _splashScreenContent: HTMLDivElement;
     private _splashScreenTimeout: number = 3000;
     private _homeUI: HTMLDivElement;
-    private _regionsButtonContainer: HTMLDivElement;
+    private _roomsButtonContainer: HTMLDivElement;
     private _fullscreenButtonContainer: HTMLDivElement;
     private _formContainer: HTMLFormElement;
     private _inputField: HTMLInputElement;
@@ -192,8 +192,8 @@ export default class World {
         this._setSplashScreenMessage("Loading...");
 
         this._homeUI = document.getElementById("home-ui") as HTMLDivElement;
-        this._regionsButtonContainer = document.getElementById(
-            "regions-button-container"
+        this._roomsButtonContainer = document.getElementById(
+            "rooms-button-container"
         ) as HTMLDivElement;
         this._fullscreenButtonContainer = document.getElementById(
             "fullscreen-button-container"
@@ -2060,9 +2060,9 @@ export default class World {
     private _resizeInGameUI(width: number, height: number) {
         if (this._input.currentDeviceIsMobile === true) {
             if (width >= height) {
-                this._regionsButtonContainer.style.right =
+                this._roomsButtonContainer.style.right =
                     "calc(100% - 25vmin - 10vmin)";
-                this._regionsButtonContainer.style.bottom =
+                this._roomsButtonContainer.style.bottom =
                     "calc(100% - 6vmin - 5vmin)";
 
                 this._fullscreenButtonContainer.style.left =
@@ -2098,7 +2098,7 @@ export default class World {
                         "calc(20vmin + 7.5vmin + 0.75vmin";
                 }
             } else {
-                this._regionsButtonContainer.style.right =
+                this._roomsButtonContainer.style.right =
                     "calc(100% - 25vmin - 5vmin)";
                 this._fullscreenButtonContainer.style.left =
                     "calc(100% - 5vmin - 5vmin)";
@@ -2108,7 +2108,7 @@ export default class World {
                     "calc(100% - 50vmin - 0.5vmin)";
 
                 if (screenfull.isFullscreen === true) {
-                    this._regionsButtonContainer.style.bottom =
+                    this._roomsButtonContainer.style.bottom =
                         "calc(100% - 6vmin - 10vmin)";
                     this._fullscreenButtonContainer.style.bottom =
                         "calc(100% - 5vmin - 10vmin)";
@@ -2117,7 +2117,7 @@ export default class World {
                     this._leaderboardContainer.style.bottom =
                         "calc(100% - 40vmin - 0.5vmin - 10vmin)";
                 } else {
-                    this._regionsButtonContainer.style.bottom =
+                    this._roomsButtonContainer.style.bottom =
                         "calc(100% - 6vmin - 5vmin)";
                     this._fullscreenButtonContainer.style.bottom =
                         "calc(100% - 5vmin - 5vmin)";
