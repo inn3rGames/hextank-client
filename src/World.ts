@@ -349,7 +349,7 @@ export default class World {
         roomsList: Map<string, { address: string; type: string }>
     ): Promise<void> {
         let roomKey = "NONE";
-        let roomType = "DEV";
+        let roomType = "NONE";
         const roomsArray = Array.from(roomsList.entries());
 
         try {
