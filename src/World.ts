@@ -296,8 +296,6 @@ export default class World {
 
         this._input = new Input();
         this._setUICallbacks();
-
-        this._plausible.enableAutoPageviews();
     }
 
     private _setDebugMode() {
