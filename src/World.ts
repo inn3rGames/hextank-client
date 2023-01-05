@@ -156,6 +156,14 @@ export default class World {
         new Map();
     private _paidRooms: Map<string, { address: string; type: string }> =
         new Map();
+    private _fetchedData: Array<{
+        key: string;
+        address: string;
+        type: string;
+        clients: number;
+        maxClients: number;
+        ping: number;
+    }> = [];
 
     private _hubApi!: HubApi;
 
@@ -373,10 +381,9 @@ export default class World {
         this._setRoomData(roomKey, roomType);
     }
 
-    private async _getLatency(
+    private async _fetchRoomsData(
         roomsList: Map<string, { address: string; type: string }>
-    ): Promise<number> {
-        let pings: Array<{ roomKey: string; ping: number }> = [];
+    ): Promise<void> {
         const roomsArray = Array.from(roomsList.entries());
 
         await Promise.all(
@@ -385,10 +392,17 @@ export default class World {
                 const oldTime = performance.now();
 
                 try {
-                    await client.getAvailableRooms();
+                    const data = await client.getAvailableRooms();
                     const presentTime = performance.now();
                     const currentPing = presentTime - oldTime;
-                    pings.push({ roomKey: roomData[0], ping: currentPing });
+                    this._fetchedData.push({
+                        key: roomData[0],
+                        address: roomData[1].address,
+                        type: roomData[1].type,
+                        clients: data[0].clients,
+                        maxClients: data[0].maxClients,
+                        ping: currentPing,
+                    });
                 } catch (error) {
                     if (this._production === false) {
                         console.log(error);
@@ -396,13 +410,18 @@ export default class World {
                 }
             })
         );
+    }
 
-        pings.sort((a, b) => {
-            return a.ping - b.ping;
-        });
+    private async _fetchData() {
+        this._fetchedData = [];
 
-        console.log(pings[0].ping);
-        return pings[0].ping;
+        await this._fetchRoomsData(this._paidRooms);
+        await this._fetchRoomsData(this._freeRooms);
+        await this._fetchRoomsData(this._developmentRooms);
+
+        if (this._production === false) {
+            console.log(this._fetchedData);
+        }
     }
 
     private async _entryRoom() {
@@ -504,6 +523,30 @@ export default class World {
         this._homeUI.addEventListener("touchcancel", (event) => {
             event.stopPropagation();
         });
+
+        this._roomsButtonContainer.addEventListener(
+            "mouseup",
+            async (event) => {
+                event.preventDefault();
+
+                this._showSplashScreen("Fetching rooms data...");
+                await this._fetchData();
+                this._setSplashScreenMessage("Rooms data fetched...");
+                this._showHomeUI();
+            }
+        );
+
+        this._roomsButtonContainer.addEventListener(
+            "touchend",
+            async (event) => {
+                event.preventDefault();
+
+                this._showSplashScreen("Fetching rooms data...");
+                await this._fetchData();
+                this._setSplashScreenMessage("Rooms data fetched...");
+                this._showHomeUI();
+            }
+        );
 
         this._fullscreenButtonContainer.addEventListener("mouseup", (event) => {
             event.preventDefault();
