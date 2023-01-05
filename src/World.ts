@@ -533,6 +533,7 @@ export default class World {
                 await this._fetchData();
                 this._setSplashScreenMessage("Rooms data fetched...");
                 this._showHomeUI();
+                window.location.hash = "rooms";
             }
         );
 
@@ -545,6 +546,7 @@ export default class World {
                 await this._fetchData();
                 this._setSplashScreenMessage("Rooms data fetched...");
                 this._showHomeUI();
+                window.location.hash = "rooms";
             }
         );
 
