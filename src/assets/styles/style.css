@@ -290,7 +290,13 @@ body::after {
     width: 60vmin;
     height: 3.2vmin;
     margin: 0.25vmin;
-/*     background-color: #FFFF00; */
+    border: 0.25vmin solid #000000;
+    border-radius: 1vmin;
+    background-color: #FFFF00;
+}
+
+.room-data-row:hover {
+    background-color: #B0B000;
 }
 
 .room-data-select,
@@ -306,7 +312,27 @@ body::after {
     height: 3.2vmin;
     margin: 0.25vmin;
     line-height: 3.2vmin;
-    background-color: #0AC70A;
+}
+
+input[type=radio] {
+    position: relative;
+    appearance: none;
+    font-size: 2.25vmin;
+    text-align: center;
+    width: 2.25vmin;
+    height: 2.25vmin;
+    bottom: calc(0% - 0.35vmin);
+    margin: 0;
+    padding: 0;
+    line-height: 2.25vmin;
+    border: 0.375vmin solid #FFFFFF;
+    border-radius: 50%;
+    box-shadow: 0 0 0 0.25vmin #000000;
+    background-color: #FFFFFF;
+}
+
+input[type=radio]:checked {
+    background-color: #000000;
 }
 
 #fullscreen-button-container {
