@@ -321,8 +321,8 @@ input[type=radio] {
     text-align: center;
     width: 2.25vmin;
     height: 2.25vmin;
-    bottom: calc(0% - 0.35vmin);
-    margin: 0;
+    bottom: calc(0% - 0.35vmin + 0.25vmin);
+    margin: 0.5vmin;
     padding: 0;
     line-height: 2.25vmin;
     border: 0.375vmin solid #FFFFFF;
