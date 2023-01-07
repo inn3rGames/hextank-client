@@ -295,8 +295,8 @@ body::after {
     background-color: #FFFF00;
 }
 
-.room-data-row:hover {
-    background-color: #B0B000;
+.room-data-row-title{
+    background-color: #0AC70A;
 }
 
 .room-data-select,

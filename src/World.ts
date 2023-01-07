@@ -100,6 +100,8 @@ export default class World {
     private _splashScreenTimeout: number = 3000;
     private _homeUI: HTMLDivElement;
     private _roomsButtonContainer: HTMLDivElement;
+    private _paidDataContainer: HTMLDivElement;
+    private _freeDataContainer: HTMLDivElement;
     private _fullscreenButtonContainer: HTMLDivElement;
     private _formContainer: HTMLFormElement;
     private _inputField: HTMLInputElement;
@@ -202,6 +204,12 @@ export default class World {
         this._homeUI = document.getElementById("home-ui") as HTMLDivElement;
         this._roomsButtonContainer = document.getElementById(
             "rooms-button-container"
+        ) as HTMLDivElement;
+        this._paidDataContainer = document.getElementById(
+            "paid-data-container"
+        ) as HTMLDivElement;
+        this._freeDataContainer = document.getElementById(
+            "free-data-container"
         ) as HTMLDivElement;
         this._fullscreenButtonContainer = document.getElementById(
             "fullscreen-button-container"
@@ -549,6 +557,22 @@ export default class World {
                 window.location.hash = "rooms";
             }
         );
+
+        this._paidDataContainer.addEventListener("change", (event) => {
+            const paidSelectors =
+                document.querySelectorAll(`input[name="paid"]`);
+            paidSelectors.forEach((selector) => {
+                const radioButton = selector as HTMLInputElement;
+                const parent = radioButton.parentElement
+                    ?.parentElement as HTMLElement;
+                if (radioButton.checked === true) {
+                    parent.style.backgroundColor = "#B0B000";
+                    console.log(radioButton.value);
+                } else {
+                    parent.style.backgroundColor = "#FFFF00";
+                }
+            });
+        });
 
         this._fullscreenButtonContainer.addEventListener("mouseup", (event) => {
             event.preventDefault();

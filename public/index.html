@@ -54,18 +54,16 @@
                         <div id="rooms-text-content" class="text-content">
                             <div class="text-category-container">
                                 <div class="text-category-title">PAID</div>
-                                <div class="room-data-container">
+                                <div id="paid-data-container" class="room-data-container">
+                                    <div class="room-data-row room-data-row-title">
+                                        <div class="room-data-select">SELECT</div>
+                                        <div class="room-data-key">NAME</div>
+                                        <div class="room-data-players">PLAYERS</div>
+                                        <div class="room-data-ping">PING</div>
+                                    </div>
                                     <label>
                                         <div class="room-data-row">
-                                            <div class="room-data-select">SELECT</div>
-                                            <div class="room-data-key">NAME</div>
-                                            <div class="room-data-players">PLAYERS</div>
-                                            <div class="room-data-ping">PING</div>
-                                        </div>
-                                    </label>
-                                    <label>
-                                        <div class="room-data-row">
-                                            <div class="room-data-select"><input type="radio" name="paid"></div>
+                                            <div class="room-data-select"><input type="radio" name="paid" value="AUTO"></div>
                                             <div class="room-data-key">AUTO</div>
                                             <div class="room-data-players"></div>
                                             <div class="room-data-ping"></div>
@@ -73,7 +71,7 @@
                                     </label>
                                     <label>
                                         <div class="room-data-row">
-                                            <div class="room-data-select"><input type="radio" name="paid"></div>
+                                            <div class="room-data-select"><input type="radio" name="paid" value="EUROPE"></div>
                                             <div class="room-data-key">EUROPE</div>
                                             <div class="room-data-players">5/25</div>
                                             <div class="room-data-ping">65</div>
@@ -81,7 +79,7 @@
                                     </label>
                                     <label>
                                         <div class="room-data-row">
-                                            <div class="room-data-select"><input type="radio" name="paid"></div>
+                                            <div class="room-data-select"><input type="radio" name="paid" value="USA"></div>
                                             <div class="room-data-key">USA</div>
                                             <div class="room-data-players">5/25</div>
                                             <div class="room-data-ping">65</div>
@@ -89,7 +87,7 @@
                                     </label>
                                     <label>
                                         <div class="room-data-row">
-                                            <div class="room-data-select"><input type="radio" name="paid"></div>
+                                            <div class="room-data-select"><input type="radio" name="paid" value="ASIA"></div>
                                             <div class="room-data-key">ASIA</div>
                                             <div class="room-data-players">5/25</div>
                                             <div class="room-data-ping">65</div>
@@ -97,15 +95,13 @@
                                     </label>
                                 </div>
                                 <div class="text-category-title">FREE</div>
-                                <div class="room-data-container">
-                                    <label>
-                                        <div class="room-data-row">
-                                            <div class="room-data-select">SELECT</div>
-                                            <div class="room-data-key">NAME</div>
-                                            <div class="room-data-players">PLAYERS</div>
-                                            <div class="room-data-ping">PING</div>
-                                        </div>
-                                    </label>
+                                <div id="free-data-container" class="room-data-container">
+                                    <div class="room-data-row room-data-row-title">
+                                        <div class="room-data-select">SELECT</div>
+                                        <div class="room-data-key">NAME</div>
+                                        <div class="room-data-players">PLAYERS</div>
+                                        <div class="room-data-ping">PING</div>
+                                    </div>
                                     <label>
                                         <div class="room-data-row">
                                             <div class="room-data-select"><input type="radio" name="free"></div>
