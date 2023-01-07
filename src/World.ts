@@ -466,6 +466,21 @@ export default class World {
         }
     }
 
+    private _setRoomSelectorsColor() {
+        const selectors = document.querySelectorAll(`input[type="radio"]`);
+        selectors.forEach((selector) => {
+            const radioButton = selector as HTMLInputElement;
+            const parent = radioButton.parentElement
+                ?.parentElement as HTMLElement;
+            if (radioButton.checked === true) {
+                parent.style.backgroundColor = "#B0B000";
+                console.log(radioButton.value);
+            } else {
+                parent.style.backgroundColor = "#FFFF00";
+            }
+        });
+    }
+
     private _setUICallbacks() {
         if (localStorage.getItem("name") === null) {
             localStorage.setItem("name", "");
@@ -558,10 +573,28 @@ export default class World {
             }
         );
 
+        this._setRoomSelectorsColor();
+
         this._paidDataContainer.addEventListener("change", (event) => {
             const paidSelectors =
                 document.querySelectorAll(`input[name="paid"]`);
             paidSelectors.forEach((selector) => {
+                const radioButton = selector as HTMLInputElement;
+                const parent = radioButton.parentElement
+                    ?.parentElement as HTMLElement;
+                if (radioButton.checked === true) {
+                    parent.style.backgroundColor = "#B0B000";
+                    console.log(radioButton.value);
+                } else {
+                    parent.style.backgroundColor = "#FFFF00";
+                }
+            });
+        });
+
+        this._freeDataContainer.addEventListener("change", (event) => {
+            const freeSelectors =
+                document.querySelectorAll(`input[name="free"]`);
+            freeSelectors.forEach((selector) => {
                 const radioButton = selector as HTMLInputElement;
                 const parent = radioButton.parentElement
                     ?.parentElement as HTMLElement;

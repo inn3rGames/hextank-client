@@ -295,8 +295,9 @@ body::after {
     background-color: #FFFF00;
 }
 
-.room-data-row-title{
-    background-color: #0AC70A;
+.room-data-row-title {
+    border: 0.25vmin solid #808080;
+    background: repeating-linear-gradient(45deg, #F8F8F8, #F8F8F8 1vmin, #E0E0E0 1vmin, #E0E0E0 2vmin);
 }
 
 .room-data-select,
