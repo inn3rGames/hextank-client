@@ -102,7 +102,6 @@ export default class World {
     private _roomsButtonContainer: HTMLDivElement;
     private _paidDataContainer: HTMLDivElement;
     private _freeDataContainer: HTMLDivElement;
-    private _fullscreenButtonContainer: HTMLDivElement;
     private _logo: HTMLDivElement;
     private _restartTextContainer: HTMLDivElement;
     private _formContainer: HTMLFormElement;
@@ -113,6 +112,7 @@ export default class World {
     private _twitterButtonContainer: HTMLDivElement;
     private _discordButtonContainer: HTMLDivElement;
     private _hudContainer: HTMLDivElement;
+    private _fullscreenButtonContainer: HTMLDivElement;
     private _leaderboardContainer: HTMLDivElement;
 
     private _engine: Engine;
@@ -212,9 +212,6 @@ export default class World {
         this._freeDataContainer = document.getElementById(
             "free-data-container"
         ) as HTMLDivElement;
-        this._fullscreenButtonContainer = document.getElementById(
-            "fullscreen-button-container"
-        ) as HTMLDivElement;
         this._logo = document.getElementById("logo") as HTMLDivElement;
         this._restartTextContainer = document.getElementById(
             "restart-text-container"
@@ -246,6 +243,9 @@ export default class World {
         ) as HTMLDivElement;
         this._hudContainer = document.getElementById(
             "hud-container"
+        ) as HTMLDivElement;
+        this._fullscreenButtonContainer = document.getElementById(
+            "fullscreen-button-container"
         ) as HTMLDivElement;
         this._leaderboardContainer = document.getElementById(
             "leaderboard-container"
@@ -760,23 +760,6 @@ export default class World {
             });
         });
 
-        this._fullscreenButtonContainer.addEventListener("mouseup", (event) => {
-            event.preventDefault();
-            if (screenfull.isEnabled === true) {
-                screenfull.toggle();
-            }
-        });
-
-        this._fullscreenButtonContainer.addEventListener(
-            "touchend",
-            (event) => {
-                event.preventDefault();
-                if (screenfull.isEnabled === true) {
-                    screenfull.toggle();
-                }
-            }
-        );
-
         this._formContainer.addEventListener("submit", (event) => {
             event.preventDefault();
         });
@@ -873,6 +856,23 @@ export default class World {
             event.preventDefault();
             window.open("https://discord.gg/mStb7HEnbq");
         });
+
+        this._fullscreenButtonContainer.addEventListener("mouseup", (event) => {
+            event.preventDefault();
+            if (screenfull.isEnabled === true) {
+                screenfull.toggle();
+            }
+        });
+
+        this._fullscreenButtonContainer.addEventListener(
+            "touchend",
+            (event) => {
+                event.preventDefault();
+                if (screenfull.isEnabled === true) {
+                    screenfull.toggle();
+                }
+            }
+        );
 
         window.addEventListener("focus", () => {
             this._focusRegained();
@@ -2373,15 +2373,15 @@ export default class World {
                 this._roomsButtonContainer.style.bottom =
                     "calc(100% - 6vmin - 5vmin)";
 
-                this._fullscreenButtonContainer.style.left =
-                    "calc(100% - 5vmin - 10vmin)";
-                this._fullscreenButtonContainer.style.bottom =
-                    "calc(100% - 5vmin - 5vmin)";
-
                 this._hudContainer.style.right =
                     "calc(100% - 40vmin - 0.5vmin - 10vmin)";
                 this._hudContainer.style.bottom =
                     "calc(100% - 25vmin - 0.5vmin)";
+
+                this._fullscreenButtonContainer.style.right =
+                    "calc(100% - 4.5vmin - 0.5vmin - 10vmin)";
+                this._fullscreenButtonContainer.style.bottom =
+                    "calc(100% - 25vmin - 4.5vmin - 0.75vmin)";
 
                 this._leaderboardContainer.style.left =
                     "calc(100% - 50vmin - 0.5vmin - 10vmin)";
@@ -2408,29 +2408,29 @@ export default class World {
             } else {
                 this._roomsButtonContainer.style.right =
                     "calc(100% - 18.75vmin - 5vmin)";
-                this._fullscreenButtonContainer.style.left =
-                    "calc(100% - 5vmin - 5vmin)";
                 this._hudContainer.style.right =
                     "calc(100% - 40vmin - 0.5vmin)";
+                this._fullscreenButtonContainer.style.right =
+                    "calc(100% - 4.5vmin - 0.5vmin)";
                 this._leaderboardContainer.style.left =
                     "calc(100% - 50vmin - 0.5vmin)";
 
                 if (screenfull.isFullscreen === true) {
                     this._roomsButtonContainer.style.bottom =
                         "calc(100% - 6vmin - 10vmin)";
-                    this._fullscreenButtonContainer.style.bottom =
-                        "calc(100% - 5vmin - 10vmin)";
                     this._hudContainer.style.bottom =
                         "calc(100% - 25vmin - 0.5vmin - 10vmin)";
+                    this._fullscreenButtonContainer.style.bottom =
+                        "calc(100% - 25vmin - 4.5vmin - 0.75vmin - 10vmin)";
                     this._leaderboardContainer.style.bottom =
                         "calc(100% - 40vmin - 0.5vmin - 10vmin)";
                 } else {
                     this._roomsButtonContainer.style.bottom =
                         "calc(100% - 6vmin - 5vmin)";
-                    this._fullscreenButtonContainer.style.bottom =
-                        "calc(100% - 5vmin - 5vmin)";
                     this._hudContainer.style.bottom =
                         "calc(100% - 25vmin - 0.5vmin)";
+                    this._fullscreenButtonContainer.style.bottom =
+                        "calc(100% - 25vmin - 4.5vmin - 0.75vmin)";
                     this._leaderboardContainer.style.bottom =
                         "calc(100% - 40vmin - 0.5vmin)";
                 }

@@ -340,22 +340,6 @@ input[type=radio]:checked {
     background-color: #000000;
 }
 
-#fullscreen-button-container {
-    width: 5vmin;
-    height: 5vmin;
-    left: calc(100% - 5vmin - 5vmin);
-    bottom: calc(100% - 5vmin - 5vmin);
-}
-
-#fullscreen-button {
-    width: 5vmin;
-    height: 5vmin;
-    background-image: url("../../assets/images/fullscreen.png");
-    background-size: 4vmin 4vmin;
-    background-repeat: no-repeat;
-    background-position: center center;
-}
-
 #logo {
     position: fixed;
     width: 95vmin;
@@ -788,6 +772,24 @@ a {
 #hud-health {
     width: 27vmin;
     background: linear-gradient(135deg, rgba(10, 199, 10, 0.75) 0%, rgba(255, 255, 255, 0.75) 50%, rgba(10, 199, 10, 0.75) 100%);
+}
+
+#fullscreen-button-container {
+    position: fixed;
+    width: 4.5vmin;
+    height: 4.5vmin;
+    right: calc(100% - 4.5vmin - 0.5vmin);
+    bottom: calc(100% - 25vmin - 4.5vmin - 0.75vmin);
+    opacity: 50%;
+}
+
+#fullscreen-button {
+    width: 4.5vmin;
+    height: 4.5vmin;
+    background-image: url("../../assets/images/fullscreen.png");
+    background-size: 3.6vmin 3.6vmin;
+    background-repeat: no-repeat;
+    background-position: center center;
 }
 
 #leaderboard-container {
