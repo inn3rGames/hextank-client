@@ -2126,6 +2126,19 @@ export default class World {
             return b.damage - a.damage;
         });
 
+        const hudDamageTitleElement = this._hudContainer.children[2]
+            .children[0] as HTMLDivElement;
+
+        if (typeof this._roomData !== "undefined") {
+            if (this._roomData.type === "PAID") {
+                hudDamageTitleElement.textContent = "NIM";
+            } else {
+                hudDamageTitleElement.textContent = "DAMAGE";
+            }
+        } else {
+            hudDamageTitleElement.textContent = "DAMAGE";
+        }
+
         const hudNumberElement = this._hudContainer.children[0]
             .children[1] as HTMLDivElement;
         hudNumberElement.textContent = "";
@@ -2144,6 +2157,21 @@ export default class World {
 
         const leaderboardRows = Array.from(this._leaderboardContainer.children);
         leaderboardRows.forEach((value, index) => {
+            if (index === 0) {
+                const leaderboardTitle = value as HTMLDivElement;
+                const leaderboardTitleDamage = leaderboardTitle
+                    .children[2] as HTMLDivElement;
+
+                if (typeof this._roomData !== "undefined") {
+                    if (this._roomData.type === "PAID") {
+                        leaderboardTitleDamage.textContent = "NIM";
+                    } else {
+                        leaderboardTitleDamage.textContent = "DAMAGE";
+                    }
+                } else {
+                    leaderboardTitleDamage.textContent = "DAMAGE";
+                }
+            }
             if (index >= 1) {
                 const leaderboardRow = value as HTMLDivElement;
                 leaderboardRow.style.display = "none";
