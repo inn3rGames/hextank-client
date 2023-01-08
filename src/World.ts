@@ -103,6 +103,8 @@ export default class World {
     private _paidDataContainer: HTMLDivElement;
     private _freeDataContainer: HTMLDivElement;
     private _fullscreenButtonContainer: HTMLDivElement;
+    private _logo: HTMLDivElement;
+    private _restartTextContainer: HTMLDivElement;
     private _formContainer: HTMLFormElement;
     private _inputField: HTMLInputElement;
     private _payButtonContainer: HTMLDivElement;
@@ -212,6 +214,10 @@ export default class World {
         ) as HTMLDivElement;
         this._fullscreenButtonContainer = document.getElementById(
             "fullscreen-button-container"
+        ) as HTMLDivElement;
+        this._logo = document.getElementById("logo") as HTMLDivElement;
+        this._restartTextContainer = document.getElementById(
+            "restart-text-container"
         ) as HTMLDivElement;
         this._formContainer = document.getElementById(
             "form-container"
@@ -894,6 +900,10 @@ export default class World {
         this._splashScreen.style.display = "none";
         this._inGameUI.style.display = "none";
         this._homeUI.style.display = "flex";
+        this._logo.style.display = "block";
+        this._restartTextContainer.style.display = "none";
+        const child = this._restartTextContainer.children[0] as HTMLDivElement;
+        child.textContent = "";
         this._setSplashScreenMessage("Game ready");
     }
 
@@ -907,10 +917,8 @@ export default class World {
         this._splashScreen.style.display = "none";
         this._inGameUI.style.display = "none";
         this._homeUI.style.display = "flex";
-        /* this._freeButtonContainer.style.width = "35vmin";
-        const child = this._freeButtonContainer.children[0] as HTMLDivElement;
-        child.textContent = "RESTART";
-        child.style.width = "35vmin"; */
+        this._logo.style.display = "none";
+        this._restartTextContainer.style.display = "flex";
     }
 
     private _clearItems() {
@@ -1888,6 +1896,25 @@ export default class World {
         this._input.setRoom(this._room, this._production);
     }
 
+    private _setRestartText(damage: number, roomType: string) {
+        const child = this._restartTextContainer.children[0] as HTMLDivElement;
+
+        let restartTextString;
+        if (roomType === "PAID") {
+            restartTextString = `You won ${damage} NIM!`;
+        } else {
+            restartTextString = `You dealt ${damage} damage!`;
+        }
+
+        child.textContent = restartTextString;
+        child.style.fontSize = this._computeFontSize(
+            restartTextString.length,
+            24,
+            12
+        );
+        child.style.textShadow = this._computeFontStroke(child.style.fontSize);
+    }
+
     private _setHexTanksCallbacks() {
         this._room.state.hexTanks.onAdd = (serverHexTank: any) => {
             const clientHexTank = new HexTank(
@@ -1927,6 +1954,10 @@ export default class World {
                     this._hexTanks.get(serverHexTank.id)!.deleteMeshes();
                     this._hexTanks.delete(serverHexTank.id);
                     if (this._room.sessionId === serverHexTank.id) {
+                        this._setRestartText(
+                            serverHexTank.damage,
+                            this._roomData.type
+                        );
                         this._sessionEnd();
                     }
                 }
