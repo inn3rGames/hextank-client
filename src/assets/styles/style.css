@@ -332,7 +332,7 @@ input[type=radio] {
     line-height: 2vmin;
     border: 0.375vmin solid #FFFFFF;
     border-radius: 50%;
-    box-shadow: 0 0 0 0.5vmin #000000;
+    box-shadow: 0 0 0 0.4vmin #000000;
     background-color: #FFFFFF;
 }
 

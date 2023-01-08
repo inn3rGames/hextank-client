@@ -379,12 +379,23 @@ export default class World {
                     roomsArray.map(async (roomData) => {
                         const client = new Client(roomData[1].address);
                         const fetchedRooms = await client.getAvailableRooms();
-                        if (
-                            fetchedRooms[0].clients >=
-                            fetchedRooms[0].maxClients
-                        ) {
-                            throw new Error("Room is full!");
+
+                        if (roomsListType === "PAID") {
+                            if (
+                                fetchedRooms[0].clients >=
+                                fetchedRooms[0].maxClients - 5
+                            ) {
+                                throw new Error("Room is full!");
+                            }
+                        } else {
+                            if (
+                                fetchedRooms[0].clients >=
+                                fetchedRooms[0].maxClients
+                            ) {
+                                throw new Error("Room is full!");
+                            }
                         }
+
                         roomKey = roomData[0];
                         roomType = roomData[1].type;
                         return roomKey;
@@ -426,11 +437,21 @@ export default class World {
                     const data = await client.getAvailableRooms();
                     const presentTime = performance.now();
                     const currentPing = presentTime - oldTime;
+
+                    let fetchedPlayers;
+                    if (roomData[1].type === "PAID") {
+                        fetchedPlayers = `${data[0].clients}/${
+                            data[0].maxClients - 5
+                        }`;
+                    } else {
+                        fetchedPlayers = `${data[0].clients}/${data[0].maxClients}`;
+                    }
+
                     this._fetchedData.push({
                         key: roomData[0],
                         address: roomData[1].address,
                         type: roomData[1].type,
-                        players: `${data[0].clients}/${data[0].maxClients}`,
+                        players: fetchedPlayers,
                         ping: Math.floor(currentPing).toString(),
                     });
                 } catch (error) {
