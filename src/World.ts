@@ -425,7 +425,7 @@ export default class World {
                         address: roomData[1].address,
                         type: roomData[1].type,
                         players: `${data[0].clients}/${data[0].maxClients}`,
-                        ping: currentPing.toString(),
+                        ping: Math.floor(currentPing).toString(),
                     });
                 } catch (error) {
                     if (this._production === false) {
