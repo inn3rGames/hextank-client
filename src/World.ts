@@ -771,7 +771,7 @@ export default class World {
             }
         );
 
-        this._formContainer.addEventListener("submit", async (event) => {
+        this._formContainer.addEventListener("submit", (event) => {
             event.preventDefault();
         });
 
