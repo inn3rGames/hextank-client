@@ -365,26 +365,33 @@ export default class World {
     }
 
     private async _fetchNearestRoom(
-        roomsList: Map<string, { address: string; type: string }>
+        roomsList: Map<string, { address: string; type: string }>,
+        roomsListType: string
     ): Promise<void> {
         let roomKey = "NONE";
         let roomType = "NONE";
         const roomsArray = Array.from(roomsList.entries());
 
-        try {
-            await Promise.any(
-                roomsArray.map(async (roomData) => {
-                    const client = new Client(roomData[1].address);
-                    await client.getAvailableRooms();
-                    roomKey = roomData[0];
-                    roomType = roomData[1].type;
-                    return roomKey;
-                })
-            );
-        } catch (error) {
-            if (this._production === false) {
-                console.log(error);
+        const localRoomKey = localStorage.getItem(roomsListType);
+        if (localRoomKey === null || localRoomKey === "AUTO") {
+            try {
+                await Promise.any(
+                    roomsArray.map(async (roomData) => {
+                        const client = new Client(roomData[1].address);
+                        await client.getAvailableRooms();
+                        roomKey = roomData[0];
+                        roomType = roomData[1].type;
+                        return roomKey;
+                    })
+                );
+            } catch (error) {
+                if (this._production === false) {
+                    console.log(error);
+                }
             }
+        } else {
+            roomKey = localRoomKey;
+            roomType = roomsListType;
         }
 
         this._setRoomData(roomKey, roomType);
@@ -392,14 +399,14 @@ export default class World {
 
     private async _fetchRoomsData(
         roomsList: Map<string, { address: string; type: string }>,
-        roomType: string
+        roomsListType: string
     ): Promise<void> {
         const roomsArray = Array.from(roomsList.entries());
 
         this._fetchedData.push({
             key: "AUTO",
             address: "",
-            type: roomType,
+            type: roomsListType,
             players: "",
             ping: "",
         });
@@ -665,8 +672,6 @@ export default class World {
             }
         );
 
-        this._setRoomsInputState();
-
         this._paidDataContainer.addEventListener("change", (event) => {
             const paidSelectors =
                 document.querySelectorAll(`input[name="PAID"]`);
@@ -732,7 +737,7 @@ export default class World {
             event.preventDefault();
 
             this._showSplashScreen("Finding nearest paid room...");
-            await this._fetchNearestRoom(this._paidRooms);
+            await this._fetchNearestRoom(this._paidRooms, "PAID");
             this._setSplashScreenMessage(
                 "Finding nearest paid room finished..."
             );
@@ -743,7 +748,7 @@ export default class World {
             event.preventDefault();
 
             this._showSplashScreen("Finding nearest paid room...");
-            await this._fetchNearestRoom(this._paidRooms);
+            await this._fetchNearestRoom(this._paidRooms, "PAID");
             this._setSplashScreenMessage(
                 "Finding nearest paid room finished..."
             );
@@ -754,7 +759,7 @@ export default class World {
             event.preventDefault();
 
             this._showSplashScreen("Finding nearest free room...");
-            await this._fetchNearestRoom(this._freeRooms);
+            await this._fetchNearestRoom(this._freeRooms, "FREE");
             this._setSplashScreenMessage(
                 "Finding nearest free room finished..."
             );
@@ -767,7 +772,7 @@ export default class World {
                 event.preventDefault();
 
                 this._showSplashScreen("Finding nearest free room...");
-                await this._fetchNearestRoom(this._freeRooms);
+                await this._fetchNearestRoom(this._freeRooms, "FREE");
                 this._setSplashScreenMessage(
                     "Finding nearest free room finished..."
                 );
@@ -783,7 +788,7 @@ export default class World {
             event.preventDefault();
 
             this._showSplashScreen("Finding nearest dev room...");
-            await this._fetchNearestRoom(this._developmentRooms);
+            await this._fetchNearestRoom(this._developmentRooms, "FREE");
             this._setSplashScreenMessage(
                 "Finding nearest dev room finished..."
             );
@@ -794,7 +799,7 @@ export default class World {
             event.preventDefault();
 
             this._showSplashScreen("Finding nearest dev room...");
-            await this._fetchNearestRoom(this._developmentRooms);
+            await this._fetchNearestRoom(this._developmentRooms, "FREE");
             this._setSplashScreenMessage(
                 "Finding nearest dev room finished..."
             );
