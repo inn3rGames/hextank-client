@@ -801,7 +801,7 @@ export default class World {
             event.preventDefault();
 
             this._showSplashScreen("Finding nearest dev room...");
-            await this._fetchNearestRoom(this._developmentRooms, "FREE");
+            await this._fetchNearestRoom(this._developmentRooms, "DEV");
             this._setSplashScreenMessage(
                 "Finding nearest dev room finished..."
             );
@@ -812,7 +812,7 @@ export default class World {
             event.preventDefault();
 
             this._showSplashScreen("Finding nearest dev room...");
-            await this._fetchNearestRoom(this._developmentRooms, "FREE");
+            await this._fetchNearestRoom(this._developmentRooms, "DEV");
             this._setSplashScreenMessage(
                 "Finding nearest dev room finished..."
             );
