@@ -436,8 +436,61 @@ export default class World {
         );
     }
 
+    private _createRoomInputRow(
+        parent: HTMLElement,
+        roomType: string,
+        key: string,
+        players: string,
+        ping: string
+    ) {
+        const label = document.createElement("label");
+        parent.appendChild(label);
+
+        const roomDataRow = document.createElement("div");
+        roomDataRow.className = "room-data-row";
+        label.appendChild(roomDataRow);
+
+        const roomDataSelect = document.createElement("div");
+        roomDataSelect.className = "room-data-select";
+        roomDataRow.appendChild(roomDataSelect);
+
+        const input = document.createElement("input");
+        input.type = "radio";
+        input.name = roomType;
+        input.value = key;
+        roomDataSelect.appendChild(input);
+
+        const roomDataKey = document.createElement("div");
+        roomDataKey.className = "room-data-key";
+        roomDataKey.textContent = key;
+        roomDataRow.appendChild(roomDataKey);
+
+        const roomDataPlayers = document.createElement("div");
+        roomDataPlayers.className = "room-data-players";
+        roomDataPlayers.textContent = players;
+        roomDataRow.appendChild(roomDataPlayers);
+
+        const roomDataPing = document.createElement("div");
+        roomDataPing.className = "room-data-ping";
+        roomDataPing.textContent = ping;
+        roomDataRow.appendChild(roomDataPing);
+    }
+
+    private _clearRoomsInputRows(parent: HTMLElement) {
+        const childrenArray = Array.from(parent.children);
+
+        childrenArray.forEach((element) => {
+            if (element.tagName === "LABEL") {
+                parent.removeChild(element);
+            }
+        });
+    }
+
     private async _fetchData() {
         this._fetchedData = [];
+
+        this._clearRoomsInputRows(this._paidDataContainer);
+        this._clearRoomsInputRows(this._freeDataContainer);
 
         await this._fetchRoomsData(this._paidRooms, "PAID");
         await this._fetchRoomsData(this._freeRooms, "FREE");
@@ -445,7 +498,7 @@ export default class World {
 
         this._fetchedData.forEach((roomData) => {
             if (roomData.type === "PAID") {
-                this._createRoomsInputRow(
+                this._createRoomInputRow(
                     this._paidDataContainer,
                     roomData.type,
                     roomData.key,
@@ -454,7 +507,7 @@ export default class World {
                 );
             }
             if (roomData.type === "FREE") {
-                this._createRoomsInputRow(
+                this._createRoomInputRow(
                     this._freeDataContainer,
                     roomData.type,
                     roomData.key,
@@ -503,46 +556,6 @@ export default class World {
             this._plausible.trackEvent("FREE_PLAY");
             await this._sessionStart();
         }
-    }
-
-    private _createRoomsInputRow(
-        parent: HTMLElement,
-        roomType: string,
-        key: string,
-        players: string,
-        ping: string
-    ) {
-        const label = document.createElement("label");
-        parent.appendChild(label);
-
-        const roomDataRow = document.createElement("div");
-        roomDataRow.className = "room-data-row";
-        label.appendChild(roomDataRow);
-
-        const roomDataSelect = document.createElement("div");
-        roomDataSelect.className = "room-data-select";
-        roomDataRow.appendChild(roomDataSelect);
-
-        const input = document.createElement("input");
-        input.type = "radio";
-        input.name = roomType;
-        input.value = key;
-        roomDataSelect.appendChild(input);
-
-        const roomDataKey = document.createElement("div");
-        roomDataKey.className = "room-data-key";
-        roomDataKey.textContent = key;
-        roomDataRow.appendChild(roomDataKey);
-
-        const roomDataPlayers = document.createElement("div");
-        roomDataPlayers.className = "room-data-players";
-        roomDataPlayers.textContent = players;
-        roomDataRow.appendChild(roomDataPlayers);
-
-        const roomDataPing = document.createElement("div");
-        roomDataPing.className = "room-data-ping";
-        roomDataPing.textContent = ping;
-        roomDataRow.appendChild(roomDataPing);
     }
 
     private _setRoomsInputState() {
