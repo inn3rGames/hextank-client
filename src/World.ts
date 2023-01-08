@@ -329,10 +329,12 @@ export default class World {
             type: "FREE",
         });
 
-        this._developmentRooms.set("DEVELOPMENT", {
-            address: "ws://localhost:2567",
-            type: "DEV",
-        });
+        if (this._production === false) {
+            this._developmentRooms.set("DEVELOPMENT", {
+                address: "ws://localhost:2567",
+                type: "DEV",
+            });
+        }
     }
 
     private _setNimiqNetwork() {
