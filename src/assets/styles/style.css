@@ -401,6 +401,7 @@ input[type=radio]:checked {
 
 #restart-text {
     font-size: 12vmin;
+    text-shadow: 0.6vmin 0.6vmin 0vmin #000000, -0.6vmin -0.6vmin 0vmin #000000, -0.6vmin 0.6vmin 0vmin #000000, 0.6vmin -0.6vmin 0vmin #000000;
     color: #FFFFFF;
 }
 
