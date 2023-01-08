@@ -35,7 +35,7 @@ body::after {
     width: 0px;
     height: 0px;
     z-index: -1;
-    content: url("../../assets/images/fullscreen.png") url("../../assets/images/logo.png") url("../../assets/images/twitter.png") url("../../assets/images/discord.png");
+    content: url("../../assets/images/fullscreen.png") url("../../assets/images/logo.png") url("../../assets/images/twitter.png") url("../../assets/images/discord.png") url("../../assets/images/nimiq.png");
     visibility: hidden;
 }
 
@@ -435,6 +435,23 @@ input[type=radio]:checked {
     bottom: calc(42% - 8vmin - 1vmin);
 }
 
+#pay-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#nimiq-logo {
+    width: 7vmin;
+    height: 7vmin;
+    background-image: url("../../assets/images/nimiq.png");
+    background-size: 7vmin 7vmin;
+    background-repeat: no-repeat;
+    background-position: center center;
+    margin-left: 0.5vmin;
+    margin-right: 0.5vmin;
+}
+
 #free-button-container {
     right: calc(50% - 25vmin - 0.5vmin);
     bottom: calc(42% - 8vmin - 1vmin);
@@ -444,6 +461,13 @@ input[type=radio]:checked {
     bottom: calc(42% - 16vmin - 2vmin);
 }
 
+#twitter-button-container {
+    width: 12vmin;
+    height: 6vmin;
+    right: calc(50% + 18.75vmin + 7.5vmin);
+    top: calc(100% - 6vmin - 10vmin);
+}
+
 #twitter-button {
     width: 12vmin;
     height: 6vmin;
@@ -451,13 +475,6 @@ input[type=radio]:checked {
     background-size: 6.75vmin 5.55vmin;
     background-repeat: no-repeat;
     background-position: center center;
-}
-
-#twitter-button-container {
-    width: 12vmin;
-    height: 6vmin;
-    right: calc(50% + 18.75vmin + 7.5vmin);
-    top: calc(100% - 6vmin - 10vmin);
 }
 
 #help-button-container {
@@ -470,6 +487,13 @@ input[type=radio]:checked {
     top: calc(100% - 6vmin - 10vmin);
 }
 
+#discord-button-container {
+    width: 12vmin;
+    height: 6vmin;
+    left: calc(50% + 18.75vmin + 7.5vmin);
+    top: calc(100% - 6vmin - 10vmin);
+}
+
 #discord-button {
     width: 12vmin;
     height: 6vmin;
@@ -477,13 +501,6 @@ input[type=radio]:checked {
     background-size: 7.5vmin 5.67vmin;
     background-repeat: no-repeat;
     background-position: center center;
-}
-
-#discord-button-container {
-    width: 12vmin;
-    height: 6vmin;
-    left: calc(50% + 18.75vmin + 7.5vmin);
-    top: calc(100% - 6vmin - 10vmin);
 }
 
 .modal-shadow {
