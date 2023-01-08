@@ -378,7 +378,13 @@ export default class World {
                 await Promise.any(
                     roomsArray.map(async (roomData) => {
                         const client = new Client(roomData[1].address);
-                        await client.getAvailableRooms();
+                        const fetchedRooms = await client.getAvailableRooms();
+                        if (
+                            fetchedRooms[0].clients >=
+                            fetchedRooms[0].maxClients
+                        ) {
+                            throw new Error("Room is full!");
+                        }
                         roomKey = roomData[0];
                         roomType = roomData[1].type;
                         return roomKey;
