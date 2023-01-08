@@ -162,9 +162,8 @@ export default class World {
         key: string;
         address: string;
         type: string;
-        clients: number;
-        maxClients: number;
-        ping: number;
+        players: string;
+        ping: string;
     }> = [];
 
     private _hubApi!: HubApi;
@@ -305,6 +304,8 @@ export default class World {
         this._input = new Input();
         this._setUICallbacks();
 
+        this._fetchData();
+
         this._plausible.enableAutoPageviews();
     }
 
@@ -390,9 +391,18 @@ export default class World {
     }
 
     private async _fetchRoomsData(
-        roomsList: Map<string, { address: string; type: string }>
+        roomsList: Map<string, { address: string; type: string }>,
+        roomType: string
     ): Promise<void> {
         const roomsArray = Array.from(roomsList.entries());
+
+        this._fetchedData.push({
+            key: "AUTO",
+            address: "",
+            type: roomType,
+            players: "",
+            ping: "",
+        });
 
         await Promise.all(
             roomsArray.map(async (roomData) => {
@@ -407,9 +417,8 @@ export default class World {
                         key: roomData[0],
                         address: roomData[1].address,
                         type: roomData[1].type,
-                        clients: data[0].clients,
-                        maxClients: data[0].maxClients,
-                        ping: currentPing,
+                        players: `${data[0].clients}/${data[0].maxClients}`,
+                        ping: currentPing.toString(),
                     });
                 } catch (error) {
                     if (this._production === false) {
@@ -423,9 +432,32 @@ export default class World {
     private async _fetchData() {
         this._fetchedData = [];
 
-        await this._fetchRoomsData(this._paidRooms);
-        await this._fetchRoomsData(this._freeRooms);
-        await this._fetchRoomsData(this._developmentRooms);
+        await this._fetchRoomsData(this._paidRooms, "PAID");
+        await this._fetchRoomsData(this._freeRooms, "FREE");
+        await this._fetchRoomsData(this._developmentRooms, "DEV");
+
+        this._fetchedData.forEach((roomData) => {
+            if (roomData.type === "PAID") {
+                this._createRoomsInputRow(
+                    this._paidDataContainer,
+                    roomData.type,
+                    roomData.key,
+                    roomData.players,
+                    roomData.ping
+                );
+            }
+            if (roomData.type === "FREE") {
+                this._createRoomsInputRow(
+                    this._freeDataContainer,
+                    roomData.type,
+                    roomData.key,
+                    roomData.players,
+                    roomData.ping
+                );
+            }
+        });
+
+        this._setRoomsInputState();
 
         if (this._production === false) {
             console.log(this._fetchedData);
@@ -632,8 +664,6 @@ export default class World {
                 window.location.hash = "rooms";
             }
         );
-
-        this._createRoomsInputRow(this._paidDataContainer, "PAID", "OMG", "999", "9");
 
         this._setRoomsInputState();
 
