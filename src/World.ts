@@ -167,7 +167,7 @@ export default class World {
         string,
         { name: string; address: string; type: string }
     > = new Map();
-    private _fetchedData: Array<{
+    private _filledData: Array<{
         key: string;
         address: string;
         type: string;
@@ -438,13 +438,13 @@ export default class World {
         this._setRoomData(roomKey, roomType);
     }
 
-    private async _fetchRoomsData(
+    private async _fillRowData(
         roomsList: Map<string, { address: string; type: string }>,
         roomsListType: string
     ): Promise<void> {
         const roomsArray = Array.from(roomsList.entries());
 
-        this._fetchedData.push({
+        this._filledData.push({
             key: "AUTO",
             address: "",
             type: roomsListType,
@@ -471,7 +471,7 @@ export default class World {
                         fetchedPlayers = `${data[0].clients}/${data[0].maxClients}`;
                     }
 
-                    this._fetchedData.push({
+                    this._filledData.push({
                         key: roomData[0],
                         address: roomData[1].address,
                         type: roomData[1].type,
@@ -560,14 +560,14 @@ export default class World {
         this._clearRoomDataRows(this._freeDataContainer);
     }
 
-    private async _fetchData() {
-        this._fetchedData = [];
+    private async _fillRowsData() {
+        this._filledData = [];
 
-        await this._fetchRoomsData(this._paidRooms, "PAID");
-        await this._fetchRoomsData(this._freeRooms, "FREE");
-        await this._fetchRoomsData(this._developmentRooms, "DEV");
+        await this._fillRowData(this._paidRooms, "PAID");
+        await this._fillRowData(this._freeRooms, "FREE");
+        await this._fillRowData(this._developmentRooms, "DEV");
 
-        this._fetchedData.forEach((roomData) => {
+        this._filledData.forEach((roomData) => {
             if (roomData.type === "PAID") {
                 this._createOrUpdateRoomDataRow(
                     this._paidDataContainer,
@@ -591,7 +591,7 @@ export default class World {
         this._setRoomsInputState();
 
         if (this._production === false) {
-            console.log(this._fetchedData);
+            console.log(this._filledData);
         }
     }
 
@@ -739,7 +739,7 @@ export default class World {
                 window.location.hash = "#rooms";
 
                 this._showSplashScreen("Fetching rooms data...");
-                await this._fetchData();
+                await this._fillRowsData();
                 this._setSplashScreenMessage("Rooms data fetched...");
 
                 this._showHomeUI();
@@ -755,7 +755,7 @@ export default class World {
                 window.location.hash = "#rooms";
 
                 this._showSplashScreen("Fetching rooms data...");
-                await this._fetchData();
+                await this._fillRowsData();
                 this._setSplashScreenMessage("Rooms data fetched...");
 
                 this._showHomeUI();
@@ -2437,7 +2437,7 @@ export default class World {
             const roomsCurrentTime = performance.now();
             if (roomsCurrentTime - this._roomsOldTime >= 1000) {
                 this._roomsOldTime = roomsCurrentTime;
-                this._fetchData();
+                this._fillRowsData();
             }
         }
     }
