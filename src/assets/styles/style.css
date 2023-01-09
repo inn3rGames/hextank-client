@@ -786,25 +786,6 @@ a {
     width: 27vmin;
 }
 
-#fullscreen-button-container {
-    position: fixed;
-    width: 6.9vmin;
-    height: 6.9vmin;
-    left: calc(100% - 6.9vmin - 0.5vmin);
-    bottom: calc(100% - 6.9vmin - 0.5vmin);
-    margin: -0.25vmin;
-    opacity: 50%;
-}
-
-#fullscreen-button {
-    width: 6.9vmin;
-    height: 6.9vmin;
-    background-image: url("../../assets/images/fullscreen.png");
-    background-size: 5.52vmin 5.52vmin;
-    background-repeat: no-repeat;
-    background-position: center center;
-}
-
 #leaderboard-container {
     position: fixed;
     display: flex;
@@ -872,4 +853,22 @@ a {
 
 .leaderboard-kills {
     width: 28%;
+}
+
+#fullscreen-button-container {
+    position: fixed;
+    width: 6.9vmin;
+    height: 6.9vmin;
+    left: calc(100% - 6.9vmin - 0.75vmin);
+    bottom: calc(100% - 6.9vmin - 0.75vmin);
+    opacity: 50%;
+}
+
+#fullscreen-button {
+    width: 6.9vmin;
+    height: 6.9vmin;
+    background-image: url("../../assets/images/fullscreen.png");
+    background-size: 5.52vmin 5.52vmin;
+    background-repeat: no-repeat;
+    background-position: center center;
 }

@@ -2410,9 +2410,9 @@ export default class World {
                     "calc(100% - 40vmin - 0.5vmin)";
 
                 this._fullscreenButtonContainer.style.left =
-                    "calc(100% - 6.9vmin - 0.5vmin - 10vmin)";
+                    "calc(100% - 6.9vmin - 0.75vmin - 10vmin)";
                 this._fullscreenButtonContainer.style.bottom =
-                    "calc(100% - 6.9vmin - 0.5vmin - 0.75vmin)";
+                    "calc(100% - 6.9vmin - 0.75vmin)";
 
                 if (typeof this._input.buttonUp !== "undefined") {
                     this._input.buttonUp.style.left = "20vmin";
@@ -2439,7 +2439,7 @@ export default class World {
                 this._leaderboardContainer.style.left =
                     "calc(100% - 50vmin - 6.9vmin - 1vmin)";
                 this._fullscreenButtonContainer.style.left =
-                    "calc(100% - 6.9vmin - 0.5vmin)";
+                    "calc(100% - 6.9vmin - 0.75vmin)";
 
                 if (screenfull.isFullscreen === true) {
                     this._roomsButtonContainer.style.bottom =
@@ -2449,7 +2449,7 @@ export default class World {
                     this._leaderboardContainer.style.bottom =
                         "calc(100% - 40vmin - 0.5vmin - 10vmin)";
                     this._fullscreenButtonContainer.style.bottom =
-                        "calc(100% - 6.9vmin - 0.5vmin - 10vmin)";
+                        "calc(100% - 6.9vmin - 0.75vmin - 10vmin)";
                 } else {
                     this._roomsButtonContainer.style.bottom =
                         "calc(100% - 6vmin - 5vmin)";
@@ -2458,7 +2458,7 @@ export default class World {
                     this._leaderboardContainer.style.bottom =
                         "calc(100% - 40vmin - 0.5vmin)";
                     this._fullscreenButtonContainer.style.bottom =
-                        "calc(100% - 6.9vmin - 0.5vmin - 0.75vmin)";
+                        "calc(100% - 6.9vmin - 0.75vmin)";
                 }
 
                 if (typeof this._input.buttonUp !== "undefined") {
