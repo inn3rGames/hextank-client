@@ -40,34 +40,34 @@ import HubApi, { SignedTransaction } from "@nimiq/hub-api";
 import { v1 as uuidv1 } from "uuid";
 import Plausible from "plausible-tracker";
 
-import body from "./assets/models/hexTankBody.glb";
-import jet from "./assets/models/hexTankJet.glb";
-import wall from "./assets/models/wall.glb";
-import pyramid from "./assets/models/pyramid.glb";
-import oasis from "./assets/models/oasis.glb";
-import building1 from "./assets/models/building1.glb";
-import building2 from "./assets/models/building2.glb";
-import rock1 from "./assets/models/rock1.glb";
-import rock2 from "./assets/models/rock2.glb";
-import rock3 from "./assets/models/rock3.glb";
-import bullet from "./assets/models/bullet.glb";
-import bulletExplosion from "./assets/models/bulletExplosion.glb";
-import hexTankExplosion from "./assets/models/hexTankExplosion.glb";
+import body from "../assets/models/hexTankBody.glb";
+import jet from "../assets/models/hexTankJet.glb";
+import wall from "../assets/models/wall.glb";
+import pyramid from "../assets/models/pyramid.glb";
+import oasis from "../assets/models/oasis.glb";
+import building1 from "../assets/models/building1.glb";
+import building2 from "../assets/models/building2.glb";
+import rock1 from "../assets/models/rock1.glb";
+import rock2 from "../assets/models/rock2.glb";
+import rock3 from "../assets/models/rock3.glb";
+import bullet from "../assets/models/bullet.glb";
+import bulletExplosion from "../assets/models/bulletExplosion.glb";
+import hexTankExplosion from "../assets/models/hexTankExplosion.glb";
 
-import skyboxPx from "./assets/textures/skybox/skybox_px.jpg";
-import skyboxPy from "./assets/textures/skybox/skybox_py.jpg";
-import skyboxPz from "./assets/textures/skybox/skybox_pz.jpg";
-import skyboxNx from "./assets/textures/skybox/skybox_nx.jpg";
-import skyboxNy from "./assets/textures/skybox/skybox_ny.jpg";
-import skyboxNz from "./assets/textures/skybox/skybox_nz.jpg";
-import sand from "./assets/textures/sand.jpg";
+import skyboxPx from "../assets/textures/skybox/skybox_px.jpg";
+import skyboxPy from "../assets/textures/skybox/skybox_py.jpg";
+import skyboxPz from "../assets/textures/skybox/skybox_pz.jpg";
+import skyboxNx from "../assets/textures/skybox/skybox_nx.jpg";
+import skyboxNy from "../assets/textures/skybox/skybox_ny.jpg";
+import skyboxNz from "../assets/textures/skybox/skybox_nz.jpg";
+import sand from "../assets/textures/sand.jpg";
 
-import HexTank from "./entities/HexTank";
-import StaticCircleEntity from "./entities/StaticCircleEntity";
-import StaticRectangleEntity from "./entities/StaticRectangleEntity";
-import Bullet from "./entities/Bullet";
-import Input from "./input/Input";
-import Explosion from "./vfx/Explosion";
+import HexTank from "../entities/HexTank";
+import StaticCircleEntity from "../entities/StaticCircleEntity";
+import StaticRectangleEntity from "../entities/StaticRectangleEntity";
+import Bullet from "../entities/Bullet";
+import Input from "../input/Input";
+import Explosion from "../vfx/Explosion";
 
 DracoCompression.Configuration = {
     decoder: {
