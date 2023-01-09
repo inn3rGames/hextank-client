@@ -529,30 +529,60 @@ export default class World {
             const roomDataKey = document.createElement("div");
             roomDataKey.className = "room-data-key";
             roomDataKey.textContent = key;
+            roomDataKey.style.fontSize = this._computeFontSize(
+                key.length,
+                6,
+                2.8
+            );
             roomDataRow.appendChild(roomDataKey);
 
             const roomDataPlayers = document.createElement("div");
             roomDataPlayers.className = "room-data-players";
             roomDataPlayers.textContent = players;
+            roomDataPlayers.style.fontSize = this._computeFontSize(
+                players.length,
+                6,
+                2.8
+            );
             roomDataRow.appendChild(roomDataPlayers);
 
             const roomDataPing = document.createElement("div");
             roomDataPing.className = "room-data-ping";
             roomDataPing.textContent = ping;
+            roomDataPing.style.fontSize = this._computeFontSize(
+                ping.length,
+                6,
+                2.8
+            );
             roomDataRow.appendChild(roomDataPing);
         } else {
             const label = document.getElementById(id) as HTMLElement;
 
             const roomDataRow = label.children[0];
 
-            const roomDataKey = roomDataRow.children[1];
+            const roomDataKey = roomDataRow.children[1] as HTMLElement;
             roomDataKey.textContent = key;
+            roomDataKey.style.fontSize = this._computeFontSize(
+                key.length,
+                6,
+                2.8
+            );
 
-            const roomDataPlayers = roomDataRow.children[2];
+            const roomDataPlayers = roomDataRow.children[2] as HTMLElement;
             roomDataPlayers.textContent = players;
+            roomDataPlayers.style.fontSize = this._computeFontSize(
+                players.length,
+                6,
+                2.8
+            );
 
-            const roomDataPing = roomDataRow.children[3];
+            const roomDataPing = roomDataRow.children[3] as HTMLElement;
             roomDataPing.textContent = ping;
+            roomDataPing.style.fontSize = this._computeFontSize(
+                ping.length,
+                6,
+                2.8
+            );
         }
     }
 
