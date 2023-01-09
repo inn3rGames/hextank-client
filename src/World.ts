@@ -599,10 +599,6 @@ export default class World {
         });
 
         this._setRoomsInputState();
-
-        if (this._production === false) {
-            console.log(this._filledData);
-        }
     }
 
     private async _entryRoom() {
