@@ -483,47 +483,65 @@ export default class World {
         );
     }
 
-    private _createRoomInputRow(
+    private _createOrUpdateRoomDataRow(
         parent: HTMLElement,
         roomType: string,
         key: string,
         players: string,
         ping: string
     ) {
-        const label = document.createElement("label");
-        parent.appendChild(label);
+        const id = roomType.toLowerCase() + "-" + key.toLocaleLowerCase();
 
-        const roomDataRow = document.createElement("div");
-        roomDataRow.className = "room-data-row";
-        label.appendChild(roomDataRow);
+        if (document.getElementById(id) === null) {
+            const label = document.createElement("label");
+            label.id = id;
+            parent.appendChild(label);
 
-        const roomDataSelect = document.createElement("div");
-        roomDataSelect.className = "room-data-select";
-        roomDataRow.appendChild(roomDataSelect);
+            const roomDataRow = document.createElement("div");
+            roomDataRow.className = "room-data-row";
+            label.appendChild(roomDataRow);
 
-        const input = document.createElement("input");
-        input.type = "radio";
-        input.name = roomType;
-        input.value = key;
-        roomDataSelect.appendChild(input);
+            const roomDataSelect = document.createElement("div");
+            roomDataSelect.className = "room-data-select";
+            roomDataRow.appendChild(roomDataSelect);
 
-        const roomDataKey = document.createElement("div");
-        roomDataKey.className = "room-data-key";
-        roomDataKey.textContent = key;
-        roomDataRow.appendChild(roomDataKey);
+            const input = document.createElement("input");
+            input.type = "radio";
+            input.name = roomType;
+            input.value = key;
+            roomDataSelect.appendChild(input);
 
-        const roomDataPlayers = document.createElement("div");
-        roomDataPlayers.className = "room-data-players";
-        roomDataPlayers.textContent = players;
-        roomDataRow.appendChild(roomDataPlayers);
+            const roomDataKey = document.createElement("div");
+            roomDataKey.className = "room-data-key";
+            roomDataKey.textContent = key;
+            roomDataRow.appendChild(roomDataKey);
 
-        const roomDataPing = document.createElement("div");
-        roomDataPing.className = "room-data-ping";
-        roomDataPing.textContent = ping;
-        roomDataRow.appendChild(roomDataPing);
+            const roomDataPlayers = document.createElement("div");
+            roomDataPlayers.className = "room-data-players";
+            roomDataPlayers.textContent = players;
+            roomDataRow.appendChild(roomDataPlayers);
+
+            const roomDataPing = document.createElement("div");
+            roomDataPing.className = "room-data-ping";
+            roomDataPing.textContent = ping;
+            roomDataRow.appendChild(roomDataPing);
+        } else {
+            const label = document.getElementById(id) as HTMLElement;
+
+            const roomDataRow = label.children[0];
+
+            const roomDataKey = roomDataRow.children[1];
+            roomDataKey.textContent = key;
+
+            const roomDataPlayers = roomDataRow.children[2];
+            roomDataPlayers.textContent = players;
+
+            const roomDataPing = roomDataRow.children[3];
+            roomDataPing.textContent = ping;
+        }
     }
 
-    private _clearRoomsInputRows(parent: HTMLElement) {
+    private _clearRoomDataRows(parent: HTMLElement) {
         const childrenArray = Array.from(parent.children);
 
         childrenArray.forEach((element) => {
@@ -533,11 +551,13 @@ export default class World {
         });
     }
 
+    private _clearAllRoomDataRows() {
+        this._clearRoomDataRows(this._paidDataContainer);
+        this._clearRoomDataRows(this._freeDataContainer);
+    }
+
     private async _fetchData() {
         this._fetchedData = [];
-
-        this._clearRoomsInputRows(this._paidDataContainer);
-        this._clearRoomsInputRows(this._freeDataContainer);
 
         await this._fetchRoomsData(this._paidRooms, "PAID");
         await this._fetchRoomsData(this._freeRooms, "FREE");
@@ -545,7 +565,7 @@ export default class World {
 
         this._fetchedData.forEach((roomData) => {
             if (roomData.type === "PAID") {
-                this._createRoomInputRow(
+                this._createOrUpdateRoomDataRow(
                     this._paidDataContainer,
                     roomData.type,
                     roomData.key,
@@ -554,7 +574,7 @@ export default class World {
                 );
             }
             if (roomData.type === "FREE") {
-                this._createRoomInputRow(
+                this._createOrUpdateRoomDataRow(
                     this._freeDataContainer,
                     roomData.type,
                     roomData.key,
