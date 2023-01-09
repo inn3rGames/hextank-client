@@ -768,12 +768,12 @@ export default class World {
             }
         );
 
-        this._roomsCloseButtonContainer.addEventListener("mousedown", () => {
+        this._roomsCloseButtonContainer.addEventListener("mouseup", () => {
             this._isRoomActive = false;
             this._clearAllRoomsDataRows();
         });
 
-        this._roomsCloseButtonContainer.addEventListener("touchstart", () => {
+        this._roomsCloseButtonContainer.addEventListener("touchend", () => {
             this._isRoomActive = false;
             this._clearAllRoomsDataRows();
         });
