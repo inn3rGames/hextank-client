@@ -1,4 +1,4 @@
-import World from "./World";
+import World from "./world/World";
 import "./assets/styles/style.css";
 import pkg from "../package.json";
 

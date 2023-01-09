@@ -40,52 +40,52 @@ import HubApi, { SignedTransaction } from "@nimiq/hub-api";
 import { v1 as uuidv1 } from "uuid";
 import Plausible from "plausible-tracker";
 
-import body from "./assets/models/hexTankBody.glb";
-import jet from "./assets/models/hexTankJet.glb";
-import wall from "./assets/models/wall.glb";
-import pyramid from "./assets/models/pyramid.glb";
-import oasis from "./assets/models/oasis.glb";
-import building1 from "./assets/models/building1.glb";
-import building2 from "./assets/models/building2.glb";
-import rock1 from "./assets/models/rock1.glb";
-import rock2 from "./assets/models/rock2.glb";
-import rock3 from "./assets/models/rock3.glb";
-import bullet from "./assets/models/bullet.glb";
-import bulletExplosion from "./assets/models/bulletExplosion.glb";
-import hexTankExplosion from "./assets/models/hexTankExplosion.glb";
+import body from "../assets/models/hexTankBody.glb";
+import jet from "../assets/models/hexTankJet.glb";
+import wall from "../assets/models/wall.glb";
+import pyramid from "../assets/models/pyramid.glb";
+import oasis from "../assets/models/oasis.glb";
+import building1 from "../assets/models/building1.glb";
+import building2 from "../assets/models/building2.glb";
+import rock1 from "../assets/models/rock1.glb";
+import rock2 from "../assets/models/rock2.glb";
+import rock3 from "../assets/models/rock3.glb";
+import bullet from "../assets/models/bullet.glb";
+import bulletExplosion from "../assets/models/bulletExplosion.glb";
+import hexTankExplosion from "../assets/models/hexTankExplosion.glb";
 
-import skyboxPx from "./assets/textures/skybox/skybox_px.jpg";
-import skyboxPy from "./assets/textures/skybox/skybox_py.jpg";
-import skyboxPz from "./assets/textures/skybox/skybox_pz.jpg";
-import skyboxNx from "./assets/textures/skybox/skybox_nx.jpg";
-import skyboxNy from "./assets/textures/skybox/skybox_ny.jpg";
-import skyboxNz from "./assets/textures/skybox/skybox_nz.jpg";
-import sand from "./assets/textures/sand.jpg";
+import skyboxPx from "../assets/textures/skybox/skybox_px.jpg";
+import skyboxPy from "../assets/textures/skybox/skybox_py.jpg";
+import skyboxPz from "../assets/textures/skybox/skybox_pz.jpg";
+import skyboxNx from "../assets/textures/skybox/skybox_nx.jpg";
+import skyboxNy from "../assets/textures/skybox/skybox_ny.jpg";
+import skyboxNz from "../assets/textures/skybox/skybox_nz.jpg";
+import sand from "../assets/textures/sand.jpg";
 
-import HexTank from "./HexTank";
-import StaticCircleEntity from "./StaticCircleEntity";
-import StaticRectangleEntity from "./StaticRectangleEntity";
-import Bullet from "./Bullet";
+import HexTank from "../entities/HexTank";
+import StaticCircleEntity from "../entities/StaticCircleEntity";
+import StaticRectangleEntity from "../entities/StaticRectangleEntity";
+import Bullet from "../entities/Bullet";
+import Input from "../input/Input";
 import Explosion from "./Explosion";
-import Input from "./Input";
 
 DracoCompression.Configuration = {
     decoder: {
-        wasmUrl: "./draco/draco_wasm_wrapper_gltf.js",
-        wasmBinaryUrl: "./draco/draco_decoder_gltf.wasm",
-        fallbackUrl: "./draco/draco_decoder_gltf.js",
+        wasmUrl: "../draco/draco_wasm_wrapper_gltf.js",
+        wasmBinaryUrl: "../draco/draco_decoder_gltf.wasm",
+        fallbackUrl: "../draco/draco_decoder_gltf.js",
     },
 };
 
 KhronosTextureContainer2.URLConfig = {
-    jsDecoderModule: "./ktx2/babylon.ktx2Decoder.js",
-    wasmUASTCToASTC: "./ktx2/uastc_astc.wasm",
-    wasmUASTCToBC7: "./ktx2/uastc_bc7.wasm",
-    wasmUASTCToRGBA_UNORM: "./ktx2/uastc_rgba32_unorm.wasm",
-    wasmUASTCToRGBA_SRGB: "./ktx2/uastc_rgba32_srgb.wasm",
-    jsMSCTranscoder: "./ktx2/msc_basis_transcoder.js",
-    wasmMSCTranscoder: "./ktx2/msc_basis_transcoder.wasm",
-    wasmZSTDDecoder: "./ktx2/zstddec.wasm",
+    jsDecoderModule: "../ktx2/babylon.ktx2Decoder.js",
+    wasmUASTCToASTC: "../ktx2/uastc_astc.wasm",
+    wasmUASTCToBC7: "../ktx2/uastc_bc7.wasm",
+    wasmUASTCToRGBA_UNORM: "../ktx2/uastc_rgba32_unorm.wasm",
+    wasmUASTCToRGBA_SRGB: "../ktx2/uastc_rgba32_srgb.wasm",
+    jsMSCTranscoder: "../ktx2/msc_basis_transcoder.js",
+    wasmMSCTranscoder: "../ktx2/msc_basis_transcoder.wasm",
+    wasmZSTDDecoder: "../ktx2/zstddec.wasm",
     wasmUASTCToR8_UNORM: null,
     wasmUASTCToRG8_UNORM: null,
 };
