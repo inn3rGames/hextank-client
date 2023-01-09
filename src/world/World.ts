@@ -94,10 +94,13 @@ export default class World {
     private _modelsMeshes: Map<string, Array<Mesh>> = new Map();
 
     private _canvas: HTMLCanvasElement;
+
     private _inGameUI: HTMLDivElement;
+
     private _splashScreen: HTMLDivElement;
     private _splashScreenContent: HTMLDivElement;
     private _splashScreenTimeout: number = 3000;
+
     private _homeUI: HTMLDivElement;
     private _roomsButtonContainer: HTMLDivElement;
     private _roomsCloseButtonContainer: HTMLDivElement;
@@ -112,6 +115,7 @@ export default class World {
     private _devButtonContainer: HTMLDivElement;
     private _twitterButtonContainer: HTMLDivElement;
     private _discordButtonContainer: HTMLDivElement;
+
     private _hudContainer: HTMLDivElement;
     private _leaderboardContainer: HTMLDivElement;
     private _fullscreenButtonContainer: HTMLDivElement;
@@ -993,6 +997,7 @@ export default class World {
             this._isRoomActive = false;
             this._clearAllRoomsDataRows();
         }
+
         this._splashScreen.style.display = "none";
         this._inGameUI.style.display = "none";
         this._homeUI.style.display = "flex";
@@ -1006,6 +1011,7 @@ export default class World {
     private _showInGameUI() {
         this._isRoomActive = false;
         this._clearAllRoomsDataRows();
+
         this._splashScreen.style.display = "none";
         this._homeUI.style.display = "none";
         this._inGameUI.style.display = "flex";
@@ -1014,6 +1020,7 @@ export default class World {
     private _showRestartUI() {
         this._isRoomActive = false;
         this._clearAllRoomsDataRows();
+
         this._splashScreen.style.display = "none";
         this._inGameUI.style.display = "none";
         this._homeUI.style.display = "flex";
@@ -1026,6 +1033,7 @@ export default class World {
             item.deleteMeshes();
         });
         this._hexTanks.clear();
+
         this._bullets.forEach((item) => {
             item.deleteMeshes();
         });
@@ -1048,8 +1056,9 @@ export default class World {
 
     private async _sessionStart(signedTransaction?: SignedTransaction) {
         if (this._readyToConnect === true) {
-            this._showSplashScreen("Connecting. Allow up to 5 minutes...");
             this._readyToConnect = false;
+
+            this._showSplashScreen("Connecting. Allow up to 5 minutes...");
             this._clearItems();
             await this._connectWorld(signedTransaction);
         }
@@ -1985,6 +1994,7 @@ export default class World {
             });
         } catch (error) {
             this._showSplashScreen("Room error...");
+
             setTimeout(() => {
                 this._sessionEnd();
             }, this._splashScreenTimeout);
@@ -2027,8 +2037,10 @@ export default class World {
                 this._production
             );
             this._hexTanks.set(serverHexTank.id, clientHexTank);
+
             if (clientHexTank.id === this._room.sessionId) {
                 this._showInGameUI();
+
                 if (typeof this._fakeClientHexTank !== "undefined") {
                     this._fakeClientHexTank.deleteMeshes();
                     this._fakeClientHexTank = undefined;
@@ -2053,6 +2065,7 @@ export default class World {
                 ) {
                     this._hexTanks.get(serverHexTank.id)!.deleteMeshes();
                     this._hexTanks.delete(serverHexTank.id);
+
                     if (this._room.sessionId === serverHexTank.id) {
                         this._setRestartText(
                             serverHexTank.damage,
@@ -2074,6 +2087,7 @@ export default class World {
             this._input.setRoom(undefined, false);
             if (code >= 1000) {
                 this._showSplashScreen("Room disconnected unexpectedly...");
+
                 setTimeout(() => {
                     this._sessionEnd();
                 }, this._splashScreenTimeout);
@@ -2086,6 +2100,7 @@ export default class World {
 
         this._room.onError((code, message) => {
             this._showSplashScreen(`Room error ${code} ${message}`);
+
             setTimeout(() => {
                 this._sessionEnd();
             }, this._splashScreenTimeout);
@@ -2177,6 +2192,7 @@ export default class World {
             this._setHexTankExplosions();
         } else {
             this._showSplashScreen("Room error...");
+
             setTimeout(() => {
                 this._sessionEnd();
             }, this._splashScreenTimeout);
@@ -2218,6 +2234,7 @@ export default class World {
                 } else {
                     clientHexTank.update(serverHexTank);
                 }
+
                 currentHexTanks.push(clientHexTank);
             }
         });
@@ -2246,15 +2263,19 @@ export default class World {
         const hudNumberElement = this._hudContainer.children[0]
             .children[1] as HTMLDivElement;
         hudNumberElement.textContent = "";
+
         const hudNameElement = this._hudContainer.children[1]
             .children[1] as HTMLDivElement;
         hudNameElement.textContent = "";
+
         const hudDamageElement = this._hudContainer.children[2]
             .children[1] as HTMLDivElement;
         hudDamageElement.textContent = "";
+
         const hudKillsElement = this._hudContainer.children[3]
             .children[1] as HTMLDivElement;
         hudKillsElement.textContent = "";
+
         const hudHealthElement = this._hudContainer.children[4]
             .children[1] as HTMLDivElement;
         hudHealthElement.textContent = "";
@@ -2276,6 +2297,7 @@ export default class World {
                     leaderboardTitleDamage.textContent = "DAMAGE";
                 }
             }
+
             if (index >= 1) {
                 const leaderboardRow = value as HTMLDivElement;
                 leaderboardRow.style.display = "none";
@@ -2455,12 +2477,14 @@ export default class World {
         this._explosions.forEach((value, key) => {
             const explosion = value;
             explosion.update();
+
             if (explosion.type === "bulletExplosion") {
                 if (explosion.age >= 52.5) {
                     explosion.deleteMeshes();
                     this._explosions.delete(key);
                 }
             }
+
             if (explosion.type === "hexTankExplosion") {
                 if (explosion.age >= 105) {
                     explosion.deleteMeshes();
@@ -2473,6 +2497,7 @@ export default class World {
     private _updateRoomsDataRows() {
         if (this._isRoomActive === true) {
             const roomsCurrentTime = performance.now();
+
             if (roomsCurrentTime - this._roomsOldTime >= 1000) {
                 this._roomsOldTime = roomsCurrentTime;
                 this._fillRowsData();
