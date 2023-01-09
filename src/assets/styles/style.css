@@ -540,8 +540,8 @@ input[type=radio]:checked {
     display: flex;
 }
 
-.button-container-close,
-.button-close {
+.close-button-container,
+.close-button {
     position: absolute;
     text-align: center;
     font-size: 4vmin;
@@ -554,17 +554,17 @@ input[type=radio]:checked {
     background-color: #FF0000;
 }
 
-.button-container-close {
+.close-button-container {
     right: 0%;
     top: 0%;
     background-color: #000000;
 }
 
-.button-close {
+.close-button {
     transform: scale(95%);
 }
 
-.button-close:hover {
+.close-button:hover {
     background-color: #BB0000;
 }
 

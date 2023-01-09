@@ -100,6 +100,7 @@ export default class World {
     private _splashScreenTimeout: number = 3000;
     private _homeUI: HTMLDivElement;
     private _roomsButtonContainer: HTMLDivElement;
+    private _roomsCloseButtonContainer: HTMLDivElement;
     private _paidDataContainer: HTMLDivElement;
     private _freeDataContainer: HTMLDivElement;
     private _logo: HTMLDivElement;
@@ -214,6 +215,9 @@ export default class World {
         this._roomsButtonContainer = document.getElementById(
             "rooms-button-container"
         ) as HTMLDivElement;
+        this._roomsCloseButtonContainer = document.getElementById(
+            "rooms-close-button-container"
+        ) as HTMLDivElement;
         this._paidDataContainer = document.getElementById(
             "paid-data-container"
         ) as HTMLDivElement;
@@ -317,8 +321,6 @@ export default class World {
 
         this._input = new Input();
         this._setUICallbacks();
-
-        this._fetchData();
 
         this._plausible.enableAutoPageviews();
     }
@@ -760,6 +762,14 @@ export default class World {
             }
         );
 
+        this._roomsCloseButtonContainer.addEventListener("mousedown", () => {
+            this._isRoomActive = false;
+        });
+
+        this._roomsCloseButtonContainer.addEventListener("touchstart", () => {
+            this._isRoomActive = false;
+        });
+
         this._paidDataContainer.addEventListener("change", (event) => {
             const paidSelectors =
                 document.querySelectorAll(`input[name="PAID"]`);
@@ -943,6 +953,7 @@ export default class World {
             this._isRoomActive = true;
         } else {
             this._isRoomActive = false;
+            this._clearAllRoomsDataRows();
         }
         this._splashScreen.style.display = "none";
         this._inGameUI.style.display = "none";
@@ -956,6 +967,7 @@ export default class World {
 
     private _showInGameUI() {
         this._isRoomActive = false;
+        this._clearAllRoomsDataRows();
         this._splashScreen.style.display = "none";
         this._homeUI.style.display = "none";
         this._inGameUI.style.display = "flex";
@@ -963,6 +975,7 @@ export default class World {
 
     private _showRestartUI() {
         this._isRoomActive = false;
+        this._clearAllRoomsDataRows();
         this._splashScreen.style.display = "none";
         this._inGameUI.style.display = "none";
         this._homeUI.style.display = "flex";
