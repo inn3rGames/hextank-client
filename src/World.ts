@@ -153,13 +153,19 @@ export default class World {
     private _room!: Room;
     private _readyToConnect: boolean = true;
 
-    private _roomData!: { address: string; type: string };
-    private _developmentRooms: Map<string, { address: string; type: string }> =
-        new Map();
-    private _freeRooms: Map<string, { address: string; type: string }> =
-        new Map();
-    private _paidRooms: Map<string, { address: string; type: string }> =
-        new Map();
+    private _roomData!: { name: string; address: string; type: string };
+    private _developmentRooms: Map<
+        string,
+        { name: string; address: string; type: string }
+    > = new Map();
+    private _freeRooms: Map<
+        string,
+        { name: string; address: string; type: string }
+    > = new Map();
+    private _paidRooms: Map<
+        string,
+        { name: string; address: string; type: string }
+    > = new Map();
     private _fetchedData: Array<{
         key: string;
         address: string;
@@ -327,16 +333,19 @@ export default class World {
 
     private _setServerRooms() {
         this._freeRooms.set("GERMANY", {
+            name: "GERMANY",
             address: "wss://wrbnqh.colyseus.de",
             type: "FREE",
         });
         this._freeRooms.set("USA", {
+            name: "USA",
             address: "wss://aq4lds.us-east-vin.colyseus.net",
             type: "FREE",
         });
 
         if (this._production === false) {
             this._developmentRooms.set("DEVELOPMENT", {
+                name: "DEVELOPMENT",
                 address: "ws://localhost:2567",
                 type: "DEV",
             });
@@ -354,18 +363,21 @@ export default class World {
     private _setRoomData(roomKey: string, type: string) {
         if (type === "PAID") {
             this._roomData = this._paidRooms.get(roomKey) as {
+                name: string;
                 address: string;
                 type: string;
             };
         }
         if (type === "FREE") {
             this._roomData = this._freeRooms.get(roomKey) as {
+                name: string;
                 address: string;
                 type: string;
             };
         }
         if (type === "DEV") {
             this._roomData = this._developmentRooms.get(roomKey) as {
+                name: string;
                 address: string;
                 type: string;
             };
@@ -2128,6 +2140,8 @@ export default class World {
 
         const hudDamageTitleElement = this._hudContainer.children[2]
             .children[0] as HTMLDivElement;
+        const hudRoomElement = this._hudContainer.children[5]
+            .children[1] as HTMLDivElement;
 
         if (typeof this._roomData !== "undefined") {
             if (this._roomData.type === "PAID") {
@@ -2135,8 +2149,10 @@ export default class World {
             } else {
                 hudDamageTitleElement.textContent = "DAMAGE";
             }
+            hudRoomElement.textContent = this._roomData.name;
         } else {
             hudDamageTitleElement.textContent = "DAMAGE";
+            hudRoomElement.textContent = "AUTO";
         }
 
         const hudNumberElement = this._hudContainer.children[0]
@@ -2236,6 +2252,16 @@ export default class World {
                 );
                 hudHealthElement.style.textShadow = this._computeFontStroke(
                     hudHealthElement.style.fontSize
+                );
+
+                const hudRoomValue = hudRoomElement.textContent as string;
+                hudRoomElement.style.fontSize = this._computeFontSize(
+                    hudRoomValue.length,
+                    10,
+                    3.6
+                );
+                hudRoomElement.style.textShadow = this._computeFontStroke(
+                    hudRoomElement.style.fontSize
                 );
 
                 if (index + 1 <= 3) {
@@ -2376,12 +2402,12 @@ export default class World {
                 this._hudContainer.style.right =
                     "calc(100% - 40vmin - 0.5vmin - 10vmin)";
                 this._hudContainer.style.bottom =
-                    "calc(100% - 25vmin - 0.5vmin)";
+                    "calc(100% - 30vmin - 0.5vmin)";
 
                 this._fullscreenButtonContainer.style.right =
                     "calc(100% - 4.5vmin - 0.5vmin - 10vmin)";
                 this._fullscreenButtonContainer.style.bottom =
-                    "calc(100% - 25vmin - 4.5vmin - 0.75vmin)";
+                    "calc(100% - 30vmin - 4.5vmin - 0.75vmin)";
 
                 this._leaderboardContainer.style.left =
                     "calc(100% - 50vmin - 0.5vmin - 10vmin)";
@@ -2419,18 +2445,18 @@ export default class World {
                     this._roomsButtonContainer.style.bottom =
                         "calc(100% - 6vmin - 10vmin)";
                     this._hudContainer.style.bottom =
-                        "calc(100% - 25vmin - 0.5vmin - 10vmin)";
+                        "calc(100% - 30vmin - 0.5vmin - 10vmin)";
                     this._fullscreenButtonContainer.style.bottom =
-                        "calc(100% - 25vmin - 4.5vmin - 0.75vmin - 10vmin)";
+                        "calc(100% - 30vmin - 4.5vmin - 0.75vmin - 10vmin)";
                     this._leaderboardContainer.style.bottom =
                         "calc(100% - 40vmin - 0.5vmin - 10vmin)";
                 } else {
                     this._roomsButtonContainer.style.bottom =
                         "calc(100% - 6vmin - 5vmin)";
                     this._hudContainer.style.bottom =
-                        "calc(100% - 25vmin - 0.5vmin)";
+                        "calc(100% - 30vmin - 0.5vmin)";
                     this._fullscreenButtonContainer.style.bottom =
-                        "calc(100% - 25vmin - 4.5vmin - 0.75vmin)";
+                        "calc(100% - 30vmin - 4.5vmin - 0.75vmin)";
                     this._leaderboardContainer.style.bottom =
                         "calc(100% - 40vmin - 0.5vmin)";
                 }
