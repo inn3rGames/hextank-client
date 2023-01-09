@@ -788,18 +788,19 @@ a {
 
 #fullscreen-button-container {
     position: fixed;
-    width: 4.5vmin;
-    height: 4.5vmin;
-    right: calc(100% - 4.5vmin - 0.5vmin);
-    bottom: calc(100% - 30vmin - 4.5vmin - 0.75vmin);
+    width: 6.9vmin;
+    height: 6.9vmin;
+    left: calc(100% - 6.9vmin - 0.5vmin);
+    bottom: calc(100% - 6.9vmin - 0.5vmin);
+    margin: -0.25vmin;
     opacity: 50%;
 }
 
 #fullscreen-button {
-    width: 4.5vmin;
-    height: 4.5vmin;
+    width: 6.9vmin;
+    height: 6.9vmin;
     background-image: url("../../assets/images/fullscreen.png");
-    background-size: 3.6vmin 3.6vmin;
+    background-size: 5.52vmin 5.52vmin;
     background-repeat: no-repeat;
     background-position: center center;
 }
@@ -811,7 +812,7 @@ a {
     flex-direction: column;
     width: 50vmin;
     height: 40vmin;
-    left: calc(100% - 50vmin - 0.5vmin);
+    left: calc(100% - 50vmin - 6.9vmin - 1vmin);
     bottom: calc(100% - 40vmin - 0.5vmin);
 }
 

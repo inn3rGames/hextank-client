@@ -112,8 +112,8 @@ export default class World {
     private _twitterButtonContainer: HTMLDivElement;
     private _discordButtonContainer: HTMLDivElement;
     private _hudContainer: HTMLDivElement;
-    private _fullscreenButtonContainer: HTMLDivElement;
     private _leaderboardContainer: HTMLDivElement;
+    private _fullscreenButtonContainer: HTMLDivElement;
 
     private _engine: Engine;
 
@@ -250,11 +250,11 @@ export default class World {
         this._hudContainer = document.getElementById(
             "hud-container"
         ) as HTMLDivElement;
-        this._fullscreenButtonContainer = document.getElementById(
-            "fullscreen-button-container"
-        ) as HTMLDivElement;
         this._leaderboardContainer = document.getElementById(
             "leaderboard-container"
+        ) as HTMLDivElement;
+        this._fullscreenButtonContainer = document.getElementById(
+            "fullscreen-button-container"
         ) as HTMLDivElement;
 
         const log = console.log;
@@ -2404,15 +2404,15 @@ export default class World {
                 this._hudContainer.style.bottom =
                     "calc(100% - 30vmin - 0.5vmin)";
 
-                this._fullscreenButtonContainer.style.right =
-                    "calc(100% - 4.5vmin - 0.5vmin - 10vmin)";
-                this._fullscreenButtonContainer.style.bottom =
-                    "calc(100% - 30vmin - 4.5vmin - 0.75vmin)";
-
                 this._leaderboardContainer.style.left =
-                    "calc(100% - 50vmin - 0.5vmin - 10vmin)";
+                    "calc(100% - 50vmin - 6.9vmin - 1vmin - 10vmin)";
                 this._leaderboardContainer.style.bottom =
                     "calc(100% - 40vmin - 0.5vmin)";
+
+                this._fullscreenButtonContainer.style.left =
+                    "calc(100% - 6.9vmin - 0.5vmin - 10vmin)";
+                this._fullscreenButtonContainer.style.bottom =
+                    "calc(100% - 6.9vmin - 0.5vmin - 0.75vmin)";
 
                 if (typeof this._input.buttonUp !== "undefined") {
                     this._input.buttonUp.style.left = "20vmin";
@@ -2436,29 +2436,29 @@ export default class World {
                     "calc(100% - 18.75vmin - 5vmin)";
                 this._hudContainer.style.right =
                     "calc(100% - 40vmin - 0.5vmin)";
-                this._fullscreenButtonContainer.style.right =
-                    "calc(100% - 4.5vmin - 0.5vmin)";
                 this._leaderboardContainer.style.left =
-                    "calc(100% - 50vmin - 0.5vmin)";
+                    "calc(100% - 50vmin - 6.9vmin - 1vmin)";
+                this._fullscreenButtonContainer.style.left =
+                    "calc(100% - 6.9vmin - 0.5vmin)";
 
                 if (screenfull.isFullscreen === true) {
                     this._roomsButtonContainer.style.bottom =
                         "calc(100% - 6vmin - 10vmin)";
                     this._hudContainer.style.bottom =
                         "calc(100% - 30vmin - 0.5vmin - 10vmin)";
-                    this._fullscreenButtonContainer.style.bottom =
-                        "calc(100% - 30vmin - 4.5vmin - 0.75vmin - 10vmin)";
                     this._leaderboardContainer.style.bottom =
                         "calc(100% - 40vmin - 0.5vmin - 10vmin)";
+                    this._fullscreenButtonContainer.style.bottom =
+                        "calc(100% - 6.9vmin - 0.5vmin - 10vmin)";
                 } else {
                     this._roomsButtonContainer.style.bottom =
                         "calc(100% - 6vmin - 5vmin)";
                     this._hudContainer.style.bottom =
                         "calc(100% - 30vmin - 0.5vmin)";
-                    this._fullscreenButtonContainer.style.bottom =
-                        "calc(100% - 30vmin - 4.5vmin - 0.75vmin)";
                     this._leaderboardContainer.style.bottom =
                         "calc(100% - 40vmin - 0.5vmin)";
+                    this._fullscreenButtonContainer.style.bottom =
+                        "calc(100% - 6.9vmin - 0.5vmin - 0.75vmin)";
                 }
 
                 if (typeof this._input.buttonUp !== "undefined") {
