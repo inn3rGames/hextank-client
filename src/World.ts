@@ -173,6 +173,8 @@ export default class World {
         players: string;
         ping: string;
     }> = [];
+    private _isRoomActive: boolean = false;
+    private _roomsOldTime = performance.now();
 
     private _hubApi!: HubApi;
 
@@ -551,7 +553,7 @@ export default class World {
         });
     }
 
-    private _clearAllRoomDataRows() {
+    private _clearAllRoomsDataRows() {
         this._clearRoomDataRows(this._paidDataContainer);
         this._clearRoomDataRows(this._freeDataContainer);
     }
@@ -731,11 +733,14 @@ export default class World {
             async (event) => {
                 event.preventDefault();
 
+                this._isRoomActive = true;
+                window.location.hash = "#rooms";
+
                 this._showSplashScreen("Fetching rooms data...");
                 await this._fetchData();
                 this._setSplashScreenMessage("Rooms data fetched...");
+
                 this._showHomeUI();
-                window.location.hash = "rooms";
             }
         );
 
@@ -744,11 +749,14 @@ export default class World {
             async (event) => {
                 event.preventDefault();
 
+                this._isRoomActive = true;
+                window.location.hash = "#rooms";
+
                 this._showSplashScreen("Fetching rooms data...");
                 await this._fetchData();
                 this._setSplashScreenMessage("Rooms data fetched...");
+
                 this._showHomeUI();
-                window.location.hash = "rooms";
             }
         );
 
@@ -759,6 +767,7 @@ export default class World {
                 const radioButton = input as HTMLInputElement;
                 const parent = radioButton.parentElement
                     ?.parentElement as HTMLElement;
+
                 if (radioButton.checked === true) {
                     parent.style.backgroundColor = "#B0B000";
                     localStorage.setItem("PAID", radioButton.value);
@@ -779,6 +788,7 @@ export default class World {
                 const radioButton = input as HTMLInputElement;
                 const parent = radioButton.parentElement
                     ?.parentElement as HTMLElement;
+
                 if (radioButton.checked === true) {
                     parent.style.backgroundColor = "#B0B000";
                     localStorage.setItem("FREE", radioButton.value);
@@ -929,6 +939,11 @@ export default class World {
     }
 
     private _showHomeUI() {
+        if (window.location.hash === "#rooms") {
+            this._isRoomActive = true;
+        } else {
+            this._isRoomActive = false;
+        }
         this._splashScreen.style.display = "none";
         this._inGameUI.style.display = "none";
         this._homeUI.style.display = "flex";
@@ -936,16 +951,18 @@ export default class World {
         this._restartTextContainer.style.display = "none";
         const child = this._restartTextContainer.children[0] as HTMLDivElement;
         child.textContent = "";
-        this._setSplashScreenMessage("Game ready");
+        this._setSplashScreenMessage("Ready to play");
     }
 
     private _showInGameUI() {
+        this._isRoomActive = false;
         this._splashScreen.style.display = "none";
         this._homeUI.style.display = "none";
         this._inGameUI.style.display = "flex";
     }
 
     private _showRestartUI() {
+        this._isRoomActive = false;
         this._splashScreen.style.display = "none";
         this._inGameUI.style.display = "none";
         this._homeUI.style.display = "flex";
@@ -2402,6 +2419,16 @@ export default class World {
         });
     }
 
+    private _updateRoomsDataRows() {
+        if (this._isRoomActive === true) {
+            const roomsCurrentTime = performance.now();
+            if (roomsCurrentTime - this._roomsOldTime >= 1000) {
+                this._roomsOldTime = roomsCurrentTime;
+                this._fetchData();
+            }
+        }
+    }
+
     private _fixedUpdate() {
         this._updateHexTanks();
         this._updateBullets();
@@ -2409,6 +2436,7 @@ export default class World {
         this._updateExplosions();
         this._scene.render();
         this._input.update();
+        this._updateRoomsDataRows();
     }
 
     private _resizeInGameUI(width: number, height: number) {
