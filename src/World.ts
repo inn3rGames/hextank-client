@@ -471,13 +471,24 @@ export default class World {
                         fetchedPlayers = `${data[0].clients}/${data[0].maxClients}`;
                     }
 
-                    this._filledData.push({
+                    const fetchedData = {
                         key: roomData[0],
                         address: roomData[1].address,
                         type: roomData[1].type,
                         players: fetchedPlayers,
                         ping: Math.floor(currentPing).toString(),
+                    };
+
+                    let itemFound = false;
+                    this._filledData.forEach((item) => {
+                        if (item.address === fetchedData.address) {
+                            itemFound = true;
+                        }
                     });
+
+                    if (itemFound === false) {
+                        this._filledData.push(fetchedData);
+                    }
                 } catch (error) {
                     if (this._production === false) {
                         console.log(error);
@@ -565,7 +576,6 @@ export default class World {
 
         await this._fillRowData(this._paidRooms, "PAID");
         await this._fillRowData(this._freeRooms, "FREE");
-        await this._fillRowData(this._developmentRooms, "DEV");
 
         this._filledData.forEach((roomData) => {
             if (roomData.type === "PAID") {
