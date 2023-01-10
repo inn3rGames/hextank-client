@@ -340,29 +340,29 @@ export default class World {
     }
 
     private _setServerRooms() {
-        this._paidRooms.set("PAID-EU-WARSAW1", {
-            name: "PAID-EU-WARSAW1",
+        this._paidRooms.set("P-EU-PL1", {
+            name: "P-EU-PL1",
             address: "wss://warsaw1.hextankroom.io",
             type: "PAID",
         });
-        this._paidRooms.set("PAID-NA-USA1", {
-            name: "PAID-NA-USA1",
+        this._paidRooms.set("P-NA-US1", {
+            name: "P-NA-US1",
             address: "wss://usa1.hextankroom.io",
             type: "PAID",
         });
-        this._paidRooms.set("PAID-AS-KOREA1", {
-            name: "PAID-AS-KOREA1",
+        this._paidRooms.set("P-AS-KR1", {
+            name: "P-AS-KR1",
             address: "wss://korea1.hextankroom.io",
             type: "PAID",
         });
 
-        this._freeRooms.set("FREE-EU-GERMANY1", {
-            name: "FREE-EU-GERMANY1",
+        this._freeRooms.set("F-EU-DE1", {
+            name: "F-EU-DE1",
             address: "wss://wrbnqh.colyseus.de",
             type: "FREE",
         });
-        this._freeRooms.set("FREE-NA-USA1", {
-            name: "FREE-NA-USA1",
+        this._freeRooms.set("F-NA-US1", {
+            name: "F-NA-US1",
             address: "wss://aq4lds.us-east-vin.colyseus.net",
             type: "FREE",
         });
