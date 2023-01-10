@@ -340,13 +340,13 @@ export default class World {
     }
 
     private _setServerRooms() {
-        this._freeRooms.set("GERMANY", {
-            name: "GERMANY",
+        this._freeRooms.set("EU-GERMANY1", {
+            name: "EU-GERMANY1",
             address: "wss://wrbnqh.colyseus.de",
             type: "FREE",
         });
-        this._freeRooms.set("USA", {
-            name: "USA",
+        this._freeRooms.set("NA-USA1", {
+            name: "NA-USA1",
             address: "wss://aq4lds.us-east-vin.colyseus.net",
             type: "FREE",
         });
