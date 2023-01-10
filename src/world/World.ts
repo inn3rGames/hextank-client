@@ -350,6 +350,11 @@ export default class World {
             address: "wss://usa1.hextankroom.io",
             type: "PAID",
         });
+        this._paidRooms.set("PAID-AS-KOREA1", {
+            name: "PAID-AS-KOREA1",
+            address: "wss://korea1.hextankroom.io",
+            type: "PAID",
+        });
 
         this._freeRooms.set("FREE-EU-GERMANY1", {
             name: "FREE-EU-GERMANY1",
