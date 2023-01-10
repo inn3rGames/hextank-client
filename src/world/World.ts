@@ -646,6 +646,7 @@ export default class World {
             this._setSplashScreenMessage(
                 "No room found based on your criteria..."
             );
+
             setTimeout(() => {
                 this._showHomeUI();
             }, this._splashScreenTimeout);
@@ -667,7 +668,13 @@ export default class World {
                 this._plausible.trackEvent("PAYMENT");
                 await this._sessionStart(signedTransaction);
             } catch (error) {
-                console.log(error);
+                setTimeout(() => {
+                    this._showHomeUI();
+                }, this._splashScreenTimeout);
+
+                if (this._production === false) {
+                    console.log(error);
+                }
             }
         } else {
             this._plausible.trackEvent("FREE_PLAY");
