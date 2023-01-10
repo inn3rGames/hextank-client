@@ -879,10 +879,10 @@ export default class World {
         this._payButtonContainer.addEventListener("mouseup", async (event) => {
             event.preventDefault();
 
-            this._showSplashScreen("Finding nearest paid room...");
+            this._showSplashScreen("Finding paid room...");
             await this._fetchNearestRoom(this._paidRooms, "PAID");
             this._setSplashScreenMessage(
-                "Finding nearest paid room finished..."
+                "Finding paid room finished..."
             );
             await this._entryRoom();
         });
@@ -890,10 +890,10 @@ export default class World {
         this._payButtonContainer.addEventListener("touchend", async (event) => {
             event.preventDefault();
 
-            this._showSplashScreen("Finding nearest paid room...");
+            this._showSplashScreen("Finding paid room...");
             await this._fetchNearestRoom(this._paidRooms, "PAID");
             this._setSplashScreenMessage(
-                "Finding nearest paid room finished..."
+                "Finding paid room finished..."
             );
             await this._entryRoom();
         });
@@ -901,10 +901,10 @@ export default class World {
         this._freeButtonContainer.addEventListener("mouseup", async (event) => {
             event.preventDefault();
 
-            this._showSplashScreen("Finding nearest free room...");
+            this._showSplashScreen("Finding free room...");
             await this._fetchNearestRoom(this._freeRooms, "FREE");
             this._setSplashScreenMessage(
-                "Finding nearest free room finished..."
+                "Finding free room finished..."
             );
             await this._entryRoom();
         });
@@ -914,10 +914,10 @@ export default class World {
             async (event) => {
                 event.preventDefault();
 
-                this._showSplashScreen("Finding nearest free room...");
+                this._showSplashScreen("Finding free room...");
                 await this._fetchNearestRoom(this._freeRooms, "FREE");
                 this._setSplashScreenMessage(
-                    "Finding nearest free room finished..."
+                    "Finding free room finished..."
                 );
                 await this._entryRoom();
             }
@@ -930,10 +930,10 @@ export default class World {
         this._devButtonContainer.addEventListener("mouseup", async (event) => {
             event.preventDefault();
 
-            this._showSplashScreen("Finding nearest dev room...");
+            this._showSplashScreen("Finding dev room...");
             await this._fetchNearestRoom(this._developmentRooms, "DEV");
             this._setSplashScreenMessage(
-                "Finding nearest dev room finished..."
+                "Finding dev room finished..."
             );
             await this._entryRoom();
         });
@@ -941,10 +941,10 @@ export default class World {
         this._devButtonContainer.addEventListener("touchend", async (event) => {
             event.preventDefault();
 
-            this._showSplashScreen("Finding nearest dev room...");
+            this._showSplashScreen("Finding dev room...");
             await this._fetchNearestRoom(this._developmentRooms, "DEV");
             this._setSplashScreenMessage(
-                "Finding nearest dev room finished..."
+                "Finding dev room finished..."
             );
             await this._entryRoom();
         });
