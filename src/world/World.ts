@@ -2373,7 +2373,7 @@ export default class World {
                 const hudRoomValue = hudRoomElement.textContent as string;
                 hudRoomElement.style.fontSize = this._computeFontSize(
                     hudRoomValue.length,
-                    10,
+                    8,
                     3.6
                 );
                 hudRoomElement.style.textShadow = this._computeFontStroke(
