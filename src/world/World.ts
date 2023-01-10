@@ -340,6 +340,12 @@ export default class World {
     }
 
     private _setServerRooms() {
+        this._paidRooms.set("EU-WARSAW1", {
+            name: "EU-WARSAW1",
+            address: "wss://warsaw1.hextankserver.io",
+            type: "PAID",
+        });
+
         this._freeRooms.set("EU-GERMANY1", {
             name: "EU-GERMANY1",
             address: "wss://wrbnqh.colyseus.de",
