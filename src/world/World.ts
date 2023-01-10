@@ -345,6 +345,11 @@ export default class World {
             address: "wss://warsaw1.hextankroom.io",
             type: "PAID",
         });
+        this._paidRooms.set("NA-USA1", {
+            name: "NA-USA1",
+            address: "wss://usa1.hextankroom.io",
+            type: "PAID",
+        });
 
         this._freeRooms.set("EU-GERMANY1", {
             name: "EU-GERMANY1",
