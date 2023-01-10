@@ -342,17 +342,17 @@ export default class World {
     private _setServerRooms() {
         this._paidRooms.set("P-EU-PL1", {
             name: "P-EU-PL1",
-            address: "wss://warsaw1.hextankroom.io",
+            address: "wss://ppl1.hextankroom.io",
             type: "PAID",
         });
         this._paidRooms.set("P-NA-US1", {
             name: "P-NA-US1",
-            address: "wss://usa1.hextankroom.io",
+            address: "wss://pus1.hextankroom.io",
             type: "PAID",
         });
         this._paidRooms.set("P-AS-KR1", {
             name: "P-AS-KR1",
-            address: "wss://korea1.hextankroom.io",
+            address: "wss://pkr1.hextankroom.io",
             type: "PAID",
         });
 
