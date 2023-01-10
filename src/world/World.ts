@@ -340,24 +340,24 @@ export default class World {
     }
 
     private _setServerRooms() {
-        this._paidRooms.set("EU-WARSAW1", {
-            name: "EU-WARSAW1",
+        this._paidRooms.set("PAID-EU-WARSAW1", {
+            name: "PAID-EU-WARSAW1",
             address: "wss://warsaw1.hextankroom.io",
             type: "PAID",
         });
-        this._paidRooms.set("NA-USA1", {
-            name: "NA-USA1",
+        this._paidRooms.set("PAID-NA-USA1", {
+            name: "PAID-NA-USA1",
             address: "wss://usa1.hextankroom.io",
             type: "PAID",
         });
 
-        this._freeRooms.set("EU-GERMANY1", {
-            name: "EU-GERMANY1",
+        this._freeRooms.set("FREE-EU-GERMANY1", {
+            name: "FREE-EU-GERMANY1",
             address: "wss://wrbnqh.colyseus.de",
             type: "FREE",
         });
-        this._freeRooms.set("NA-USA1", {
-            name: "NA-USA1",
+        this._freeRooms.set("FREE-NA-USA1", {
+            name: "FREE-NA-USA1",
             address: "wss://aq4lds.us-east-vin.colyseus.net",
             type: "FREE",
         });
@@ -881,9 +881,7 @@ export default class World {
 
             this._showSplashScreen("Finding paid room...");
             await this._fetchNearestRoom(this._paidRooms, "PAID");
-            this._setSplashScreenMessage(
-                "Finding paid room finished..."
-            );
+            this._setSplashScreenMessage("Finding paid room finished...");
             await this._entryRoom();
         });
 
@@ -892,9 +890,7 @@ export default class World {
 
             this._showSplashScreen("Finding paid room...");
             await this._fetchNearestRoom(this._paidRooms, "PAID");
-            this._setSplashScreenMessage(
-                "Finding paid room finished..."
-            );
+            this._setSplashScreenMessage("Finding paid room finished...");
             await this._entryRoom();
         });
 
@@ -903,9 +899,7 @@ export default class World {
 
             this._showSplashScreen("Finding free room...");
             await this._fetchNearestRoom(this._freeRooms, "FREE");
-            this._setSplashScreenMessage(
-                "Finding free room finished..."
-            );
+            this._setSplashScreenMessage("Finding free room finished...");
             await this._entryRoom();
         });
 
@@ -916,9 +910,7 @@ export default class World {
 
                 this._showSplashScreen("Finding free room...");
                 await this._fetchNearestRoom(this._freeRooms, "FREE");
-                this._setSplashScreenMessage(
-                    "Finding free room finished..."
-                );
+                this._setSplashScreenMessage("Finding free room finished...");
                 await this._entryRoom();
             }
         );
@@ -932,9 +924,7 @@ export default class World {
 
             this._showSplashScreen("Finding dev room...");
             await this._fetchNearestRoom(this._developmentRooms, "DEV");
-            this._setSplashScreenMessage(
-                "Finding dev room finished..."
-            );
+            this._setSplashScreenMessage("Finding dev room finished...");
             await this._entryRoom();
         });
 
@@ -943,9 +933,7 @@ export default class World {
 
             this._showSplashScreen("Finding dev room...");
             await this._fetchNearestRoom(this._developmentRooms, "DEV");
-            this._setSplashScreenMessage(
-                "Finding dev room finished..."
-            );
+            this._setSplashScreenMessage("Finding dev room finished...");
             await this._entryRoom();
         });
 
