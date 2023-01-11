@@ -378,10 +378,7 @@ export default class World {
 
     private _setNimiqNetwork() {
         if (this._production === true) {
-            const log = console.log;
-            console.log = () => {};
             this._hubApi = new HubApi("https://hub.nimiq.com");
-            console.log = log;
         } else {
             this._hubApi = new HubApi("https://hub.nimiq-testnet.com");
         }
