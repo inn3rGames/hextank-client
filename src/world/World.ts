@@ -333,6 +333,8 @@ export default class World {
         if (window.location.protocol === "https:") {
             console.log("%c Production mode.", "background-color: #00FF00");
             this._production = true;
+
+            console.log = () => {};
         } else {
             console.log("%c Development mode.", "background-color: #FFFF00");
             this._production = false;
