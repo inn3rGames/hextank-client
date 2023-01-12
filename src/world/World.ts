@@ -369,7 +369,7 @@ export default class World {
         });
         this._freeRooms.set("F-NA-US1", {
             name: "F-NA-US1",
-            address: "wss://aq4lds.us-east-vin.colyseus.net",
+            address: "wss://g0ffez.colyseus.dev",
             type: "FREE",
         });
 
