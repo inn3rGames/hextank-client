@@ -372,6 +372,30 @@ input[type=radio]:checked {
     background-color: #0AC70A;
 }
 
+#io-button-container {
+    position: absolute;
+    font-size: 3.5vmin;
+    width: 18vmin;
+    height: 4vmin;
+    line-height: 4vmin;
+    left: calc(100% - 18vmin - 1.5vmin);
+    top: calc(50% - 2vmin + 6.5vmin + 4vmin + 0.5vmin);
+    background-color: #FFFFFF;
+}
+
+#io-button {
+    font-size: 3.5vmin;
+    width: 18vmin;
+    height: 4vmin;
+    line-height: 4vmin;
+    color: #FFFFFF;
+    background-color: #29B5E3;
+}
+
+#io-button:hover{
+    background-color: #228bae;
+}
+
 #restart-text-container {
     position: fixed;
     display: none;
