@@ -303,9 +303,11 @@ export default class World {
             true,
             false
         );
-        this._optimizer.onFailureObservable.add(() => {
+        this._optimizer.onFailureObservable.add(async () => {
             this._shadowGenerator.dispose();
             this._showHomeUI();
+
+            await this._autoJoin();
         });
         this._optimizer.onNewOptimizationAppliedObservable.add((event) => {
             if (event.priority >= 0) {
@@ -315,8 +317,10 @@ export default class World {
                 `Optimizing scene step ${event.priority}`
             );
         });
-        this._optimizer.onSuccessObservable.add(() => {
+        this._optimizer.onSuccessObservable.add(async () => {
             this._showHomeUI();
+
+            await this._autoJoin();
         });
 
         this._setDebugMode();
@@ -327,6 +331,18 @@ export default class World {
         this._setUICallbacks();
 
         this._plausible.enableAutoPageviews();
+    }
+
+    private async _autoJoin() {
+        const url = new URL(window.location.href);
+        const utmSource = url.searchParams.get("utm_source");
+
+        if (utmSource === "popcash") {
+            this._showSplashScreen("Finding free room...");
+            await this._fetchNearestRoom(this._freeRooms, "FREE");
+            this._setSplashScreenMessage("Finding free room finished...");
+            await this._entryRoom();
+        }
     }
 
     private _setDebugMode() {
