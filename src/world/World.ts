@@ -337,11 +337,13 @@ export default class World {
         const url = new URL(window.location.href);
         const utmSource = url.searchParams.get("utm_source");
 
-        if (utmSource === "popcash") {
+        if (utmSource === "popcash" || utmSource === "propellerads") {
             this._showSplashScreen("Finding free room...");
             await this._fetchNearestRoom(this._freeRooms, "FREE");
             this._setSplashScreenMessage("Finding free room finished...");
             await this._entryRoom();
+
+            window.history.pushState("", "", window.origin);
         }
     }
 
