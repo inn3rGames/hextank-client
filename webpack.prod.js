@@ -14,6 +14,7 @@ module.exports = merge(common, {
                 { from: "./public/draco", to: "./draco" },
                 { from: "./public/ktx2", to: "./ktx2" },
                 { from: "./public/smallLogo.png", to: "./" },
+                { from: "./public/ads.txt", to: "./" },
             ],
         }),
     ],
