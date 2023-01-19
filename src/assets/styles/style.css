@@ -494,10 +494,6 @@ input[type=radio]:checked {
     bottom: calc(42% - 8vmin - 1vmin);
 }
 
-#dev-button-container {
-    bottom: calc(42% - 16vmin - 2vmin);
-}
-
 #twitter-button-container {
     width: 12vmin;
     height: 6vmin;

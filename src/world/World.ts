@@ -114,7 +114,6 @@ export default class World {
     private _payButtonContainer: HTMLDivElement;
     private _earnButtonContainer: HTMLDivElement;
     private _freeButtonContainer: HTMLDivElement;
-    private _devButtonContainer: HTMLDivElement;
     private _twitterButtonContainer: HTMLDivElement;
     private _discordButtonContainer: HTMLDivElement;
 
@@ -257,9 +256,6 @@ export default class World {
         this._freeButtonContainer = document.getElementById(
             "free-button-container"
         ) as HTMLDivElement;
-        this._devButtonContainer = document.getElementById(
-            "dev-button-container"
-        ) as HTMLDivElement;
         this._twitterButtonContainer = document.getElementById(
             "twitter-button-container"
         ) as HTMLDivElement;
@@ -375,11 +371,11 @@ export default class World {
             type: "PAID",
         });
 
-        this._earnRooms.set("LOCALHOST", {
+        /* this._earnRooms.set("LOCALHOST", {
             name: "LOCALHOST",
             address: "ws://localhost:2567",
             type: "EARN",
-        });
+        }); */
 
         this._freeRooms.set("F-EU-DE1", {
             name: "F-EU-DE1",
@@ -393,20 +389,28 @@ export default class World {
         });
 
         if (this._production === false) {
-            this._developmentRooms.set("DEVELOPMENT", {
-                name: "DEVELOPMENT",
+            this._paidRooms.set("LOCALHOST", {
+                name: "LOCALHOST",
                 address: "ws://localhost:2567",
-                type: "DEV",
+                type: "PAID",
+            });
+
+            this._earnRooms.set("LOCALHOST", {
+                name: "LOCALHOST",
+                address: "ws://localhost:2567",
+                type: "EARN",
+            });
+
+            this._freeRooms.set("LOCALHOST", {
+                name: "LOCALHOST",
+                address: "ws://localhost:2567",
+                type: "FREE",
             });
         }
     }
 
     private _setNimiqNetwork() {
-        if (this._production === true) {
-            this._hubApi = new HubApi("https://hub.nimiq.com");
-        } else {
-            this._hubApi = new HubApi("https://hub.nimiq-testnet.com");
-        }
+        this._hubApi = new HubApi("https://hub.nimiq.com");
     }
 
     private _setRoomData(roomKey: string, type: string) {
@@ -426,13 +430,6 @@ export default class World {
         }
         if (type === "FREE") {
             this._roomData = this._freeRooms.get(roomKey) as {
-                name: string;
-                address: string;
-                type: string;
-            };
-        }
-        if (type === "DEV") {
-            this._roomData = this._developmentRooms.get(roomKey) as {
                 name: string;
                 address: string;
                 type: string;
@@ -475,15 +472,6 @@ export default class World {
                         }
 
                         if (roomsListType === "FREE") {
-                            if (
-                                fetchedRooms[0].clients >=
-                                fetchedRooms[0].maxClients
-                            ) {
-                                throw new Error("Room is full!");
-                            }
-                        }
-
-                        if (roomsListType === "DEV") {
                             if (
                                 fetchedRooms[0].clients >=
                                 fetchedRooms[0].maxClients
@@ -547,10 +535,6 @@ export default class World {
                     }
 
                     if (roomData[1].type === "FREE") {
-                        fetchedPlayers = `${data[0].clients}/${data[0].maxClients}`;
-                    }
-
-                    if (roomData[1].type === "DEV") {
                         fetchedPlayers = `${data[0].clients}/${data[0].maxClients}`;
                     }
 
@@ -787,10 +771,6 @@ export default class World {
 
         if (this._roomData.type === "FREE") {
             this._plausible.trackEvent("FREE_PLAY");
-            await this._sessionStart();
-        }
-
-        if (this._roomData.type === "DEV") {
             await this._sessionStart();
         }
     }
@@ -1078,28 +1058,6 @@ export default class World {
                 await this._entryRoom();
             }
         );
-
-        if (this._production === true) {
-            this._devButtonContainer.style.display = "none";
-        }
-
-        this._devButtonContainer.addEventListener("mouseup", async (event) => {
-            event.preventDefault();
-
-            this._showSplashScreen("Finding dev room...");
-            await this._fetchNearestRoom(this._developmentRooms, "DEV");
-            this._setSplashScreenMessage("Finding dev room finished...");
-            await this._entryRoom();
-        });
-
-        this._devButtonContainer.addEventListener("touchend", async (event) => {
-            event.preventDefault();
-
-            this._showSplashScreen("Finding dev room...");
-            await this._fetchNearestRoom(this._developmentRooms, "DEV");
-            this._setSplashScreenMessage("Finding dev room finished...");
-            await this._entryRoom();
-        });
 
         this._twitterButtonContainer.addEventListener("mouseup", (event) => {
             event.preventDefault();
