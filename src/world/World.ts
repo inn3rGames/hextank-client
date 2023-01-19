@@ -2147,7 +2147,9 @@ export default class World {
         }
 
         if (roomType === "EARN") {
-            restartTextString = `You earned ${damage} NIM!`;
+            restartTextString = `You earned ${
+                Math.floor(damage * 1000) / 1000
+            } NIM!`;
         }
 
         if (roomType === "FREE") {
@@ -2484,7 +2486,9 @@ export default class World {
                     hudNameElement.style.fontSize
                 );
 
-                const hudDamageValue = value.damage.toString();
+                const hudDamageValue = (
+                    Math.floor(value.damage * 1000) / 1000
+                ).toString();
                 hudDamageElement.textContent = hudDamageValue;
                 hudDamageElement.style.fontSize = this._computeFontSize(
                     hudDamageValue.length,
@@ -2562,7 +2566,9 @@ export default class World {
                     rowNameElement.style.fontSize
                 );
 
-                const rowDamageValue = value.damage.toString();
+                const rowDamageValue = (
+                    Math.floor(value.damage * 1000) / 1000
+                ).toString();
                 const rowDamageElement = currentRow
                     .children[2] as HTMLDivElement;
                 rowDamageElement.textContent = rowDamageValue;
