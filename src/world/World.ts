@@ -748,9 +748,11 @@ export default class World {
         }
 
         if (this._roomData.type === "EARN") {
+            let adState = true;
+
             const options = {
                 appName: "HexTank.io",
-                message: `HexTank.io entry fee tx-${uuidv1()}`,
+                message: `HexTank.io valid login: ${adState}`,
             };
 
             try {
