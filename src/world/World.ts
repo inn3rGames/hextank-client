@@ -734,7 +734,7 @@ export default class World {
 
             try {
                 const signedTransaction = await this._hubApi.checkout(options);
-                this._plausible.trackEvent("PAYMENT");
+                this._plausible.trackEvent("PAID_PLAY");
                 await this._sessionStart(signedTransaction);
             } catch (error) {
                 setTimeout(() => {
