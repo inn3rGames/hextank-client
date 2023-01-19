@@ -544,7 +544,10 @@ export default class World {
 
                     let itemFound = false;
                     this._filledData.forEach((item) => {
-                        if (item.address === fetchedData.address) {
+                        if (
+                            item.address === fetchedData.address &&
+                            item.type === fetchedData.type
+                        ) {
                             itemFound = true;
                         }
                     });
