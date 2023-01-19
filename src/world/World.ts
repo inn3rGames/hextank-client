@@ -172,10 +172,6 @@ export default class World {
         string,
         { name: string; address: string; type: string }
     > = new Map();
-    private _developmentRooms: Map<
-        string,
-        { name: string; address: string; type: string }
-    > = new Map();
 
     private _filledData: Array<{
         key: string;
