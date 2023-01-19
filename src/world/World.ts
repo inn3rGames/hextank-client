@@ -36,7 +36,7 @@ import "@babylonjs/core/Materials/Textures/Loaders/ktxTextureLoader";
 
 import { Client, Room } from "colyseus.js";
 import screenfull from "screenfull";
-import HubApi, { SignedTransaction } from "@nimiq/hub-api";
+import HubApi, { SignedMessage, SignedTransaction } from "@nimiq/hub-api";
 import { v1 as uuidv1 } from "uuid";
 import Plausible from "plausible-tracker";
 
@@ -105,12 +105,14 @@ export default class World {
     private _roomsButtonContainer: HTMLDivElement;
     private _roomsCloseButtonContainer: HTMLDivElement;
     private _paidDataContainer: HTMLDivElement;
+    private _earnDataContainer: HTMLDivElement;
     private _freeDataContainer: HTMLDivElement;
     private _logo: HTMLDivElement;
     private _restartTextContainer: HTMLDivElement;
     private _formContainer: HTMLFormElement;
     private _inputField: HTMLInputElement;
     private _payButtonContainer: HTMLDivElement;
+    private _earnButtonContainer: HTMLDivElement;
     private _freeButtonContainer: HTMLDivElement;
     private _devButtonContainer: HTMLDivElement;
     private _twitterButtonContainer: HTMLDivElement;
@@ -159,7 +161,11 @@ export default class World {
     private _readyToConnect: boolean = true;
 
     private _roomData!: { name: string; address: string; type: string };
-    private _developmentRooms: Map<
+    private _paidRooms: Map<
+        string,
+        { name: string; address: string; type: string }
+    > = new Map();
+    private _earnRooms: Map<
         string,
         { name: string; address: string; type: string }
     > = new Map();
@@ -167,10 +173,11 @@ export default class World {
         string,
         { name: string; address: string; type: string }
     > = new Map();
-    private _paidRooms: Map<
+    private _developmentRooms: Map<
         string,
         { name: string; address: string; type: string }
     > = new Map();
+
     private _filledData: Array<{
         key: string;
         address: string;
@@ -225,6 +232,9 @@ export default class World {
         this._paidDataContainer = document.getElementById(
             "paid-data-container"
         ) as HTMLDivElement;
+        this._earnDataContainer = document.getElementById(
+            "earn-data-container"
+        ) as HTMLDivElement;
         this._freeDataContainer = document.getElementById(
             "free-data-container"
         ) as HTMLDivElement;
@@ -240,6 +250,9 @@ export default class World {
         ) as HTMLInputElement;
         this._payButtonContainer = document.getElementById(
             "pay-button-container"
+        ) as HTMLDivElement;
+        this._earnButtonContainer = document.getElementById(
+            "earn-button-container"
         ) as HTMLDivElement;
         this._freeButtonContainer = document.getElementById(
             "free-button-container"
@@ -362,6 +375,12 @@ export default class World {
             type: "PAID",
         });
 
+        this._earnRooms.set("LOCALHOST", {
+            name: "LOCALHOST",
+            address: "ws://localhost:2567",
+            type: "EARN",
+        });
+
         this._freeRooms.set("F-EU-DE1", {
             name: "F-EU-DE1",
             address: "wss://wrbnqh.colyseus.de",
@@ -393,6 +412,13 @@ export default class World {
     private _setRoomData(roomKey: string, type: string) {
         if (type === "PAID") {
             this._roomData = this._paidRooms.get(roomKey) as {
+                name: string;
+                address: string;
+                type: string;
+            };
+        }
+        if (type === "EARN") {
+            this._roomData = this._earnRooms.get(roomKey) as {
                 name: string;
                 address: string;
                 type: string;
@@ -437,7 +463,27 @@ export default class World {
                             ) {
                                 throw new Error("Room is full!");
                             }
-                        } else {
+                        }
+
+                        if (roomsListType === "EARN") {
+                            if (
+                                fetchedRooms[0].clients >=
+                                fetchedRooms[0].maxClients
+                            ) {
+                                throw new Error("Room is full!");
+                            }
+                        }
+
+                        if (roomsListType === "FREE") {
+                            if (
+                                fetchedRooms[0].clients >=
+                                fetchedRooms[0].maxClients
+                            ) {
+                                throw new Error("Room is full!");
+                            }
+                        }
+
+                        if (roomsListType === "DEV") {
                             if (
                                 fetchedRooms[0].clients >=
                                 fetchedRooms[0].maxClients
@@ -488,12 +534,23 @@ export default class World {
                     const presentTime = performance.now();
                     const currentPing = presentTime - oldTime;
 
-                    let fetchedPlayers;
+                    let fetchedPlayers = "";
+
                     if (roomData[1].type === "PAID") {
                         fetchedPlayers = `${data[0].clients}/${
                             data[0].maxClients - 5
                         }`;
-                    } else {
+                    }
+
+                    if (roomData[1].type === "EARN") {
+                        fetchedPlayers = `${data[0].clients}/${data[0].maxClients}`;
+                    }
+
+                    if (roomData[1].type === "FREE") {
+                        fetchedPlayers = `${data[0].clients}/${data[0].maxClients}`;
+                    }
+
+                    if (roomData[1].type === "DEV") {
                         fetchedPlayers = `${data[0].clients}/${data[0].maxClients}`;
                     }
 
@@ -624,6 +681,7 @@ export default class World {
 
     private _clearAllRoomsDataRows() {
         this._clearRoomDataRows(this._paidDataContainer);
+        this._clearRoomDataRows(this._earnDataContainer);
         this._clearRoomDataRows(this._freeDataContainer);
     }
 
@@ -631,6 +689,7 @@ export default class World {
         this._filledData = [];
 
         await this._fillRowData(this._paidRooms, "PAID");
+        await this._fillRowData(this._earnRooms, "EARN");
         await this._fillRowData(this._freeRooms, "FREE");
 
         this._filledData.forEach((roomData) => {
@@ -643,6 +702,17 @@ export default class World {
                     roomData.ping
                 );
             }
+
+            if (roomData.type === "EARN") {
+                this._createOrUpdateRoomDataRow(
+                    this._earnDataContainer,
+                    roomData.type,
+                    roomData.key,
+                    roomData.players,
+                    roomData.ping
+                );
+            }
+
             if (roomData.type === "FREE") {
                 this._createOrUpdateRoomDataRow(
                     this._freeDataContainer,
@@ -692,8 +762,35 @@ export default class World {
                     console.log(error);
                 }
             }
-        } else {
+        }
+
+        if (this._roomData.type === "EARN") {
+            const options = {
+                appName: "HexTank.io",
+                message: `HexTank.io entry fee tx-${uuidv1()}`,
+            };
+
+            try {
+                const signedMessage = await this._hubApi.signMessage(options);
+                this._plausible.trackEvent("EARN_PLAY");
+                await this._sessionStart(signedMessage);
+            } catch (error) {
+                setTimeout(() => {
+                    this._showHomeUI();
+                }, this._splashScreenTimeout);
+
+                if (this._production === false) {
+                    console.log(error);
+                }
+            }
+        }
+
+        if (this._roomData.type === "FREE") {
             this._plausible.trackEvent("FREE_PLAY");
+            await this._sessionStart();
+        }
+
+        if (this._roomData.type === "DEV") {
             await this._sessionStart();
         }
     }
@@ -701,6 +798,10 @@ export default class World {
     private _setRoomsInputState() {
         if (localStorage.getItem("PAID") === null) {
             localStorage.setItem("PAID", "AUTO");
+        }
+
+        if (localStorage.getItem("EARN") === null) {
+            localStorage.setItem("EARN", "AUTO");
         }
 
         if (localStorage.getItem("FREE") === null) {
@@ -715,6 +816,12 @@ export default class World {
 
             if (radioButton.name === "PAID") {
                 if (radioButton.value === localStorage.getItem("PAID")) {
+                    radioButton.checked = true;
+                }
+            }
+
+            if (radioButton.name === "EARN") {
+                if (radioButton.value === localStorage.getItem("EARN")) {
                     radioButton.checked = true;
                 }
             }
@@ -862,6 +969,27 @@ export default class World {
             });
         });
 
+        this._earnDataContainer.addEventListener("change", (event) => {
+            const earnSelectors =
+                document.querySelectorAll(`input[name="EARN"]`);
+            earnSelectors.forEach((input) => {
+                const radioButton = input as HTMLInputElement;
+                const parent = radioButton.parentElement
+                    ?.parentElement as HTMLElement;
+
+                if (radioButton.checked === true) {
+                    parent.style.backgroundColor = "#B0B000";
+                    localStorage.setItem("EARN", radioButton.value);
+
+                    if (this._production === false) {
+                        console.log(radioButton.value);
+                    }
+                } else {
+                    parent.style.backgroundColor = "#FFFF00";
+                }
+            });
+        });
+
         this._freeDataContainer.addEventListener("change", (event) => {
             const freeSelectors =
                 document.querySelectorAll(`input[name="FREE"]`);
@@ -904,6 +1032,31 @@ export default class World {
             this._setSplashScreenMessage("Finding paid room finished...");
             await this._entryRoom();
         });
+
+        this._earnButtonContainer.addEventListener("mouseup", async (event) => {
+            event.preventDefault();
+
+            this._showSplashScreen("Finding room with earnings...");
+            await this._fetchNearestRoom(this._earnRooms, "EARN");
+            this._setSplashScreenMessage(
+                "Finding room with earnings finished..."
+            );
+            await this._entryRoom();
+        });
+
+        this._earnButtonContainer.addEventListener(
+            "touchend",
+            async (event) => {
+                event.preventDefault();
+
+                this._showSplashScreen("Finding room with earnings...");
+                await this._fetchNearestRoom(this._earnRooms, "EARN");
+                this._setSplashScreenMessage(
+                    "Finding room with earnings finished..."
+                );
+                await this._entryRoom();
+            }
+        );
 
         this._freeButtonContainer.addEventListener("mouseup", async (event) => {
             event.preventDefault();
@@ -1071,13 +1224,15 @@ export default class World {
         }
     }
 
-    private async _sessionStart(signedTransaction?: SignedTransaction) {
+    private async _sessionStart(
+        signedObject?: SignedTransaction | SignedMessage
+    ) {
         if (this._readyToConnect === true) {
             this._readyToConnect = false;
 
             this._showSplashScreen("Connecting. Allow up to 5 minutes...");
             this._clearItems();
-            await this._connectWorld(signedTransaction);
+            await this._connectWorld(signedObject);
         }
     }
 
@@ -2001,13 +2156,13 @@ export default class World {
             "Creating world map finished...";
     }
 
-    private async _connect(signedTransaction?: SignedTransaction) {
+    private async _connect(signedObject?: SignedTransaction | SignedMessage) {
         this._client = new Client(this._roomData.address);
 
         try {
             this._room = await this._client.join("world_room", {
                 name: this._inputField.value,
-                signedTransaction: signedTransaction,
+                signedObject: signedObject,
             });
         } catch (error) {
             this._showSplashScreen("Room error...");
@@ -2026,10 +2181,17 @@ export default class World {
     private _setRestartText(damage: number, roomType: string) {
         const child = this._restartTextContainer.children[0] as HTMLDivElement;
 
-        let restartTextString;
+        let restartTextString = "";
+
         if (roomType === "PAID") {
             restartTextString = `You won ${damage} NIM!`;
-        } else {
+        }
+
+        if (roomType === "EARN") {
+            restartTextString = `You earned ${damage} NIM!`;
+        }
+
+        if (roomType === "FREE") {
             restartTextString = `You dealt ${damage} damage!`;
         }
 
@@ -2199,8 +2361,10 @@ export default class World {
         this._formContainer.style.backgroundColor = "#767676";
     }
 
-    private async _connectWorld(signedTransaction?: SignedTransaction) {
-        await this._connect(signedTransaction);
+    private async _connectWorld(
+        signedObject?: SignedTransaction | SignedMessage
+    ) {
+        await this._connect(signedObject);
 
         if (typeof this._room !== "undefined") {
             this._setHexTanksCallbacks();
@@ -2268,9 +2432,16 @@ export default class World {
         if (typeof this._roomData !== "undefined") {
             if (this._roomData.type === "PAID") {
                 hudDamageTitleElement.textContent = "NIM";
-            } else {
+            }
+
+            if (this._roomData.type === "EARN") {
+                hudDamageTitleElement.textContent = "NIM";
+            }
+
+            if (this._roomData.type === "FREE") {
                 hudDamageTitleElement.textContent = "DAMAGE";
             }
+
             hudRoomElement.textContent = this._roomData.name;
         } else {
             hudDamageTitleElement.textContent = "DAMAGE";
@@ -2307,7 +2478,13 @@ export default class World {
                 if (typeof this._roomData !== "undefined") {
                     if (this._roomData.type === "PAID") {
                         leaderboardTitleDamage.textContent = "NIM";
-                    } else {
+                    }
+
+                    if (this._roomData.type === "EARN") {
+                        leaderboardTitleDamage.textContent = "NIM";
+                    }
+
+                    if (this._roomData.type === "FREE") {
                         leaderboardTitleDamage.textContent = "DAMAGE";
                     }
                 } else {

@@ -392,7 +392,7 @@ input[type=radio]:checked {
     background-color: #29B5E3;
 }
 
-#io-button:hover{
+#io-button:hover {
     background-color: #228bae;
 }
 
@@ -456,7 +456,7 @@ input[type=radio]:checked {
 }
 
 #pay-button-container {
-    left: calc(50% - 25vmin - 0.5vmin);
+    left: calc(50% - 39.5vmin - 0.5vmin);
     bottom: calc(42% - 8vmin - 1vmin);
 }
 
@@ -466,7 +466,7 @@ input[type=radio]:checked {
     justify-content: center;
 }
 
-#nimiq-logo {
+.nimiq-logo {
     width: 7vmin;
     height: 7vmin;
     background-image: url("../../assets/images/nimiq.png");
@@ -477,8 +477,20 @@ input[type=radio]:checked {
     margin-right: 0.5vmin;
 }
 
+#earn-button-container {
+    width: 29vmin;
+    bottom: calc(42% - 8vmin - 1vmin);
+}
+
+#earn-button {
+    width: 29vmin;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 #free-button-container {
-    right: calc(50% - 25vmin - 0.5vmin);
+    right: calc(50% - 39.5vmin - 0.5vmin);
     bottom: calc(42% - 8vmin - 1vmin);
 }
 

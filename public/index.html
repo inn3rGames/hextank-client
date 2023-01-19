@@ -63,6 +63,15 @@
                                         <div class="room-data-ping">PING</div>
                                     </div>
                                 </div>
+                                <div class="text-category-title">EARN</div>
+                                <div id="earn-data-container" class="room-data-container">
+                                    <div class="room-data-row room-data-row-title">
+                                        <div class="room-data-select">SELECT</div>
+                                        <div class="room-data-key">NAME</div>
+                                        <div class="room-data-players">PLAYERS</div>
+                                        <div class="room-data-ping">PING</div>
+                                    </div>
+                                </div>
                                 <div class="text-category-title">FREE</div>
                                 <div id="free-data-container" class="room-data-container">
                                     <div class="room-data-row room-data-row-title">
@@ -93,14 +102,20 @@
                 <input type="text" id="input-field" placeholder="name" spellcheck="false" autocomplete="off"
                     autocorrect="off" maxlength="16" onkeydown="return /[0-9a-z]/gi.test(event.key)" />
             </form>
-            <div id="free-button-container" class="button-container">
-                <div id="free-button" class="button">FREE</div>
-            </div>
             <div id="pay-button-container" class="button-container">
                 <div id="pay-button" class="button">
                     <p>PAY</p>
-                    <div id="nimiq-logo"></div>
+                    <div class="nimiq-logo"></div>
                 </div>
+            </div>
+            <div id="earn-button-container" class="button-container">
+                <div id="earn-button" class="button">
+                    <p>EARN</p>
+                    <div class="nimiq-logo"></div>
+                </div>
+            </div>
+            <div id="free-button-container" class="button-container">
+                <div id="free-button" class="button">FREE</div>
             </div>
             <div id="dev-button-container" class="button-container">
                 <div id="dev-button" class="button">DEV</div>
