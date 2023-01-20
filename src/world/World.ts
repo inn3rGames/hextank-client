@@ -2137,23 +2137,30 @@ export default class World {
         this._input.setRoom(this._room, this._production);
     }
 
+    private _formatDamage(damage: number): string {
+        const damageInNim = damage / 100000;
+        const damageDecimals = Math.floor(damageInNim * 1000) / 1000;
+        const damageString = damageDecimals.toString();
+        return damageString;
+    }
+
     private _setRestartText(damage: number, roomType: string) {
         const child = this._restartTextContainer.children[0] as HTMLDivElement;
 
         let restartTextString = "";
 
         if (roomType === "PAID") {
-            restartTextString = `You won ${damage} NIM!`;
+            restartTextString = `You won ${this._formatDamage(damage)} NIM!`;
         }
 
         if (roomType === "EARN") {
-            restartTextString = `You earned ${
-                Math.floor(damage * 1000) / 1000
-            } NIM!`;
+            restartTextString = `You earned ${this._formatDamage(damage)} NIM!`;
         }
 
         if (roomType === "FREE") {
-            restartTextString = `You dealt ${damage} damage!`;
+            restartTextString = `You dealt ${this._formatDamage(
+                damage
+            )} damage!`;
         }
 
         child.textContent = restartTextString;
@@ -2486,9 +2493,7 @@ export default class World {
                     hudNameElement.style.fontSize
                 );
 
-                const hudDamageValue = (
-                    Math.floor(value.damage * 1000) / 1000
-                ).toString();
+                const hudDamageValue = this._formatDamage(value.damage);
                 hudDamageElement.textContent = hudDamageValue;
                 hudDamageElement.style.fontSize = this._computeFontSize(
                     hudDamageValue.length,
@@ -2566,9 +2571,7 @@ export default class World {
                     rowNameElement.style.fontSize
                 );
 
-                const rowDamageValue = (
-                    Math.floor(value.damage * 1000) / 1000
-                ).toString();
+                const rowDamageValue = this._formatDamage(value.damage);
                 const rowDamageElement = currentRow
                     .children[2] as HTMLDivElement;
                 rowDamageElement.textContent = rowDamageValue;
