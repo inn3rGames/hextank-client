@@ -326,6 +326,7 @@ export default class World {
 
         this._setDebugMode();
         this._setServerRooms();
+        this._cleanRoomsLocalStorage();
         this._setNimiqNetwork();
 
         this._input = new Input();
@@ -405,6 +406,44 @@ export default class World {
         }
     }
 
+    private _cleanRoomsLocalStorage() {
+        if (localStorage.getItem("PAID") === null) {
+            localStorage.setItem("PAID", "AUTO");
+        } else {
+            if (
+                typeof this._paidRooms.get(
+                    localStorage.getItem("PAID") as string
+                ) === "undefined"
+            ) {
+                localStorage.setItem("PAID", "AUTO");
+            }
+        }
+
+        if (localStorage.getItem("EARN") === null) {
+            localStorage.setItem("EARN", "AUTO");
+        } else {
+            if (
+                typeof this._earnRooms.get(
+                    localStorage.getItem("EARN") as string
+                ) === "undefined"
+            ) {
+                localStorage.setItem("EARN", "AUTO");
+            }
+        }
+
+        if (localStorage.getItem("FREE") === null) {
+            localStorage.setItem("FREE", "AUTO");
+        } else {
+            if (
+                typeof this._freeRooms.get(
+                    localStorage.getItem("FREE") as string
+                ) === "undefined"
+            ) {
+                localStorage.setItem("FREE", "AUTO");
+            }
+        }
+    }
+
     private _setNimiqNetwork() {
         this._hubApi = new HubApi("https://hub.nimiq.com");
     }
@@ -437,6 +476,8 @@ export default class World {
         roomsList: Map<string, { address: string; type: string }>,
         roomsListType: string
     ): Promise<void> {
+        this._cleanRoomsLocalStorage();
+
         let roomKey = "NONE";
         let roomType = "NONE";
         const roomsArray = Array.from(roomsList.entries());
@@ -780,17 +821,7 @@ export default class World {
     }
 
     private _setRoomsInputState() {
-        if (localStorage.getItem("PAID") === null) {
-            localStorage.setItem("PAID", "AUTO");
-        }
-
-        if (localStorage.getItem("EARN") === null) {
-            localStorage.setItem("EARN", "AUTO");
-        }
-
-        if (localStorage.getItem("FREE") === null) {
-            localStorage.setItem("FREE", "AUTO");
-        }
+        this._cleanRoomsLocalStorage();
 
         const inputs = document.querySelectorAll(`input[type="radio"]`);
         inputs.forEach((input) => {
