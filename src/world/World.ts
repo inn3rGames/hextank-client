@@ -723,12 +723,15 @@ export default class World {
             return;
         }
         if (this._roomData.type === "PAID") {
+            const lunaEntryFee = 50 * 1e5;
+            const lunaTransactionFee = 500;
+
             const options = {
                 appName: "HexTank.io",
                 recipient: "NQ31 T9EV J5KN KR79 RR3R MNYB D7D0 XCPN 9LCQ",
-                value: 500 * 1e5 + 6 * 500,
+                value: lunaEntryFee + 6 * lunaTransactionFee,
                 shopLogoUrl: window.location.href + "smallLogo.png",
-                fee: 500,
+                fee: lunaTransactionFee,
                 extraData: `HexTank.io entry fee tx-${uuidv1()}`,
             };
 
