@@ -1204,6 +1204,8 @@ export default class World {
     }
 
     private _sessionEnd() {
+        this._input.setRoom(undefined);
+
         this._readyToConnect = true;
         if (typeof this._room !== "undefined") {
             this._room.removeAllListeners();
@@ -2168,7 +2170,7 @@ export default class World {
             }
         }
 
-        this._input.setRoom(this._room, this._production);
+        this._input.setRoom(this._room);
     }
 
     private _formatDamage(damage: number): string {
@@ -2265,7 +2267,7 @@ export default class World {
         };
 
         this._room.onLeave((code) => {
-            this._input.setRoom(undefined, false);
+            this._input.setRoom(undefined);
             if (code >= 1000) {
                 this._showSplashScreen("Room disconnected unexpectedly...");
 

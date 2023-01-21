@@ -656,9 +656,8 @@ export default class Input {
         }
     }
 
-    setRoom(room: Room | undefined, production: boolean) {
+    setRoom(room: Room | undefined) {
         this._room = room;
-        this._production = production;
     }
 
     update() {
