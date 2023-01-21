@@ -1203,16 +1203,21 @@ export default class World {
         this._bullets.clear();
     }
 
-    private _sessionEnd() {
-        this._input.setRoom(undefined);
-
+    private _sessionEnd(gameUI: string) {
         this._readyToConnect = true;
         if (typeof this._room !== "undefined") {
             this._room.removeAllListeners();
             this._room.leave();
         }
         this._clearItems();
-        this._showRestartUI();
+
+        if (gameUI === "RESTART" || typeof gameUI === "undefined") {
+            this._showRestartUI();
+        }
+
+        if (gameUI === "HOME") {
+            this._showHomeUI();
+        }
 
         if (this._production === false) {
             console.clear();
@@ -2160,11 +2165,14 @@ export default class World {
                 signedObject: signedObject,
             });
         } catch (error) {
+            this._input.setRoom(undefined);
+
             this._showSplashScreen("Room error...");
 
             setTimeout(() => {
-                this._sessionEnd();
+                this._sessionEnd("HOME");
             }, this._splashScreenTimeout);
+
             if (this._production === false) {
                 console.log(error);
             }
@@ -2250,11 +2258,14 @@ export default class World {
                     this._hexTanks.delete(serverHexTank.id);
 
                     if (this._room.sessionId === serverHexTank.id) {
+                        this._input.setRoom(undefined);
+
                         this._setRestartText(
                             serverHexTank.damage,
                             this._roomData.type
                         );
-                        this._sessionEnd();
+
+                        this._sessionEnd("RESTART");
                     }
                 }
             }
@@ -2268,11 +2279,12 @@ export default class World {
 
         this._room.onLeave((code) => {
             this._input.setRoom(undefined);
+
             if (code >= 1000) {
                 this._showSplashScreen("Room disconnected unexpectedly...");
 
                 setTimeout(() => {
-                    this._sessionEnd();
+                    this._sessionEnd("HOME");
                 }, this._splashScreenTimeout);
             }
 
@@ -2282,10 +2294,12 @@ export default class World {
         });
 
         this._room.onError((code, message) => {
+            this._input.setRoom(undefined);
+
             this._showSplashScreen(`Room error ${code} ${message}`);
 
             setTimeout(() => {
-                this._sessionEnd();
+                this._sessionEnd("HOME");
             }, this._splashScreenTimeout);
         });
     }
@@ -2376,10 +2390,12 @@ export default class World {
             this._setBulletExplosions();
             this._setHexTankExplosions();
         } else {
+            this._input.setRoom(undefined);
+
             this._showSplashScreen("Room error...");
 
             setTimeout(() => {
-                this._sessionEnd();
+                this._sessionEnd("HOME");
             }, this._splashScreenTimeout);
         }
 
