@@ -402,9 +402,9 @@ input[type=radio]:checked {
     align-items: center;
     justify-content: center;
     width: 95vmin;
-    height: 34vmin;
+    height: 33vmin;
     left: calc(50% - 47.5vmin);
-    bottom: calc(72% - 17vmin);
+    bottom: calc(72% - 16.5vmin - 0.5vmin);
 }
 
 #restart-text {
