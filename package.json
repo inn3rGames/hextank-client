@@ -21,7 +21,7 @@
   "dependencies": {
     "@babylonjs/core": "^5.40.0",
     "@babylonjs/gui": "^5.40.0",
-    "@babylonjs/loaders": "^5.40.0",
+    "@babylonjs/loaders": "^5.40.1",
     "@nimiq/hub-api": "^1.6.1",
     "colyseus.js": "^0.14.13",
     "plausible-tracker": "^0.3.8",
