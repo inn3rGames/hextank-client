@@ -856,6 +856,121 @@ export default class World {
     }
 
     private _setUICallbacks() {
+        var imported = document.createElement("script");
+        var AdsenseId = "ca-pub-6129580795478709";
+        var ChannelId = "123456789";
+        var adFrequency = "180s";
+        var testAdsOn = true;
+
+        (<any>window).adsbygoogle = (<any>window).adsbygoogle || [];
+        const adBreak = ((<any>window).adConfig = function (o: any) {
+            (<any>window).adsbygoogle.push(o);
+        });
+        (<any>window).adConfig({
+            preloadAdBreaks: "on",
+            sound: "on", // This game has sound
+            onReady: () => {
+                console.log("ready");
+            }, // Called when API has initialised and adBreak() is ready
+        });
+
+        function nextAds(context: World) {
+            console.log("showNextAd");
+            adBreak({
+                type: "start", // ad shows at start of next level
+                name: "start-game",
+                beforeAd: () => {
+                    console.log("beforeAd");
+                    //Please add pause Game code here
+                },
+                afterAd: async () => {
+                    console.log("afterAd");
+                    //Please add resume Game code here
+                    context._showSplashScreen("Finding free room...");
+                    await context._fetchNearestRoom(context._freeRooms, "FREE");
+                    context._setSplashScreenMessage(
+                        "Finding free room finished..."
+                    );
+                    await context._entryRoom();
+                },
+                adBreakDone: (placementInfo: any) => {
+                    console.log("adBreak complete ");
+                    console.log(placementInfo.breakType);
+                    console.log(placementInfo.breakName);
+                    console.log(placementInfo.breakFormat);
+                    console.log(placementInfo.breakStatus);
+                },
+            });
+        }
+
+        function showReward() {
+            console.log("showReward");
+            adBreak({
+                type: "reward",
+                name: "rewarded Ad",
+                beforeAd: () => {
+                    console.log("beforeAd");
+                    //Please add pause Game code here
+                },
+                afterAd: () => {
+                    console.log("afterAd");
+                    //Please add resume Game code here
+                },
+                beforeReward: (showAdFn: any) => {
+                    console.log("beforeReward ") + showAdFn(0);
+                },
+                adDismissed: () => {
+                    console.log("adDismissed");
+                    rewardDismissed();
+                },
+                adViewed: () => {
+                    console.log("adViewed");
+                    RewardGained();
+                },
+                adBreakDone: (placementInfo: any) => {
+                    console.log("adBreak complete ");
+                    console.log(placementInfo.breakType);
+                    console.log(placementInfo.breakName);
+                    console.log(placementInfo.breakFormat);
+                    console.log(placementInfo.breakStatus);
+                    if (placementInfo.breakStatus == "frequencyCapped") {
+                        frequencyCappedNoRewards();
+                    }
+                },
+            });
+        }
+
+        function rewardDismissed() {
+            console.log("rewardDismissed");
+            // User clicked the close button when reward is showing. So just restart the game with no rewards.
+        }
+
+        function RewardGained() {
+            console.log("RewardGained");
+            // User watched the rewarded ad. so add rewards function here.
+        }
+
+        function frequencyCappedNoRewards() {
+            console.log("frequencyCappedNoRewards");
+            // User Clicked the rewarded ad, but there is no rewarded ads available in server.
+        }
+
+        function createAFGScript() {
+            imported.setAttribute("data-ad-client", AdsenseId);
+            imported.setAttribute("data-ad-channel", ChannelId);
+            imported.setAttribute("data-ad-frequency-hint", adFrequency);
+            if (testAdsOn == true) {
+                imported.setAttribute("data-adbreak-test", "on");
+            }
+            imported.src =
+                "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js";
+            imported.setAttribute("type", "text/javascript");
+            imported.async = true;
+            document.head.appendChild(imported);
+        }
+
+        createAFGScript();
+
         if (localStorage.getItem("name") === null) {
             localStorage.setItem("name", "");
         }
@@ -1076,10 +1191,7 @@ export default class World {
         this._freeButtonContainer.addEventListener("mouseup", async (event) => {
             event.preventDefault();
 
-            this._showSplashScreen("Finding free room...");
-            await this._fetchNearestRoom(this._freeRooms, "FREE");
-            this._setSplashScreenMessage("Finding free room finished...");
-            await this._entryRoom();
+            nextAds(this);
         });
 
         this._freeButtonContainer.addEventListener(
@@ -1087,10 +1199,7 @@ export default class World {
             async (event) => {
                 event.preventDefault();
 
-                this._showSplashScreen("Finding free room...");
-                await this._fetchNearestRoom(this._freeRooms, "FREE");
-                this._setSplashScreenMessage("Finding free room finished...");
-                await this._entryRoom();
+                nextAds(this);
             }
         );
 
