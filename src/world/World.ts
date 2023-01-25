@@ -865,29 +865,20 @@ export default class World {
                     case "SDK_GAME_PAUSE":
                         break;
                     case "SDK_GAME_START":
-                        if (a.status === "succes") {
-                            if (this._enableAds === true) {
-                                this._enableAds = false;
+                        if (this._enableAds === true) {
+                            this._enableAds = false;
 
-                                this._showSplashScreen("Finding free room...");
-                                await this._fetchNearestRoom(
-                                    this._freeRooms,
-                                    "FREE"
-                                );
-                                this._setSplashScreenMessage(
-                                    "Finding free room finished..."
-                                );
-                                await this._entryRoom();
-                            }
-                        } else {
-                            if (this._enableAds === true) {
-                                this._enableAds = false;
-
-                                this._showSplashScreen(
-                                    "No ads founds. Refresh the page and try again."
-                                );
-                            }
+                            this._showSplashScreen("Finding free room...");
+                            await this._fetchNearestRoom(
+                                this._freeRooms,
+                                "FREE"
+                            );
+                            this._setSplashScreenMessage(
+                                "Finding free room finished..."
+                            );
+                            await this._entryRoom();
                         }
+
                         break;
                     case "SDK_READY":
                         break;
