@@ -1191,7 +1191,14 @@ export default class World {
         this._freeButtonContainer.addEventListener("mouseup", async (event) => {
             event.preventDefault();
 
-            nextAds(this);
+            if (typeof nextAds !== undefined) {
+                nextAds(this);
+            } else {
+                this._showSplashScreen("Finding free room...");
+                await this._fetchNearestRoom(this._freeRooms, "FREE");
+                this._setSplashScreenMessage("Finding free room finished...");
+                await this._entryRoom();
+            }
         });
 
         this._freeButtonContainer.addEventListener(
@@ -1199,7 +1206,16 @@ export default class World {
             async (event) => {
                 event.preventDefault();
 
-                nextAds(this);
+                if (typeof nextAds !== undefined) {
+                    nextAds(this);
+                } else {
+                    this._showSplashScreen("Finding free room...");
+                    await this._fetchNearestRoom(this._freeRooms, "FREE");
+                    this._setSplashScreenMessage(
+                        "Finding free room finished..."
+                    );
+                    await this._entryRoom();
+                }
             }
         );
 
