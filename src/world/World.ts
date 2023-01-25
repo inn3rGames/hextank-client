@@ -856,6 +856,9 @@ export default class World {
     }
 
     private _setUICallbacks() {
+        let didAdRun = false;
+        let didAdStart = false;
+
         var imported = document.createElement("script");
         var AdsenseId = "ca-pub-6129580795478709";
         var ChannelId = "123456789";
@@ -882,23 +885,27 @@ export default class World {
                 beforeAd: () => {
                     console.log("beforeAd");
                     //Please add pause Game code here
+                    didAdStart = true;
                 },
-                afterAd: async () => {
+                afterAd: () => {
                     console.log("afterAd");
                     //Please add resume Game code here
+                },
+                adBreakDone: async (placementInfo: any) => {
+                    console.log("adBreak complete ");
+                    console.log(placementInfo.breakType);
+                    console.log(placementInfo.breakName);
+                    console.log(placementInfo.breakFormat);
+                    console.log(placementInfo.breakStatus);
+
+                    didAdRun = true;
+
                     context._showSplashScreen("Finding free room...");
                     await context._fetchNearestRoom(context._freeRooms, "FREE");
                     context._setSplashScreenMessage(
                         "Finding free room finished..."
                     );
                     await context._entryRoom();
-                },
-                adBreakDone: (placementInfo: any) => {
-                    console.log("adBreak complete ");
-                    console.log(placementInfo.breakType);
-                    console.log(placementInfo.breakName);
-                    console.log(placementInfo.breakFormat);
-                    console.log(placementInfo.breakStatus);
                 },
             });
         }
@@ -1192,7 +1199,23 @@ export default class World {
             event.preventDefault();
 
             if (typeof nextAds !== undefined) {
+                didAdRun = false;
+                didAdStart = false;
+
+                this._showSplashScreen("Loading ad...");
                 nextAds(this);
+
+                setTimeout(async () => {
+                    if (didAdRun === false && didAdStart === false) {
+                        this._showSplashScreen("Ad not found...");
+                        this._showSplashScreen("Finding free room...");
+                        await this._fetchNearestRoom(this._freeRooms, "FREE");
+                        this._setSplashScreenMessage(
+                            "Finding free room finished..."
+                        );
+                        await this._entryRoom();
+                    }
+                }, this._splashScreenTimeout);
             } else {
                 this._showSplashScreen("Finding free room...");
                 await this._fetchNearestRoom(this._freeRooms, "FREE");
@@ -1207,7 +1230,26 @@ export default class World {
                 event.preventDefault();
 
                 if (typeof nextAds !== undefined) {
+                    didAdRun = false;
+                    didAdStart = false;
+
+                    this._showSplashScreen("Loading ad...");
                     nextAds(this);
+
+                    setTimeout(async () => {
+                        if (didAdRun === false && didAdStart === false) {
+                            this._showSplashScreen("Ad not found...");
+                            this._showSplashScreen("Finding free room...");
+                            await this._fetchNearestRoom(
+                                this._freeRooms,
+                                "FREE"
+                            );
+                            this._setSplashScreenMessage(
+                                "Finding free room finished..."
+                            );
+                            await this._entryRoom();
+                        }
+                    }, this._splashScreenTimeout);
                 } else {
                     this._showSplashScreen("Finding free room...");
                     await this._fetchNearestRoom(this._freeRooms, "FREE");
