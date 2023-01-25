@@ -1122,6 +1122,11 @@ export default class World {
                 (<any>window).sdk.showBanner !== "undefined"
             ) {
                 (<any>window).sdk.showBanner();
+            } else {
+                this._showSplashScreen("Finding free room...");
+                await this._fetchNearestRoom(this._freeRooms, "FREE");
+                this._setSplashScreenMessage("Finding free room finished...");
+                await this._entryRoom();
             }
         });
 
@@ -1137,6 +1142,13 @@ export default class World {
                     (<any>window).sdk.showBanner !== "undefined"
                 ) {
                     (<any>window).sdk.showBanner();
+                } else {
+                    this._showSplashScreen("Finding free room...");
+                    await this._fetchNearestRoom(this._freeRooms, "FREE");
+                    this._setSplashScreenMessage(
+                        "Finding free room finished..."
+                    );
+                    await this._entryRoom();
                 }
             }
         );
