@@ -204,6 +204,8 @@ export default class World {
 
     private _plausible = Plausible({ domain: "hextank.io", hashMode: true });
 
+    private _enableAds: boolean = false;
+
     constructor() {
         this._canvas = document.getElementById(
             "hextankgame"
@@ -856,6 +858,52 @@ export default class World {
     }
 
     private _setUICallbacks() {
+        (<any>window).SDK_OPTIONS = {
+            gameId: "8ugcliynfk8xz49yci7jotwysw24r8ik",
+            onEvent: async (a: any) => {
+                switch (a.name) {
+                    case "SDK_GAME_PAUSE":
+                        break;
+                    case "SDK_GAME_START":
+                        if (a.status === "succes") {
+                            if (this._enableAds === true) {
+                                this._enableAds = false;
+
+                                this._showSplashScreen("Finding free room...");
+                                await this._fetchNearestRoom(
+                                    this._freeRooms,
+                                    "FREE"
+                                );
+                                this._setSplashScreenMessage(
+                                    "Finding free room finished..."
+                                );
+                                await this._entryRoom();
+                            }
+                        } else {
+                            if (this._enableAds === true) {
+                                this._enableAds = false;
+
+                                this._showSplashScreen(
+                                    "No ads founds. Refresh the page and try again."
+                                );
+                            }
+                        }
+                        break;
+                    case "SDK_READY":
+                        break;
+                }
+            },
+        };
+
+        (function (a: any, b, c) {
+            var d = a.getElementsByTagName(b)[0];
+            a.getElementById(c) ||
+                ((a = a.createElement(b)),
+                (a.id = c),
+                (a.src = "https://api.gamemonetize.com/sdk.js"),
+                d.parentNode.insertBefore(a, d));
+        })(document, "script", "gamemonetize-sdk");
+
         if (localStorage.getItem("name") === null) {
             localStorage.setItem("name", "");
         }
@@ -1076,10 +1124,14 @@ export default class World {
         this._freeButtonContainer.addEventListener("mouseup", async (event) => {
             event.preventDefault();
 
-            this._showSplashScreen("Finding free room...");
-            await this._fetchNearestRoom(this._freeRooms, "FREE");
-            this._setSplashScreenMessage("Finding free room finished...");
-            await this._entryRoom();
+            this._enableAds = true;
+
+            if (
+                typeof (<any>window).sdk !== "undefined" &&
+                (<any>window).sdk.showBanner !== "undefined"
+            ) {
+                (<any>window).sdk.showBanner();
+            }
         });
 
         this._freeButtonContainer.addEventListener(
@@ -1087,10 +1139,14 @@ export default class World {
             async (event) => {
                 event.preventDefault();
 
-                this._showSplashScreen("Finding free room...");
-                await this._fetchNearestRoom(this._freeRooms, "FREE");
-                this._setSplashScreenMessage("Finding free room finished...");
-                await this._entryRoom();
+                this._enableAds = true;
+
+                if (
+                    typeof (<any>window).sdk !== "undefined" &&
+                    (<any>window).sdk.showBanner !== "undefined"
+                ) {
+                    (<any>window).sdk.showBanner();
+                }
             }
         );
 
