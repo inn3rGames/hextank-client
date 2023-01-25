@@ -456,6 +456,7 @@ input[type=radio]:checked {
 }
 
 #pay-button-container {
+    display: none;
     left: calc(50% - 39.5vmin - 1vmin);
     bottom: calc(42% - 8vmin - 1vmin);
 }
@@ -478,6 +479,7 @@ input[type=radio]:checked {
 }
 
 #earn-button-container {
+    display: none;
     width: 29vmin;
     bottom: calc(42% - 8vmin - 1vmin);
 }
@@ -490,7 +492,7 @@ input[type=radio]:checked {
 }
 
 #free-button-container {
-    right: calc(50% - 39.5vmin - 1vmin);
+    /* right: calc(50% - 39.5vmin - 1vmin); */
     bottom: calc(42% - 8vmin - 1vmin);
 }
 
