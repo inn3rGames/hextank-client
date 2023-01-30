@@ -861,9 +861,9 @@ export default class World {
 
         var imported = document.createElement("script");
         var AdsenseId = "ca-pub-6129580795478709";
-        var ChannelId = "123456789";
+        var ChannelId = "3982753671";
         var adFrequency = "180s";
-        var testAdsOn = true;
+        var testAdsOn = false;
 
         (<any>window).adsbygoogle = (<any>window).adsbygoogle || [];
         const adBreak = ((<any>window).adConfig = function (o: any) {
