@@ -340,11 +340,11 @@ export default class World {
             console.log("%c Production mode.", "background-color: #00FF00");
             this._production = true;
 
-            console.log = () => {};
+            /* console.log = () => {};
             console.info = () => {};
             console.debug = () => {};
             console.warn = () => {};
-            console.error = () => {};
+            console.error = () => {}; */
         } else {
             console.log("%c Development mode.", "background-color: #FFFF00");
             this._production = false;
