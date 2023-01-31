@@ -1,6 +1,6 @@
 {
   "name": "hextank-client",
-  "version": "1.1.25-beta",
+  "version": "1.1.26-beta",
   "description": "HexTank Client",
   "main": "index.js",
   "scripts": {
@@ -24,11 +24,13 @@
     "@babylonjs/loaders": "^5.40.0",
     "@nimiq/hub-api": "^1.6.1",
     "colyseus.js": "^0.14.13",
+    "crypto-js": "^4.1.1",
     "plausible-tracker": "^0.3.8",
     "screenfull": "^6.0.2",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "@types/crypto-js": "^4.1.1",
     "@types/uuid": "^9.0.0",
     "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.7.3",

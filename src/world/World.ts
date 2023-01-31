@@ -37,6 +37,7 @@ import "@babylonjs/core/Materials/Textures/Loaders/ktxTextureLoader";
 import { Client, Room } from "colyseus.js";
 import screenfull from "screenfull";
 import HubApi, { SignedMessage, SignedTransaction } from "@nimiq/hub-api";
+import aes from "crypto-js/aes";
 import { v1 as uuidv1 } from "uuid";
 import Plausible from "plausible-tracker";
 
@@ -113,6 +114,7 @@ export default class World {
     private _inputField: HTMLInputElement;
     private _payButtonContainer: HTMLDivElement;
     private _earnButtonContainer: HTMLDivElement;
+    private _adState: string = "NONE";
     private _freeButtonContainer: HTMLDivElement;
     private _twitterButtonContainer: HTMLDivElement;
     private _discordButtonContainer: HTMLDivElement;
@@ -340,11 +342,11 @@ export default class World {
             console.log("%c Production mode.", "background-color: #00FF00");
             this._production = true;
 
-            /* console.log = () => {};
+            console.log = () => {};
             console.info = () => {};
             console.debug = () => {};
             console.warn = () => {};
-            console.error = () => {}; */
+            console.error = () => {};
         } else {
             console.log("%c Development mode.", "background-color: #FFFF00");
             this._production = false;
@@ -751,7 +753,7 @@ export default class World {
         this._setRoomsInputState();
     }
 
-    private async _entryRoom() {
+    private async _entryRoom(adMessage?: string) {
         if (typeof this._roomData === "undefined") {
             this._setSplashScreenMessage(
                 "No room found based on your criteria..."
@@ -792,17 +794,15 @@ export default class World {
         }
 
         if (this._roomData.type === "EARN") {
-            let adState = true;
-
             const options = {
                 appName: "HexTank.io",
-                message: `HexTank.io valid login: ${adState}`,
+                message: `HexTank.io earn mode entry ${adMessage}`,
             };
 
             try {
                 const signedMessage = await this._hubApi.signMessage(options);
                 this._plausible.trackEvent("EARN_PLAY");
-                await this._sessionStart(signedMessage);
+                await this._sessionStart(signedMessage, adMessage);
             } catch (error) {
                 setTimeout(() => {
                     this._showHomeUI();
@@ -899,18 +899,6 @@ export default class World {
         (<any>window).cpmstarAPI({
             kind: "game.createInterstitial",
         });
-
-        (<any>window).cpmstarAPI({ kind: "go", module: "anchor" });
-
-        let rAd: any;
-        (<any>window).cpmstarAPI(function (api: any) {
-            rAd = new api.game.RewardedVideoView("rewardedvideo");
-            rAd.load();
-        });
-
-        function displayRewardedVideo() {
-            rAd.show();
-        }
 
         if (localStorage.getItem("name") === null) {
             localStorage.setItem("name", "");
@@ -1107,13 +1095,39 @@ export default class World {
         this._earnButtonContainer.addEventListener("mouseup", async (event) => {
             event.preventDefault();
 
-            displayRewardedVideo();
-            this._showSplashScreen("Finding room with earnings...");
-            await this._fetchNearestRoom(this._earnRooms, "EARN");
-            this._setSplashScreenMessage(
-                "Finding room with earnings finished..."
-            );
-            await this._entryRoom();
+            (<any>window).cpmstarAPI({
+                kind: "game.displayInterstitial",
+                onAdClosed: async () => {
+                    console.log("Interstitial closed");
+
+                    this._showSplashScreen("Finding room with earnings...");
+                    await this._fetchNearestRoom(this._earnRooms, "EARN");
+                    this._setSplashScreenMessage(
+                        "Finding room with earnings finished..."
+                    );
+
+                    this._adState = "DELIVERED";
+                    const adId = `ad-${uuidv1()}`;
+                    const rawAdMessage = `${adId} ${this._adState}`;
+
+                    const adMessage = aes
+                        .encrypt(rawAdMessage, this._adState)
+                        .toString();
+
+                    await this._entryRoom(adMessage);
+                },
+                fail: () => {
+                    console.log("No ad available, or adblocked");
+
+                    this._showSplashScreen("Disable AdBlock and refresh...");
+
+                    this._adState = "DISABLED";
+
+                    setTimeout(() => {
+                        this._showHomeUI();
+                    }, this._splashScreenTimeout);
+                },
+            });
         });
 
         this._earnButtonContainer.addEventListener(
@@ -1320,14 +1334,15 @@ export default class World {
     }
 
     private async _sessionStart(
-        signedObject?: SignedTransaction | SignedMessage
+        signedObject?: SignedTransaction | SignedMessage,
+        adMessage?: string
     ) {
         if (this._readyToConnect === true) {
             this._readyToConnect = false;
 
             this._showSplashScreen("Connecting. Allow up to 5 minutes...");
             this._clearItems();
-            await this._connectWorld(signedObject);
+            await this._connectWorld(signedObject, adMessage);
         }
     }
 
@@ -2251,13 +2266,17 @@ export default class World {
             "Creating world map finished...";
     }
 
-    private async _connect(signedObject?: SignedTransaction | SignedMessage) {
+    private async _connect(
+        signedObject?: SignedTransaction | SignedMessage,
+        adMessage?: string
+    ) {
         this._client = new Client(this._roomData.address);
 
         try {
             this._room = await this._client.join("world_room", {
                 name: this._inputField.value,
                 signedObject: signedObject,
+                adMessage: adMessage,
             });
         } catch (error) {
             this._input.setRoom(undefined);
@@ -2475,9 +2494,10 @@ export default class World {
     }
 
     private async _connectWorld(
-        signedObject?: SignedTransaction | SignedMessage
+        signedObject?: SignedTransaction | SignedMessage,
+        adMessage?: string
     ) {
-        await this._connect(signedObject);
+        await this._connect(signedObject, adMessage);
 
         if (typeof this._room !== "undefined") {
             this._setHexTanksCallbacks();
