@@ -856,6 +856,55 @@ export default class World {
     }
 
     private _setUICallbacks() {
+        (function (zonefile) {
+            var y = "cpmstarx";
+            var drutObj = ((<any>window)[y] = (<any>window)[y] || {});
+            function failCpmstarAPI() {
+                var failFn = function (o: any) {
+                    o && typeof o === "object" && o.fail && o.fail();
+                };
+                drutObj &&
+                    Array.isArray(drutObj.cmd) &&
+                    drutObj.cmd.forEach(failFn) &&
+                    (drutObj.cmd.length = 0);
+                (<any>window).cpmstarAPI = (<any>window)["_" + zonefile] =
+                    failFn;
+            }
+            var rnd = Math.round(Math.random() * 999999);
+            var s = document.createElement("script");
+            s.type = "text/javascript";
+            s.async = true;
+            s.onerror = failCpmstarAPI;
+            var proto = document.location.protocol;
+            var host =
+                proto == "https:" || proto == "file:"
+                    ? "https://server"
+                    : "//cdn";
+            if (window.location.hash == "#cpmstarDev") host = "//dev.server";
+            if (window.location.hash == "#cpmstarStaging")
+                host = "//staging.server";
+            s.src =
+                host +
+                ".cpmstar.com/cached/zonefiles/" +
+                zonefile +
+                ".js?rnd=" +
+                rnd;
+            var s2 = document.getElementsByTagName("script")[0];
+            s2.parentNode!.insertBefore(s, s2);
+            (<any>window).cpmstarAPI = function (o: any) {
+                (drutObj.cmd = drutObj.cmd || []).push(o);
+            };
+        })("949_53242_gameapi");
+
+        (<any>window).cpmstarAPI({
+            kind: "game.createInterstitial",
+            fail: function () {
+                console.log("API was blocked or failed to load");
+            },
+        });
+
+        (<any>window).cpmstarAPI({ kind: "go", module: "anchor" });
+
         if (localStorage.getItem("name") === null) {
             localStorage.setItem("name", "");
         }
