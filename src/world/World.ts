@@ -1135,12 +1135,41 @@ export default class World {
             async (event) => {
                 event.preventDefault();
 
-                this._showSplashScreen("Finding room with earnings...");
-                await this._fetchNearestRoom(this._earnRooms, "EARN");
-                this._setSplashScreenMessage(
-                    "Finding room with earnings finished..."
-                );
-                await this._entryRoom();
+                (<any>window).cpmstarAPI({
+                    kind: "game.displayInterstitial",
+                    onAdClosed: async () => {
+                        console.log("Interstitial closed");
+
+                        this._showSplashScreen("Finding room with earnings...");
+                        await this._fetchNearestRoom(this._earnRooms, "EARN");
+                        this._setSplashScreenMessage(
+                            "Finding room with earnings finished..."
+                        );
+
+                        this._adState = "DELIVERED";
+                        const adId = `ad-${uuidv1()}`;
+                        const rawAdMessage = `${adId} ${this._adState}`;
+
+                        const adMessage = aes
+                            .encrypt(rawAdMessage, this._adState)
+                            .toString();
+
+                        await this._entryRoom(adMessage);
+                    },
+                    fail: () => {
+                        console.log("No ad available, or adblocked");
+
+                        this._showSplashScreen(
+                            "Disable AdBlock and refresh..."
+                        );
+
+                        this._adState = "DISABLED";
+
+                        setTimeout(() => {
+                            this._showHomeUI();
+                        }, this._splashScreenTimeout);
+                    },
+                });
             }
         );
 

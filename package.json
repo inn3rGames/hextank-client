@@ -1,6 +1,6 @@
 {
   "name": "hextank-client",
-  "version": "1.1.26-beta",
+  "version": "1.1.27-beta",
   "description": "HexTank Client",
   "main": "index.js",
   "scripts": {
