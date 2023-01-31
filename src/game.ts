@@ -2,33 +2,35 @@ import World from "./world/World";
 import "./assets/styles/style.css";
 import pkg from "../package.json";
 
-window.addEventListener("mousedown", (event) => {
+const mainContainer = document.getElementById("main-container") as HTMLElement;
+
+mainContainer.addEventListener("mousedown", (event) => {
     event.preventDefault();
 });
-window.addEventListener("mousemove", (event) => {
+mainContainer.addEventListener("mousemove", (event) => {
     event.preventDefault();
 });
-window.addEventListener("mouseup", (event) => {
+mainContainer.addEventListener("mouseup", (event) => {
     event.preventDefault();
 });
-window.addEventListener("mouseleave", (event) => {
+mainContainer.addEventListener("mouseleave", (event) => {
     event.preventDefault();
 });
 
-/* window.addEventListener("touchstart", (event) => {
+mainContainer.addEventListener("touchstart", (event) => {
     event.preventDefault();
 });
-window.addEventListener("toucmove", (event) => {
+mainContainer.addEventListener("toucmove", (event) => {
     event.preventDefault();
 });
-window.addEventListener("touchend", (event) => {
+mainContainer.addEventListener("touchend", (event) => {
     event.preventDefault();
 });
-window.addEventListener("touchcancel", (event) => {
+mainContainer.addEventListener("touchcancel", (event) => {
     event.preventDefault();
-}); */
+});
 
-window.addEventListener("contextmenu", (event) => {
+mainContainer.addEventListener("contextmenu", (event) => {
     event.preventDefault();
 });
 
