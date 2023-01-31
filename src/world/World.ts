@@ -903,23 +903,8 @@ export default class World {
             },
         });
 
-        var cpmstar_anchorad_settings = {
-            poolid: 87131, //Pool ID assigned by CPMStar
-            dir: 1,
-        };
-
-        (function (d, t: any, s: any) {
-            t = d.createElement("script");
-            t.type = "text/javascript";
-            t.src =
-                (d.location.protocol == "https:" ? "//server" : "//cdn") +
-                ".cpmstar.com/cached/js/anchorad_v100.pack.js";
-            t.async = true;
-            s = d.getElementsByTagName("script")[0];
-            s.parentNode.insertBefore(t, s);
-        })(window.document, {}, {});
-
         (<any>window).cpmstarAPI({ kind: "go", module: "anchor" });
+        console.log((<any>window).cpmstarAPI({ kind: "go", module: "anchor" }));
 
         if (localStorage.getItem("name") === null) {
             localStorage.setItem("name", "");
