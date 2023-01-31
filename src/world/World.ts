@@ -359,33 +359,18 @@ export default class World {
             address: "wss://ppl1.hextankroom.io",
             type: "PAID",
         });
-        /* this._paidRooms.set("P-NA-US1", {
-            name: "P-NA-US1",
-            address: "wss://pus1.hextankroom.io",
-            type: "PAID",
-        });
-        this._paidRooms.set("P-AS-KR1", {
-            name: "P-AS-KR1",
-            address: "wss://pkr1.hextankroom.io",
-            type: "PAID",
-        }); */
 
-        /* this._earnRooms.set("LOCALHOST", {
-            name: "LOCALHOST",
-            address: "ws://localhost:2567",
+        this._earnRooms.set("E-EU-PL1", {
+            name: "E-EU-PL1",
+            address: "wss://epl1.hextankroom.io",
             type: "EARN",
-        }); */
+        });
 
         this._freeRooms.set("F-EU-DE1", {
             name: "F-EU-DE1",
             address: "wss://wrbnqh.colyseus.de",
             type: "FREE",
         });
-        /* this._freeRooms.set("F-NA-US1", {
-            name: "F-NA-US1",
-            address: "wss://g0ffez.colyseus.dev",
-            type: "FREE",
-        }); */
 
         if (this._production === false) {
             this._paidRooms.set("LOCALHOST", {
