@@ -898,13 +898,9 @@ export default class World {
 
         (<any>window).cpmstarAPI({
             kind: "game.createInterstitial",
-            fail: function () {
-                console.log("API was blocked or failed to load");
-            },
         });
 
         (<any>window).cpmstarAPI({ kind: "go", module: "anchor" });
-        console.log((<any>window).cpmstarAPI({ kind: "go", module: "anchor" }));
 
         if (localStorage.getItem("name") === null) {
             localStorage.setItem("name", "");
@@ -1126,10 +1122,28 @@ export default class World {
         this._freeButtonContainer.addEventListener("mouseup", async (event) => {
             event.preventDefault();
 
-            this._showSplashScreen("Finding free room...");
-            await this._fetchNearestRoom(this._freeRooms, "FREE");
-            this._setSplashScreenMessage("Finding free room finished...");
-            await this._entryRoom();
+            (<any>window).cpmstarAPI({
+                kind: "game.displayInterstitial",
+                onAdClosed: async () => {
+                    console.log("Interstitial closed");
+
+                    this._showSplashScreen("Finding free room...");
+                    await this._fetchNearestRoom(this._freeRooms, "FREE");
+                    this._setSplashScreenMessage(
+                        "Finding free room finished..."
+                    );
+                    await this._entryRoom();
+                },
+                fail: () => {
+                    console.log("No ad available, or adblocked");
+
+                    this._showSplashScreen("Disable AdBlock and refresh...");
+
+                    setTimeout(() => {
+                        this._showHomeUI();
+                    }, this._splashScreenTimeout);
+                },
+            });
         });
 
         this._freeButtonContainer.addEventListener(
@@ -1137,10 +1151,30 @@ export default class World {
             async (event) => {
                 event.preventDefault();
 
-                this._showSplashScreen("Finding free room...");
-                await this._fetchNearestRoom(this._freeRooms, "FREE");
-                this._setSplashScreenMessage("Finding free room finished...");
-                await this._entryRoom();
+                (<any>window).cpmstarAPI({
+                    kind: "game.displayInterstitial",
+                    onAdClosed: async () => {
+                        console.log("Interstitial closed");
+
+                        this._showSplashScreen("Finding free room...");
+                        await this._fetchNearestRoom(this._freeRooms, "FREE");
+                        this._setSplashScreenMessage(
+                            "Finding free room finished..."
+                        );
+                        await this._entryRoom();
+                    },
+                    fail: () => {
+                        console.log("No ad available, or adblocked");
+
+                        this._showSplashScreen(
+                            "Disable AdBlock and refresh..."
+                        );
+
+                        setTimeout(() => {
+                            this._showHomeUI();
+                        }, this._splashScreenTimeout);
+                    },
+                });
             }
         );
 
