@@ -902,6 +902,16 @@ export default class World {
 
         (<any>window).cpmstarAPI({ kind: "go", module: "anchor" });
 
+        let rAd: any;
+        (<any>window).cpmstarAPI(function (api: any) {
+            rAd = new api.game.RewardedVideoView("rewardedvideo");
+            rAd.load();
+        });
+
+        function displayRewardedVideo() {
+            rAd.show();
+        }
+
         if (localStorage.getItem("name") === null) {
             localStorage.setItem("name", "");
         }
@@ -1097,6 +1107,7 @@ export default class World {
         this._earnButtonContainer.addEventListener("mouseup", async (event) => {
             event.preventDefault();
 
+            displayRewardedVideo();
             this._showSplashScreen("Finding room with earnings...");
             await this._fetchNearestRoom(this._earnRooms, "EARN");
             this._setSplashScreenMessage(
