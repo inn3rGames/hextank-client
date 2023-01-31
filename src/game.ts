@@ -15,7 +15,7 @@ window.addEventListener("mouseleave", (event) => {
     event.preventDefault();
 });
 
-window.addEventListener("touchstart", (event) => {
+/* window.addEventListener("touchstart", (event) => {
     event.preventDefault();
 });
 window.addEventListener("toucmove", (event) => {
@@ -26,7 +26,7 @@ window.addEventListener("touchend", (event) => {
 });
 window.addEventListener("touchcancel", (event) => {
     event.preventDefault();
-});
+}); */
 
 window.addEventListener("contextmenu", (event) => {
     event.preventDefault();
