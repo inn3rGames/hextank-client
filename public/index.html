@@ -34,7 +34,7 @@
                 AIP_COMPLETE: async function (state) {
                     alert("Preroll Ad Completed: " + state);
 
-                    if (state === "video-ad-completed" || state === "video-ad-empty") {
+                    if (state === "video-ad-completed" || state === "video-ad-skipped") {
                         if (window.authType === "FREE") {
                             await window.authFreeStart();
                         }
