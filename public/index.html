@@ -32,8 +32,6 @@
                 LOADING_TEXT: "Loading ad...",
                 PREROLL_ELEM: function () { return document.getElementById("preroll") },
                 AIP_COMPLETE: async function (state) {
-                    alert("Preroll Ad Completed: " + state);
-
                     if (state === "video-ad-completed" || state === "video-ad-skipped") {
                         if (window.authType === "FREE") {
                             await window.authFreeStart();

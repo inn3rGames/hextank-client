@@ -1078,9 +1078,7 @@ export default class World {
         currentWindow.authFail = () => {
             currentWindow.authType = "NONE";
 
-            this._showSplashScreen(
-                "No ad available or disable AdBlock and refresh..."
-            );
+            this._showSplashScreen("No ad found or AdBlock enabled...");
 
             this._adState = "DISABLED";
 
