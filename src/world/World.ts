@@ -841,49 +841,8 @@ export default class World {
     }
 
     private _setUICallbacks() {
-        (function (zonefile) {
-            var y = "cpmstarx";
-            var drutObj = ((<any>window)[y] = (<any>window)[y] || {});
-            function failCpmstarAPI() {
-                var failFn = function (o: any) {
-                    o && typeof o === "object" && o.fail && o.fail();
-                };
-                drutObj &&
-                    Array.isArray(drutObj.cmd) &&
-                    drutObj.cmd.forEach(failFn) &&
-                    (drutObj.cmd.length = 0);
-                (<any>window).cpmstarAPI = (<any>window)["_" + zonefile] =
-                    failFn;
-            }
-            var rnd = Math.round(Math.random() * 999999);
-            var s = document.createElement("script");
-            s.type = "text/javascript";
-            s.async = true;
-            s.onerror = failCpmstarAPI;
-            var proto = document.location.protocol;
-            var host =
-                proto == "https:" || proto == "file:"
-                    ? "https://server"
-                    : "//cdn";
-            if (window.location.hash == "#cpmstarDev") host = "//dev.server";
-            if (window.location.hash == "#cpmstarStaging")
-                host = "//staging.server";
-            s.src =
-                host +
-                ".cpmstar.com/cached/zonefiles/" +
-                zonefile +
-                ".js?rnd=" +
-                rnd;
-            var s2 = document.getElementsByTagName("script")[0];
-            s2.parentNode!.insertBefore(s, s2);
-            (<any>window).cpmstarAPI = function (o: any) {
-                (drutObj.cmd = drutObj.cmd || []).push(o);
-            };
-        })("949_53242_gameapi");
-
-        (<any>window).cpmstarAPI({
-            kind: "game.createInterstitial",
-        });
+        const currentWindow = <any>window;
+        currentWindow.authType = "NONE";
 
         if (localStorage.getItem("name") === null) {
             localStorage.setItem("name", "");
@@ -1077,145 +1036,72 @@ export default class World {
             await this._entryRoom();
         });
 
-        this._earnButtonContainer.addEventListener("mouseup", async (event) => {
+        currentWindow.authEarnStart = async () => {
+            this._showSplashScreen("Finding room with earnings...");
+            await this._fetchNearestRoom(this._earnRooms, "EARN");
+            this._setSplashScreenMessage(
+                "Finding room with earnings finished..."
+            );
+
+            this._adState = "DELIVERED";
+            const adId = `ad-${uuidv1()}`;
+            const rawAdMessage = `${adId} ${this._adState}`;
+
+            const adMessage = aes
+                .encrypt(rawAdMessage, this._adState)
+                .toString();
+
+            await this._entryRoom(adMessage);
+        };
+
+        this._earnButtonContainer.addEventListener("mouseup", (event) => {
             event.preventDefault();
 
-            (<any>window).cpmstarAPI({
-                kind: "game.displayInterstitial",
-                onAdClosed: async () => {
-                    console.log("Interstitial closed");
-
-                    this._showSplashScreen("Finding room with earnings...");
-                    await this._fetchNearestRoom(this._earnRooms, "EARN");
-                    this._setSplashScreenMessage(
-                        "Finding room with earnings finished..."
-                    );
-
-                    this._adState = "DELIVERED";
-                    const adId = `ad-${uuidv1()}`;
-                    const rawAdMessage = `${adId} ${this._adState}`;
-
-                    const adMessage = aes
-                        .encrypt(rawAdMessage, this._adState)
-                        .toString();
-
-                    await this._entryRoom(adMessage);
-                },
-                fail: () => {
-                    console.log("No ad available, or adblocked");
-
-                    this._showSplashScreen("Disable AdBlock and refresh...");
-
-                    this._adState = "DISABLED";
-
-                    setTimeout(() => {
-                        this._showHomeUI();
-                    }, this._splashScreenTimeout);
-                },
-            });
+            currentWindow.authType = "EARN";
+            currentWindow.showAd();
         });
 
-        this._earnButtonContainer.addEventListener(
-            "touchend",
-            async (event) => {
-                event.preventDefault();
-
-                (<any>window).cpmstarAPI({
-                    kind: "game.displayInterstitial",
-                    onAdClosed: async () => {
-                        console.log("Interstitial closed");
-
-                        this._showSplashScreen("Finding room with earnings...");
-                        await this._fetchNearestRoom(this._earnRooms, "EARN");
-                        this._setSplashScreenMessage(
-                            "Finding room with earnings finished..."
-                        );
-
-                        this._adState = "DELIVERED";
-                        const adId = `ad-${uuidv1()}`;
-                        const rawAdMessage = `${adId} ${this._adState}`;
-
-                        const adMessage = aes
-                            .encrypt(rawAdMessage, this._adState)
-                            .toString();
-
-                        await this._entryRoom(adMessage);
-                    },
-                    fail: () => {
-                        console.log("No ad available, or adblocked");
-
-                        this._showSplashScreen(
-                            "Disable AdBlock and refresh..."
-                        );
-
-                        this._adState = "DISABLED";
-
-                        setTimeout(() => {
-                            this._showHomeUI();
-                        }, this._splashScreenTimeout);
-                    },
-                });
-            }
-        );
-
-        this._freeButtonContainer.addEventListener("mouseup", async (event) => {
+        this._earnButtonContainer.addEventListener("touchend", (event) => {
             event.preventDefault();
 
-            (<any>window).cpmstarAPI({
-                kind: "game.displayInterstitial",
-                onAdClosed: async () => {
-                    console.log("Interstitial closed");
-
-                    this._showSplashScreen("Finding free room...");
-                    await this._fetchNearestRoom(this._freeRooms, "FREE");
-                    this._setSplashScreenMessage(
-                        "Finding free room finished..."
-                    );
-                    await this._entryRoom();
-                },
-                fail: () => {
-                    console.log("No ad available, or adblocked");
-
-                    this._showSplashScreen("Disable AdBlock and refresh...");
-
-                    setTimeout(() => {
-                        this._showHomeUI();
-                    }, this._splashScreenTimeout);
-                },
-            });
+            currentWindow.authType = "EARN";
+            currentWindow.showAd();
         });
 
-        this._freeButtonContainer.addEventListener(
-            "touchend",
-            async (event) => {
-                event.preventDefault();
+        currentWindow.authFreeStart = async () => {
+            this._showSplashScreen("Finding free room...");
+            await this._fetchNearestRoom(this._freeRooms, "FREE");
+            this._setSplashScreenMessage("Finding free room finished...");
+            await this._entryRoom();
+        };
 
-                (<any>window).cpmstarAPI({
-                    kind: "game.displayInterstitial",
-                    onAdClosed: async () => {
-                        console.log("Interstitial closed");
+        currentWindow.authFail = () => {
+            currentWindow.authType = "NONE";
 
-                        this._showSplashScreen("Finding free room...");
-                        await this._fetchNearestRoom(this._freeRooms, "FREE");
-                        this._setSplashScreenMessage(
-                            "Finding free room finished..."
-                        );
-                        await this._entryRoom();
-                    },
-                    fail: () => {
-                        console.log("No ad available, or adblocked");
+            this._showSplashScreen(
+                "No ad available or disable AdBlock and refresh..."
+            );
 
-                        this._showSplashScreen(
-                            "Disable AdBlock and refresh..."
-                        );
+            this._adState = "DISABLED";
 
-                        setTimeout(() => {
-                            this._showHomeUI();
-                        }, this._splashScreenTimeout);
-                    },
-                });
-            }
-        );
+            setTimeout(() => {
+                this._showHomeUI();
+            }, this._splashScreenTimeout);
+        };
+
+        this._freeButtonContainer.addEventListener("mouseup", (event) => {
+            event.preventDefault();
+
+            currentWindow.authType = "FREE";
+            currentWindow.showAd();
+        });
+
+        this._freeButtonContainer.addEventListener("touchend", (event) => {
+            event.preventDefault();
+
+            currentWindow.authType = "FREE";
+            currentWindow.showAd();
+        });
 
         this._twitterButtonContainer.addEventListener("mouseup", (event) => {
             event.preventDefault();

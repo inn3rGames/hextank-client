@@ -13,9 +13,56 @@
     <meta property="og:url" content="https://hextank.io/" />
     <meta property="og:image" content="https://hextank.io/smallLogo.png" />
     <title>HexTank.io</title>
+    <script>
+        window.aiptag = window.aiptag || { cmd: [] };
+        aiptag.cmd.display = aiptag.cmd.display || [];
+        aiptag.cmd.player = aiptag.cmd.player || [];
+        aiptag.cmp = {
+            show: true,
+            position: "centered",
+            button: false,
+            buttonText: "PRIVACY",
+            buttonPosition: "bottom-left"
+        }
+        aiptag.cmd.player.push(function () {
+            aiptag.adplayer = new aipPlayer({
+                AD_WIDTH: 960,
+                AD_HEIGHT: 540,
+                AD_DISPLAY: "fill",
+                LOADING_TEXT: "Loading ad...",
+                PREROLL_ELEM: function () { return document.getElementById("preroll") },
+                AIP_COMPLETE: async function (state) {
+                    alert("Preroll Ad Completed: " + state);
+
+                    if (state === "video-ad-completed" || state === "video-ad-empty") {
+                        if (window.authType === "FREE") {
+                            await window.authFreeStart();
+                        }
+
+                        if (window.authType === "EARN") {
+                            await window.authEarnStart();
+                        }
+                    }
+                    else {
+                        window.authFail();
+                    }
+                }
+            });
+
+        });
+        window.showAd = function () {
+            if (typeof aiptag.adplayer !== "undefined") {
+                aiptag.cmd.player.push(function () { aiptag.adplayer.startPreRoll(); });
+            } else {
+                window.authFail();
+            }
+        }
+    </script>
+    <script async src="//api.adinplay.com/libs/aiptag/pub/HXT/hextank.io/tag.min.js"></script>
 </head>
 
 <body>
+    <div id="preroll"></div>
     <div id="main-container">
         <canvas id="hextankgame"></canvas>
         <div id="splash-screen">
@@ -204,13 +251,13 @@
                                     <div class="text-question">#3 The current tournament that I joined looks empty. What
                                         can I do?</div>
                                     <div class="text-answer">
-                                        HexTank.io doesn't use any bots. All players are real players. Feel free to
+                                        HexTank.io doesn"t use any bots. All players are real players. Feel free to
                                         invite some friends and spread awareness
                                         about HexTank.io in order to gain more players for the current tournament!
                                     </div>
                                 </div>
                                 <div class="text-question-container">
-                                    <div class="text-question">#4 I'm experiencing connectivity issues. What can I do?
+                                    <div class="text-question">#4 I"m experiencing connectivity issues. What can I do?
                                     </div>
                                     <div class="text-answer">
                                         Ensure that you are playing using a stable Wi-Fi or ethernet connection. 5G
@@ -232,7 +279,7 @@
                                 <div class="text-question-container">
                                     <div class="text-question">#6 Does HexTank.io hold any funds?</div>
                                     <div class="text-answer">
-                                        HexTank.io is a non-custodial game, meaning it doesn't hold any player funds
+                                        HexTank.io is a non-custodial game, meaning it doesn"t hold any player funds
                                         besides the prize pool during the game
                                         session. Each amount of NIM you earn gets sent instantly to your Nimiq wallet.
                                     </div>
@@ -241,10 +288,10 @@
                                     <div class="text-question">#7 Does HexTank.io collect any user-identifiable data?
                                     </div>
                                     <div class="text-answer">
-                                        No, HexTank.io doesn't collect any user-identifiable data such as IP addresses
-                                        and it doesn't use cookies. But its partners might collect this type of data. Be
+                                        No, HexTank.io doesn"t collect any user-identifiable data such as IP addresses
+                                        and it doesn"t use cookies. But its partners might collect this type of data. Be
                                         sure to check their privacy <a
-                                            href="https://www.cpmstar.com/privacyPolicy.html">policy</a>.
+                                            href="https://adinplay.com/privacy-and-cookies-policy/">policy</a>.
                                     </div>
                                 </div>
                             </div>
@@ -281,14 +328,14 @@
                                 <div class="text-category-title">2. Use License</div>
                                 <div class="text-category-content">
                                     <p>Permission is granted to temporarily download one copy of the materials on
-                                        HexTank.io's Website for personal,
+                                        HexTank.io"s Website for personal,
                                         non-commercial transitory viewing only. This is the grant of a license, not a
                                         transfer of title, and under this
                                         license you may not:</p>
                                     <ul>
                                         <li>modify or copy the materials;</li>
                                         <li>use the materials for any commercial purpose or for any public display;</li>
-                                        <li>attempt to reverse engineer any software contained on HexTank.io's Website;
+                                        <li>attempt to reverse engineer any software contained on HexTank.io"s Website;
                                         </li>
                                         <li>remove any copyright or other proprietary notations from the materials; or
                                         </li>
@@ -361,17 +408,17 @@
                             <div class="text-category-container">
                                 <div class="text-category-title">8. Your Privacy</div>
                                 <div class="text-category-content">
-                                    <p>HexTank.io doesn't collect any user-identifiable data such as IP addresses
-                                        and it doesn't use cookies. But its partners might collect this type of data.
+                                    <p>HexTank.io doesn"t collect any user-identifiable data such as IP addresses
+                                        and it doesn"t use cookies. But its partners might collect this type of data.
                                         Make sure to check and agree with their privacy <a
-                                            href="https://www.cpmstar.com/privacyPolicy.html">policy</a> or
+                                            href="https://adinplay.com/privacy-and-cookies-policy/">policy</a> or
                                         refrain from using this site.</p>
                                 </div>
                             </div>
                             <div class="text-category-container">
                                 <div class="text-category-title">9. Governing Law</div>
                                 <div class="text-category-content">
-                                    <p>Any claim related to HexTank.io's Website shall be governed by the laws of EU
+                                    <p>Any claim related to HexTank.io"s Website shall be governed by the laws of EU
                                         without regards to its conflict of law
                                         provisions.</p>
                                 </div>
@@ -384,6 +431,7 @@
                 <div id="discord-button" class="button-small"></div>
             </div>
             <div id="version"></div>
+            <a id="privacy" href="javascript:void(0)" onclick="aipAPItag.showCMPScreen()">PRIVACY</a>
         </div>
         <div id="in-game-ui">
             <div id="touch-buttons-container"></div>
