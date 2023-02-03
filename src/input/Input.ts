@@ -30,9 +30,9 @@ export default class Input {
 
     enableInput() {
         window.addEventListener("keydown", (event) => {
-            /* if (this._production === true) {
+            if (this._production === true) {
                 event.preventDefault();
-            } */
+            }
 
             this._defaultControls = true;
             this._resetGamepadButtons();
@@ -72,9 +72,9 @@ export default class Input {
         });
 
         window.addEventListener("keyup", (event) => {
-            /* if (this._production === true) {
+            if (this._production === true) {
                 event.preventDefault();
-            } */
+            }
 
             this._defaultControls = false;
 
@@ -657,6 +657,7 @@ export default class Input {
     }
 
     setRoom(room: Room | undefined) {
+        window.focus();
         this._room = room;
     }
 
