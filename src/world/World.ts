@@ -2191,6 +2191,7 @@ export default class World {
         }
 
         this._input.setRoom(this._room);
+        this._focusRegained();
     }
 
     private _formatDamage(damage: number): string {
