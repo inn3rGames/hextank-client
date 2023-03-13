@@ -38,7 +38,6 @@ import { Client, Room } from "colyseus.js";
 import screenfull from "screenfull";
 import HubApi, { SignedMessage, SignedTransaction } from "@nimiq/hub-api";
 import { v1 as uuidv1 } from "uuid";
-import Plausible from "plausible-tracker";
 
 import body from "../assets/models/hexTankBody.glb";
 import jet from "../assets/models/hexTankJet.glb";
@@ -202,8 +201,6 @@ export default class World {
 
     private _production: boolean = false;
 
-    private _plausible = Plausible({ domain: "hextank.io", hashMode: true });
-
     constructor() {
         this._canvas = document.getElementById(
             "hextankgame"
@@ -331,8 +328,6 @@ export default class World {
 
         this._input = new Input();
         this._setUICallbacks();
-
-        this._plausible.enableAutoPageviews();
     }
 
     private _setDebugMode() {
@@ -778,7 +773,7 @@ export default class World {
 
             try {
                 const signedTransaction = await this._hubApi.checkout(options);
-                this._plausible.trackEvent("PAID_PLAY");
+                (<any>window).beam("/custom-events/paid-play");
                 await this._sessionStart(signedTransaction);
             } catch (error) {
                 setTimeout(() => {
@@ -801,7 +796,7 @@ export default class World {
 
             try {
                 const signedMessage = await this._hubApi.signMessage(options);
-                this._plausible.trackEvent("EARN_PLAY");
+                (<any>window).beam("/custom-events/earn-play");
                 await this._sessionStart(signedMessage);
             } catch (error) {
                 setTimeout(() => {
@@ -815,7 +810,7 @@ export default class World {
         }
 
         if (this._roomData.type === "FREE") {
-            this._plausible.trackEvent("FREE_PLAY");
+            (<any>window).beam("/custom-events/free-play");
             await this._sessionStart();
         }
     }
