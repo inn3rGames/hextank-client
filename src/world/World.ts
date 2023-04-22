@@ -369,9 +369,9 @@ export default class World {
             type: "EARN",
         }); */
 
-        this._freeRooms.set("F-EU-DE1", {
-            name: "F-EU-DE1",
-            address: "wss://wrbnqh.colyseus.de",
+        this._freeRooms.set("F-NA-US1", {
+            name: "F-NA-US1",
+            address: "wss://fus1.hextankroom.io",
             type: "FREE",
         });
         /* this._freeRooms.set("F-NA-US1", {
