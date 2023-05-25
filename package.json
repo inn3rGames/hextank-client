@@ -23,7 +23,7 @@
     "@babylonjs/gui": "^5.40.0",
     "@babylonjs/loaders": "^5.40.0",
     "@nimiq/hub-api": "^1.6.1",
-    "colyseus.js": "^0.14.13",
+    "colyseus.js": "^0.15.0",
     "crypto-js": "^4.1.1",
     "screenfull": "^6.0.2",
     "uuid": "^9.0.0"
