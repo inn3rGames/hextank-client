@@ -361,9 +361,9 @@ export default class World {
             type: "EARN",
         });
 
-        this._freeRooms.set("F-NA-US1", {
-            name: "F-NA-US1",
-            address: "wss://fus1.hextankroom.io",
+        this._freeRooms.set("F-EU-DE1", {
+            name: "F-EU-DE1",
+            address: "wss://fde1.onrender.com",
             type: "FREE",
         });
 
