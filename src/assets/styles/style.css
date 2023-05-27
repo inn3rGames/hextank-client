@@ -631,6 +631,11 @@ a {
 
 }
 
+#contact-category-container {
+    margin-bottom: 6vmin;
+
+}
+
 .text-category-title {
     font-size: 6vmin;
     text-align: center;
