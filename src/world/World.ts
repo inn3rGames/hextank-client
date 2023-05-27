@@ -104,8 +104,8 @@ export default class World {
     private _homeUI: HTMLDivElement;
     private _roomsButtonContainer: HTMLDivElement;
     private _roomsCloseButtonContainer: HTMLDivElement;
-    private _paidDataContainer: HTMLDivElement;
-    private _earnDataContainer: HTMLDivElement;
+    /* private _paidDataContainer: HTMLDivElement;
+    private _earnDataContainer: HTMLDivElement; */
     private _freeDataContainer: HTMLDivElement;
     private _logo: HTMLDivElement;
     private _restartTextContainer: HTMLDivElement;
@@ -223,12 +223,12 @@ export default class World {
         this._roomsCloseButtonContainer = document.getElementById(
             "rooms-close-button-container"
         ) as HTMLDivElement;
-        this._paidDataContainer = document.getElementById(
+        /* this._paidDataContainer = document.getElementById(
             "paid-data-container"
         ) as HTMLDivElement;
         this._earnDataContainer = document.getElementById(
             "earn-data-container"
-        ) as HTMLDivElement;
+        ) as HTMLDivElement; */
         this._freeDataContainer = document.getElementById(
             "free-data-container"
         ) as HTMLDivElement;
@@ -349,7 +349,7 @@ export default class World {
     }
 
     private _setServerRooms() {
-        this._paidRooms.set("P-EU-PL1", {
+        /* this._paidRooms.set("P-EU-PL1", {
             name: "P-EU-PL1",
             address: "wss://ppl1.hextankroom.io",
             type: "PAID",
@@ -359,7 +359,7 @@ export default class World {
             name: "E-EU-PL1",
             address: "wss://epl1.hextankroom.io",
             type: "EARN",
-        });
+        }); */
 
         this._freeRooms.set("F-EU-DE1", {
             name: "F-EU-DE1",
@@ -686,8 +686,8 @@ export default class World {
     }
 
     private _clearAllRoomsDataRows() {
-        this._clearRoomDataRows(this._paidDataContainer);
-        this._clearRoomDataRows(this._earnDataContainer);
+        /* this._clearRoomDataRows(this._paidDataContainer);
+        this._clearRoomDataRows(this._earnDataContainer); */
         this._clearRoomDataRows(this._freeDataContainer);
     }
 
@@ -699,7 +699,7 @@ export default class World {
         await this._fillRowData(this._freeRooms, "FREE");
 
         this._filledData.forEach((roomData) => {
-            if (roomData.type === "PAID") {
+            /* if (roomData.type === "PAID") {
                 this._createOrUpdateRoomDataRow(
                     this._paidDataContainer,
                     roomData.type,
@@ -707,9 +707,9 @@ export default class World {
                     roomData.players,
                     roomData.ping
                 );
-            }
+            } */
 
-            if (roomData.type === "EARN") {
+            /* if (roomData.type === "EARN") {
                 this._createOrUpdateRoomDataRow(
                     this._earnDataContainer,
                     roomData.type,
@@ -717,7 +717,7 @@ export default class World {
                     roomData.players,
                     roomData.ping
                 );
-            }
+            } */
 
             if (roomData.type === "FREE") {
                 this._createOrUpdateRoomDataRow(
@@ -946,7 +946,7 @@ export default class World {
             this._clearAllRoomsDataRows();
         });
 
-        this._paidDataContainer.addEventListener("change", (event) => {
+        /* this._paidDataContainer.addEventListener("change", (event) => {
             const paidSelectors =
                 document.querySelectorAll(`input[name="PAID"]`);
             paidSelectors.forEach((input) => {
@@ -965,9 +965,9 @@ export default class World {
                     parent.style.backgroundColor = "#FFFF00";
                 }
             });
-        });
+        }); */
 
-        this._earnDataContainer.addEventListener("change", (event) => {
+        /* this._earnDataContainer.addEventListener("change", (event) => {
             const earnSelectors =
                 document.querySelectorAll(`input[name="EARN"]`);
             earnSelectors.forEach((input) => {
@@ -986,7 +986,7 @@ export default class World {
                     parent.style.backgroundColor = "#FFFF00";
                 }
             });
-        });
+        }); */
 
         this._freeDataContainer.addEventListener("change", (event) => {
             const freeSelectors =
